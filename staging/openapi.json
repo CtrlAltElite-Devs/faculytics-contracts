@@ -156,6 +156,114 @@
           "enrollments"
         ]
       }
+    },
+    "/api/v1/questionnaires": {
+      "post": {
+        "operationId": "QuestionnaireController_createQuestionnaire_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateQuestionnaireRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new questionnaire",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/{id}/versions": {
+      "post": {
+        "operationId": "QuestionnaireController_createVersion_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVersionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new version for a questionnaire",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/versions/{versionId}/publish": {
+      "patch": {
+        "operationId": "QuestionnaireController_publishVersion_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Publish a questionnaire version",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/submissions": {
+      "post": {
+        "operationId": "QuestionnaireController_submitQuestionnaire_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitQuestionnaireRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Submit a completed questionnaire",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
     }
   },
   "info": {
@@ -184,6 +292,74 @@
       "RefreshTokenRequestBody": {
         "type": "object",
         "properties": {}
+      },
+      "CreateQuestionnaireRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FACULTY_IN_CLASSROOM",
+              "FACULTY_OUT_OF_CLASSROOM",
+              "FACULTY_FEEDBACK"
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "type"
+        ]
+      },
+      "CreateVersionRequest": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "schema"
+        ]
+      },
+      "SubmitQuestionnaireRequest": {
+        "type": "object",
+        "properties": {
+          "versionId": {
+            "type": "string"
+          },
+          "respondentId": {
+            "type": "string"
+          },
+          "facultyId": {
+            "type": "string"
+          },
+          "semesterId": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "string"
+          },
+          "answers": {
+            "type": "object",
+            "example": {
+              "q1": 5,
+              "q2": 4
+            }
+          },
+          "qualitativeComment": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "versionId",
+          "respondentId",
+          "facultyId",
+          "semesterId",
+          "answers"
+        ]
       }
     }
   }
