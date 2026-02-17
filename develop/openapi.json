@@ -207,10 +207,43 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Version created successfully"
+          },
+          "404": {
+            "description": "Questionnaire not found"
+          },
+          "409": {
+            "description": "Draft version already exists"
           }
         },
         "summary": "Create a new version for a questionnaire",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/{id}/latest-active-version": {
+      "get": {
+        "operationId": "QuestionnaireController_getLatestActiveVersion_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Active version found or null if none exists"
+          },
+          "404": {
+            "description": "Questionnaire not found"
+          }
+        },
+        "summary": "Get the latest active version for a questionnaire",
         "tags": [
           "Questionnaires"
         ]
@@ -231,10 +264,46 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Version published successfully"
+          },
+          "400": {
+            "description": "Version already published or invalid schema"
+          },
+          "404": {
+            "description": "Version not found"
           }
         },
         "summary": "Publish a questionnaire version",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/versions/{versionId}/deprecate": {
+      "patch": {
+        "operationId": "QuestionnaireController_deprecateVersion_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Version deprecated successfully"
+          },
+          "400": {
+            "description": "Version already deprecated"
+          },
+          "404": {
+            "description": "Version not found"
+          }
+        },
+        "summary": "Deprecate a questionnaire version",
         "tags": [
           "Questionnaires"
         ]
