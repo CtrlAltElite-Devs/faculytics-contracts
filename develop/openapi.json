@@ -387,6 +387,149 @@
           "Questionnaires"
         ]
       }
+    },
+    "/api/v1/questionnaires/drafts": {
+      "post": {
+        "operationId": "QuestionnaireController_saveDraft_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveDraftRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Draft saved successfully"
+          },
+          "400": {
+            "description": "Invalid data or inactive version"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Save or update a draft questionnaire",
+        "tags": [
+          "Questionnaires"
+        ]
+      },
+      "get": {
+        "operationId": "QuestionnaireController_getDraft_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "facultyId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Draft found or null if no draft exists for this context"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get a specific draft by query parameters",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/drafts/list": {
+      "get": {
+        "operationId": "QuestionnaireController_listMyDrafts_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Drafts retrieved successfully"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List all drafts for the current user",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/drafts/{id}": {
+      "delete": {
+        "operationId": "QuestionnaireController_deleteDraft_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Draft deleted successfully"
+          },
+          "404": {
+            "description": "Draft not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Delete a draft by ID",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
     }
   },
   "info": {
@@ -644,15 +787,15 @@
           },
           "id": {
             "type": "object",
-            "default": "51eacaa2-040e-4ed9-a437-3312c32dd6eb"
+            "default": "63238c10-d8f8-4629-9fda-c45d9a28bfc3"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.871Z"
+            "default": "2026-02-18T15:53:55.048Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.871Z"
+            "default": "2026-02-18T15:53:55.048Z"
           },
           "deletedAt": {
             "type": "object"
@@ -752,15 +895,15 @@
           },
           "id": {
             "type": "object",
-            "default": "eecfa4f4-7cfc-4a8c-ad47-3afed26a507b"
+            "default": "0f393a96-3147-4c6c-8503-0f1cb55b56b5"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.875Z"
+            "default": "2026-02-18T15:53:55.053Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.875Z"
+            "default": "2026-02-18T15:53:55.053Z"
           },
           "deletedAt": {
             "type": "object"
@@ -795,15 +938,15 @@
           },
           "id": {
             "type": "object",
-            "default": "dabf9d08-b953-4cd0-b123-9e936f6021be"
+            "default": "48859c52-e258-4f07-ac5a-253466832fd4"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.877Z"
+            "default": "2026-02-18T15:53:55.054Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.877Z"
+            "default": "2026-02-18T15:53:55.054Z"
           },
           "deletedAt": {
             "type": "object"
@@ -845,15 +988,15 @@
           },
           "id": {
             "type": "object",
-            "default": "3766d503-29a1-4637-b403-ed87e0ff794d"
+            "default": "3b1d9506-25fb-4b9c-b4db-e1b6c6ba7356"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.878Z"
+            "default": "2026-02-18T15:53:55.056Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.878Z"
+            "default": "2026-02-18T15:53:55.056Z"
           },
           "deletedAt": {
             "type": "object"
@@ -890,15 +1033,15 @@
           },
           "id": {
             "type": "object",
-            "default": "c0deb175-21c6-4872-b091-ccc016bb7c18"
+            "default": "7278dfc9-1776-4940-a8b6-99a27d63a089"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.877Z"
+            "default": "2026-02-18T15:53:55.055Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.877Z"
+            "default": "2026-02-18T15:53:55.055Z"
           },
           "deletedAt": {
             "type": "object"
@@ -935,15 +1078,15 @@
           },
           "id": {
             "type": "object",
-            "default": "36af36cb-93a3-44c6-900c-7f8dae34d4f6"
+            "default": "c6028cd8-6467-4df4-86fd-42e785635241"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.879Z"
+            "default": "2026-02-18T15:53:55.057Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.879Z"
+            "default": "2026-02-18T15:53:55.057Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1027,15 +1170,15 @@
           },
           "id": {
             "type": "object",
-            "default": "89d40c54-0319-4eb1-a97a-7d11338dde65"
+            "default": "a5203468-1129-408b-a07d-e23073e349d8"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.876Z"
+            "default": "2026-02-18T15:53:55.054Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.876Z"
+            "default": "2026-02-18T15:53:55.054Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1092,15 +1235,15 @@
           },
           "id": {
             "type": "object",
-            "default": "7178dffa-b786-42ef-8f5c-404e9a35d8e4"
+            "default": "0b6dcb1c-4064-4eac-a9e9-7a992b116ade"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.881Z"
+            "default": "2026-02-18T15:53:55.058Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.881Z"
+            "default": "2026-02-18T15:53:55.058Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1167,7 +1310,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-02-18T13:47:06.874Z"
+            "default": "2026-02-18T15:53:55.052Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -1214,15 +1357,15 @@
           },
           "id": {
             "type": "object",
-            "default": "3630fdff-4401-4340-94f7-0fa2dd910538"
+            "default": "fb1b180a-8431-4ff1-a287-3029ec15f967"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.875Z"
+            "default": "2026-02-18T15:53:55.052Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-18T13:47:06.875Z"
+            "default": "2026-02-18T15:53:55.052Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1254,6 +1397,44 @@
           "id",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "SaveDraftRequest": {
+        "type": "object",
+        "properties": {
+          "versionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facultyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "semesterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "courseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "answers": {
+            "type": "object",
+            "example": {
+              "q1": 5,
+              "q2": 4
+            }
+          },
+          "qualitativeComment": {
+            "type": "string",
+            "maxLength": 10000
+          }
+        },
+        "required": [
+          "versionId",
+          "facultyId",
+          "semesterId",
+          "answers"
         ]
       }
     }
