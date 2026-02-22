@@ -7,7 +7,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -31,7 +38,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -45,7 +59,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -74,7 +95,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -143,7 +171,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyEnrollmentsResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -173,7 +208,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Questionnaire"
+                }
+              }
+            }
           }
         },
         "summary": "Create a new questionnaire",
@@ -207,10 +249,43 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Version created successfully"
+          },
+          "404": {
+            "description": "Questionnaire not found"
+          },
+          "409": {
+            "description": "Draft version already exists"
           }
         },
         "summary": "Create a new version for a questionnaire",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/{id}/latest-active-version": {
+      "get": {
+        "operationId": "QuestionnaireController_getLatestActiveVersion_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Active version found or null if none exists"
+          },
+          "404": {
+            "description": "Questionnaire not found"
+          }
+        },
+        "summary": "Get the latest active version for a questionnaire",
         "tags": [
           "Questionnaires"
         ]
@@ -231,10 +306,46 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Version published successfully"
+          },
+          "400": {
+            "description": "Version already published or invalid schema"
+          },
+          "404": {
+            "description": "Version not found"
           }
         },
         "summary": "Publish a questionnaire version",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/versions/{versionId}/deprecate": {
+      "patch": {
+        "operationId": "QuestionnaireController_deprecateVersion_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Version deprecated successfully"
+          },
+          "400": {
+            "description": "Version already deprecated"
+          },
+          "404": {
+            "description": "Version not found"
+          }
+        },
+        "summary": "Deprecate a questionnaire version",
         "tags": [
           "Questionnaires"
         ]
@@ -256,10 +367,165 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireSubmission"
+                }
+              }
+            }
           }
         },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
         "summary": "Submit a completed questionnaire",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/drafts": {
+      "post": {
+        "operationId": "QuestionnaireController_saveDraft_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveDraftRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Draft saved successfully"
+          },
+          "400": {
+            "description": "Invalid data or inactive version"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Save or update a draft questionnaire",
+        "tags": [
+          "Questionnaires"
+        ]
+      },
+      "get": {
+        "operationId": "QuestionnaireController_getDraft_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "facultyId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Draft found or null if no draft exists for this context"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get a specific draft by query parameters",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/drafts/list": {
+      "get": {
+        "operationId": "QuestionnaireController_listMyDrafts_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Drafts retrieved successfully"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List all drafts for the current user",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/drafts/{id}": {
+      "delete": {
+        "operationId": "QuestionnaireController_deleteDraft_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Draft deleted successfully"
+          },
+          "404": {
+            "description": "Draft not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Delete a draft by ID",
         "tags": [
           "Questionnaires"
         ]
@@ -287,11 +553,190 @@
     "schemas": {
       "LoginRequest": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "refreshToken"
+        ]
+      },
+      "MeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "moodleUserId": {
+            "type": "number"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "userProfilePicture": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "campus": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "code"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "userName",
+          "firstName",
+          "lastName",
+          "userProfilePicture",
+          "fullName",
+          "roles"
+        ]
       },
       "RefreshTokenRequestBody": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "CourseShortResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "moodleCourseId": {
+            "type": "number"
+          },
+          "shortname": {
+            "type": "string"
+          },
+          "fullname": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "moodleCourseId",
+          "shortname",
+          "fullname"
+        ]
+      },
+      "EnrollmentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "course": {
+            "$ref": "#/components/schemas/CourseShortResponseDto"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "course"
+        ]
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "type": "number"
+          },
+          "itemCount": {
+            "type": "number"
+          },
+          "itemsPerPage": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          },
+          "currentPage": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "totalItems",
+          "itemCount",
+          "itemsPerPage",
+          "totalPages",
+          "currentPage"
+        ]
+      },
+      "MyEnrollmentsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnrollmentResponseDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
       },
       "CreateQuestionnaireRequest": {
         "type": "object",
@@ -300,17 +745,70 @@
             "type": "string"
           },
           "type": {
+            "enum": [
+              "FACULTY_IN_CLASSROOM",
+              "FACULTY_OUT_OF_CLASSROOM",
+              "FACULTY_FEEDBACK"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "type"
+        ]
+      },
+      "Questionnaire": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "default": "DRAFT",
+            "enum": [
+              "DRAFT",
+              "ACTIVE",
+              "DEPRECATED"
+            ]
+          },
+          "type": {
             "type": "string",
             "enum": [
               "FACULTY_IN_CLASSROOM",
               "FACULTY_OUT_OF_CLASSROOM",
               "FACULTY_FEEDBACK"
             ]
+          },
+          "versions": {
+            "type": "object",
+            "default": []
+          },
+          "id": {
+            "type": "object",
+            "default": "933c9b5c-ff7c-4a8d-a706-5ec24cd18b33"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.636Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.636Z"
+          },
+          "deletedAt": {
+            "type": "object"
           }
         },
         "required": [
           "title",
-          "type"
+          "status",
+          "type",
+          "versions",
+          "id",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "CreateVersionRequest": {
@@ -328,19 +826,24 @@
         "type": "object",
         "properties": {
           "versionId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "respondentId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "facultyId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "semesterId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "courseId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "answers": {
             "type": "object",
@@ -356,6 +859,579 @@
         "required": [
           "versionId",
           "respondentId",
+          "facultyId",
+          "semesterId",
+          "answers"
+        ]
+      },
+      "QuestionnaireVersion": {
+        "type": "object",
+        "properties": {
+          "questionnaire": {
+            "$ref": "#/components/schemas/Questionnaire"
+          },
+          "versionNumber": {
+            "type": "number"
+          },
+          "schemaSnapshot": {
+            "type": "object"
+          },
+          "publishedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean",
+            "default": false
+          },
+          "status": {
+            "type": "string",
+            "default": "DRAFT",
+            "enum": [
+              "DRAFT",
+              "ACTIVE",
+              "DEPRECATED"
+            ]
+          },
+          "id": {
+            "type": "object",
+            "default": "330ef18b-c6d4-4eb7-b14b-479b7434d598"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.641Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.641Z"
+          },
+          "deletedAt": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "questionnaire",
+          "versionNumber",
+          "schemaSnapshot",
+          "isActive",
+          "status",
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Campus": {
+        "type": "object",
+        "properties": {
+          "moodleCategoryId": {
+            "type": "number"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "semesters": {
+            "type": "object",
+            "default": []
+          },
+          "id": {
+            "type": "object",
+            "default": "9d2927a9-8815-4a95-8d24-15f41c39c589"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.643Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.643Z"
+          },
+          "deletedAt": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "moodleCategoryId",
+          "code",
+          "semesters",
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Semester": {
+        "type": "object",
+        "properties": {
+          "moodleCategoryId": {
+            "type": "number"
+          },
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "academicYear": {
+            "type": "string"
+          },
+          "campus": {
+            "$ref": "#/components/schemas/Campus"
+          },
+          "departments": {
+            "type": "object",
+            "default": []
+          },
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "object",
+            "default": "28ad737f-ec33-4da8-8e06-b0fb0590b4a9"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.644Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.644Z"
+          },
+          "deletedAt": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "moodleCategoryId",
+          "code",
+          "campus",
+          "departments",
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Department": {
+        "type": "object",
+        "properties": {
+          "moodleCategoryId": {
+            "type": "number"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "semester": {
+            "$ref": "#/components/schemas/Semester"
+          },
+          "programs": {
+            "type": "object",
+            "default": []
+          },
+          "id": {
+            "type": "object",
+            "default": "a898f78e-776f-48bc-8be3-67a9024195d5"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.644Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.644Z"
+          },
+          "deletedAt": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "moodleCategoryId",
+          "code",
+          "semester",
+          "programs",
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Program": {
+        "type": "object",
+        "properties": {
+          "moodleCategoryId": {
+            "type": "number"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "department": {
+            "$ref": "#/components/schemas/Department"
+          },
+          "courses": {
+            "type": "object",
+            "default": []
+          },
+          "id": {
+            "type": "object",
+            "default": "06cb6801-cb3e-4bee-bd7e-66e1dcdb7fab"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.645Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.645Z"
+          },
+          "deletedAt": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "moodleCategoryId",
+          "code",
+          "department",
+          "courses",
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string"
+          },
+          "moodleUserId": {
+            "type": "number"
+          },
+          "password": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "userProfilePicture": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "campus": {
+            "$ref": "#/components/schemas/Campus"
+          },
+          "department": {
+            "$ref": "#/components/schemas/Department"
+          },
+          "program": {
+            "$ref": "#/components/schemas/Program"
+          },
+          "moodleTokens": {
+            "type": "object",
+            "default": []
+          },
+          "enrollments": {
+            "type": "object",
+            "default": []
+          },
+          "institutionalRoles": {
+            "type": "object",
+            "default": []
+          },
+          "lastLoginAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "roles": {
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "string",
+              "enum": [
+                "SUPER_ADMIN",
+                "ADMIN",
+                "DEAN",
+                "FACULTY",
+                "STUDENT"
+              ]
+            }
+          },
+          "id": {
+            "type": "object",
+            "default": "0545d78e-f2b5-46ee-a08e-e5cc52960c25"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.642Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.642Z"
+          },
+          "deletedAt": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "userName",
+          "firstName",
+          "lastName",
+          "userProfilePicture",
+          "moodleTokens",
+          "enrollments",
+          "institutionalRoles",
+          "lastLoginAt",
+          "isActive",
+          "roles",
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Course": {
+        "type": "object",
+        "properties": {
+          "moodleCourseId": {
+            "type": "number"
+          },
+          "shortname": {
+            "type": "string"
+          },
+          "fullname": {
+            "type": "string"
+          },
+          "program": {
+            "$ref": "#/components/schemas/Program"
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "timeModified": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "object",
+            "default": "44fe5d82-3c61-4042-95d2-ec0bcb98deb7"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.648Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.648Z"
+          },
+          "deletedAt": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "moodleCourseId",
+          "shortname",
+          "fullname",
+          "program",
+          "startDate",
+          "endDate",
+          "isVisible",
+          "timeModified",
+          "isActive",
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "QuestionnaireSubmission": {
+        "type": "object",
+        "properties": {
+          "questionnaireVersion": {
+            "$ref": "#/components/schemas/QuestionnaireVersion"
+          },
+          "respondent": {
+            "$ref": "#/components/schemas/User"
+          },
+          "faculty": {
+            "$ref": "#/components/schemas/User"
+          },
+          "respondentRole": {
+            "type": "string",
+            "enum": [
+              "STUDENT",
+              "DEAN"
+            ]
+          },
+          "semester": {
+            "$ref": "#/components/schemas/Semester"
+          },
+          "course": {
+            "$ref": "#/components/schemas/Course"
+          },
+          "department": {
+            "$ref": "#/components/schemas/Department"
+          },
+          "program": {
+            "$ref": "#/components/schemas/Program"
+          },
+          "campus": {
+            "$ref": "#/components/schemas/Campus"
+          },
+          "totalScore": {
+            "type": "number"
+          },
+          "normalizedScore": {
+            "type": "number"
+          },
+          "qualitativeComment": {
+            "type": "string"
+          },
+          "submittedAt": {
+            "format": "date-time",
+            "type": "string",
+            "default": "2026-02-22T06:18:15.640Z"
+          },
+          "facultyNameSnapshot": {
+            "type": "string"
+          },
+          "facultyEmployeeNumberSnapshot": {
+            "type": "string"
+          },
+          "departmentCodeSnapshot": {
+            "type": "string"
+          },
+          "departmentNameSnapshot": {
+            "type": "string"
+          },
+          "programCodeSnapshot": {
+            "type": "string"
+          },
+          "programNameSnapshot": {
+            "type": "string"
+          },
+          "campusCodeSnapshot": {
+            "type": "string"
+          },
+          "campusNameSnapshot": {
+            "type": "string"
+          },
+          "courseCodeSnapshot": {
+            "type": "string"
+          },
+          "courseTitleSnapshot": {
+            "type": "string"
+          },
+          "semesterCodeSnapshot": {
+            "type": "string"
+          },
+          "semesterLabelSnapshot": {
+            "type": "string"
+          },
+          "academicYearSnapshot": {
+            "type": "string"
+          },
+          "answers": {
+            "type": "object",
+            "default": []
+          },
+          "id": {
+            "type": "object",
+            "default": "17687f83-57a4-4f2c-82f2-3a40a37d1e94"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.641Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-02-22T06:18:15.641Z"
+          },
+          "deletedAt": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "questionnaireVersion",
+          "respondent",
+          "faculty",
+          "respondentRole",
+          "semester",
+          "department",
+          "program",
+          "campus",
+          "totalScore",
+          "normalizedScore",
+          "submittedAt",
+          "facultyNameSnapshot",
+          "departmentCodeSnapshot",
+          "departmentNameSnapshot",
+          "programCodeSnapshot",
+          "programNameSnapshot",
+          "campusCodeSnapshot",
+          "campusNameSnapshot",
+          "semesterCodeSnapshot",
+          "semesterLabelSnapshot",
+          "academicYearSnapshot",
+          "answers",
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "SaveDraftRequest": {
+        "type": "object",
+        "properties": {
+          "versionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facultyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "semesterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "courseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "answers": {
+            "type": "object",
+            "example": {
+              "q1": 5,
+              "q2": 4
+            }
+          },
+          "qualitativeComment": {
+            "type": "string",
+            "maxLength": 10000
+          }
+        },
+        "required": [
+          "versionId",
           "facultyId",
           "semesterId",
           "answers"
