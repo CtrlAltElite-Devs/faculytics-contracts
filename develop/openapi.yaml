@@ -424,6 +424,20 @@ components:
         - moodleCourseId
         - shortname
         - fullname
+    FacultyShortResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        fullName:
+          type: string
+        employeeNumber:
+          type: string
+        profilePicture:
+          type: string
+      required:
+        - id
+        - fullName
     EnrollmentResponseDto:
       type: object
       properties:
@@ -433,6 +447,10 @@ components:
           type: string
         course:
           $ref: '#/components/schemas/CourseShortResponseDto'
+        faculty:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/FacultyShortResponseDto'
       required:
         - id
         - role
@@ -505,13 +523,13 @@ components:
           default: []
         id:
           type: object
-          default: 7b535bd9-0dfc-4e7d-bd7e-2094ba5e567f
+          default: c6844efa-da14-4c08-8d2a-4ccda491c4c8
         createdAt:
           type: object
-          default: '2026-03-08T14:52:13.141Z'
+          default: '2026-03-08T16:07:09.696Z'
         updatedAt:
           type: object
-          default: '2026-03-08T14:52:13.141Z'
+          default: '2026-03-08T16:07:09.696Z'
         deletedAt:
           type: object
       required:
@@ -584,13 +602,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: bfd97947-47db-4b2d-8e9c-b02bf11cf1a4
+          default: 9d51bef4-c231-49f6-824c-54c989f0ac23
         createdAt:
           type: object
-          default: '2026-03-08T14:52:13.147Z'
+          default: '2026-03-08T16:07:09.700Z'
         updatedAt:
           type: object
-          default: '2026-03-08T14:52:13.147Z'
+          default: '2026-03-08T16:07:09.700Z'
         deletedAt:
           type: object
       required:
@@ -616,13 +634,13 @@ components:
           default: []
         id:
           type: object
-          default: c979aa6b-11a9-499f-8849-7d8460ee5ee0
+          default: fbfdb519-31c0-4e08-a73e-f5442a05a3ae
         createdAt:
           type: object
-          default: '2026-03-08T14:52:13.149Z'
+          default: '2026-03-08T16:07:09.702Z'
         updatedAt:
           type: object
-          default: '2026-03-08T14:52:13.149Z'
+          default: '2026-03-08T16:07:09.702Z'
         deletedAt:
           type: object
       required:
@@ -652,13 +670,13 @@ components:
           type: string
         id:
           type: object
-          default: acfd6673-94d1-4048-8eab-950906d835da
+          default: 82e7fe12-bdf3-4c74-bb28-2e9072f1ebae
         createdAt:
           type: object
-          default: '2026-03-08T14:52:13.151Z'
+          default: '2026-03-08T16:07:09.703Z'
         updatedAt:
           type: object
-          default: '2026-03-08T14:52:13.151Z'
+          default: '2026-03-08T16:07:09.703Z'
         deletedAt:
           type: object
       required:
@@ -685,13 +703,13 @@ components:
           default: []
         id:
           type: object
-          default: 95e9f2d2-d1a6-4f7c-bb6f-5a240f16927d
+          default: 355392f9-90a6-477b-8f7f-a2f42b873141
         createdAt:
           type: object
-          default: '2026-03-08T14:52:13.151Z'
+          default: '2026-03-08T16:07:09.702Z'
         updatedAt:
           type: object
-          default: '2026-03-08T14:52:13.151Z'
+          default: '2026-03-08T16:07:09.702Z'
         deletedAt:
           type: object
       required:
@@ -718,13 +736,13 @@ components:
           default: []
         id:
           type: object
-          default: 7076f8b7-c58b-4292-8b04-af6483361ea7
+          default: 8c307a50-bbcb-4247-88be-abc5d56bf9f0
         createdAt:
           type: object
-          default: '2026-03-08T14:52:13.152Z'
+          default: '2026-03-08T16:07:09.704Z'
         updatedAt:
           type: object
-          default: '2026-03-08T14:52:13.152Z'
+          default: '2026-03-08T16:07:09.704Z'
         deletedAt:
           type: object
       required:
@@ -785,13 +803,13 @@ components:
               - STUDENT
         id:
           type: object
-          default: c6ff75bc-1331-4ee3-8f67-a3062e402054
+          default: 9322216b-de35-4588-b2c1-93627c9c126f
         createdAt:
           type: object
-          default: '2026-03-08T14:52:13.148Z'
+          default: '2026-03-08T16:07:09.701Z'
         updatedAt:
           type: object
-          default: '2026-03-08T14:52:13.148Z'
+          default: '2026-03-08T16:07:09.701Z'
         deletedAt:
           type: object
       required:
@@ -834,13 +852,13 @@ components:
           type: boolean
         id:
           type: object
-          default: 45ff1f65-1e98-426e-a6bc-f6df54f8012a
+          default: 975886ff-0490-4f0c-b162-23edabf5eb25
         createdAt:
           type: object
-          default: '2026-03-08T14:52:13.153Z'
+          default: '2026-03-08T16:07:09.705Z'
         updatedAt:
           type: object
-          default: '2026-03-08T14:52:13.153Z'
+          default: '2026-03-08T16:07:09.705Z'
         deletedAt:
           type: object
       required:
@@ -889,7 +907,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-08T14:52:13.146Z'
+          default: '2026-03-08T16:07:09.699Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -921,13 +939,13 @@ components:
           default: []
         id:
           type: object
-          default: ae3b9581-12b6-4f56-97a1-d0aac5bec782
+          default: a0900fdd-e6a4-4315-8b23-cd191faf0eba
         createdAt:
           type: object
-          default: '2026-03-08T14:52:13.146Z'
+          default: '2026-03-08T16:07:09.699Z'
         updatedAt:
           type: object
-          default: '2026-03-08T14:52:13.146Z'
+          default: '2026-03-08T16:07:09.699Z'
         deletedAt:
           type: object
       required:
