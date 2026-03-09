@@ -674,6 +674,27 @@
           "fullname"
         ]
       },
+      "FacultyShortResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "employeeNumber": {
+            "type": "string"
+          },
+          "profilePicture": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "fullName"
+        ]
+      },
       "EnrollmentResponseDto": {
         "type": "object",
         "properties": {
@@ -685,6 +706,14 @@
           },
           "course": {
             "$ref": "#/components/schemas/CourseShortResponseDto"
+          },
+          "faculty": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FacultyShortResponseDto"
+              }
+            ]
           }
         },
         "required": [
@@ -787,15 +816,15 @@
           },
           "id": {
             "type": "object",
-            "default": "2cfd1012-887a-46c7-8195-76b95b319ade"
+            "default": "9e688658-bafb-4315-82d6-1df2d584ffad"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.137Z"
+            "default": "2026-03-09T02:40:48.717Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.137Z"
+            "default": "2026-03-09T02:40:48.717Z"
           },
           "deletedAt": {
             "type": "object"
@@ -895,15 +924,15 @@
           },
           "id": {
             "type": "object",
-            "default": "135ea538-182e-412a-9126-f153a97319d1"
+            "default": "06570ed8-b6ec-4f56-8eff-22e953eb62f3"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.142Z"
+            "default": "2026-03-09T02:40:48.722Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.142Z"
+            "default": "2026-03-09T02:40:48.722Z"
           },
           "deletedAt": {
             "type": "object"
@@ -938,15 +967,15 @@
           },
           "id": {
             "type": "object",
-            "default": "9bfd7e14-3b38-4bb4-a34d-f17334997cb7"
+            "default": "4afc5c63-5412-4bc8-b557-66f490917c35"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.144Z"
+            "default": "2026-03-09T02:40:48.723Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.144Z"
+            "default": "2026-03-09T02:40:48.723Z"
           },
           "deletedAt": {
             "type": "object"
@@ -988,15 +1017,15 @@
           },
           "id": {
             "type": "object",
-            "default": "29273c7e-26cd-46ea-8ec6-748c5b29ca32"
+            "default": "9f31ac77-26f7-4499-9763-3b61dc6888c8"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.145Z"
+            "default": "2026-03-09T02:40:48.725Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.145Z"
+            "default": "2026-03-09T02:40:48.725Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1033,15 +1062,15 @@
           },
           "id": {
             "type": "object",
-            "default": "1d1eeca2-e6d7-46c9-920a-bda34f3c6a8a"
+            "default": "c1bda6d5-fe8c-4498-902e-490e525e99ec"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.145Z"
+            "default": "2026-03-09T02:40:48.724Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.145Z"
+            "default": "2026-03-09T02:40:48.724Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1078,15 +1107,15 @@
           },
           "id": {
             "type": "object",
-            "default": "8f376a19-cf40-4d18-99a1-56e9aeb45bda"
+            "default": "e7825233-cfc7-4aa3-acbe-82c3ddd6c116"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.146Z"
+            "default": "2026-03-09T02:40:48.726Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.146Z"
+            "default": "2026-03-09T02:40:48.726Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1170,15 +1199,15 @@
           },
           "id": {
             "type": "object",
-            "default": "b5f1d951-216d-4d8c-baed-f46d666cfe27"
+            "default": "a7cae97e-cabe-4089-a57c-ee6f779f28f9"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.144Z"
+            "default": "2026-03-09T02:40:48.723Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.144Z"
+            "default": "2026-03-09T02:40:48.723Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1235,15 +1264,15 @@
           },
           "id": {
             "type": "object",
-            "default": "358f94b3-61ec-44a7-8b06-752ecad79e2c"
+            "default": "8d5a38ae-423a-4b68-9eec-af3eac9607f1"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.148Z"
+            "default": "2026-03-09T02:40:48.727Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.148Z"
+            "default": "2026-03-09T02:40:48.727Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1310,7 +1339,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-02-22T06:24:59.141Z"
+            "default": "2026-03-09T02:40:48.721Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -1357,15 +1386,15 @@
           },
           "id": {
             "type": "object",
-            "default": "d72b39d2-9469-4b2c-83ff-ea224238d4c9"
+            "default": "3a649c3b-f56f-4637-86d4-c9384cd5d29c"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.141Z"
+            "default": "2026-03-09T02:40:48.721Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-02-22T06:24:59.141Z"
+            "default": "2026-03-09T02:40:48.721Z"
           },
           "deletedAt": {
             "type": "object"
