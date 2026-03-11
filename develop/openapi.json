@@ -192,6 +192,67 @@
         ]
       }
     },
+    "/api/v1/questionnaires/types": {
+      "get": {
+        "operationId": "QuestionnaireController_getQuestionnaireTypes_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuestionnaireTypeResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List all questionnaire types",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/types/{type}/versions": {
+      "get": {
+        "operationId": "QuestionnaireController_getVersionsByType_v1",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "FACULTY_IN_CLASSROOM",
+                "FACULTY_OUT_OF_CLASSROOM",
+                "FACULTY_FEEDBACK"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Versions found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireVersionsResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get versions for a questionnaire type",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
     "/api/v1/questionnaires": {
       "post": {
         "operationId": "QuestionnaireController_createQuestionnaire_v1",
@@ -770,6 +831,113 @@
           "meta"
         ]
       },
+      "QuestionnaireTypeResponse": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FACULTY_IN_CLASSROOM",
+              "FACULTY_OUT_OF_CLASSROOM",
+              "FACULTY_FEEDBACK"
+            ]
+          },
+          "questionnaireId": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "DRAFT",
+              "ACTIVE",
+              "DEPRECATED"
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "questionnaireId",
+          "title",
+          "status"
+        ]
+      },
+      "QuestionnaireVersionItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "versionNumber": {
+            "type": "number"
+          },
+          "status": {
+            "enum": [
+              "DRAFT",
+              "ACTIVE",
+              "DEPRECATED"
+            ],
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "publishedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "versionNumber",
+          "status",
+          "isActive",
+          "createdAt"
+        ]
+      },
+      "QuestionnaireVersionsResponse": {
+        "type": "object",
+        "properties": {
+          "questionnaireId": {
+            "type": "string",
+            "nullable": true
+          },
+          "questionnaireTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "enum": [
+              "FACULTY_IN_CLASSROOM",
+              "FACULTY_OUT_OF_CLASSROOM",
+              "FACULTY_FEEDBACK"
+            ],
+            "type": "string"
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionnaireVersionItem"
+            }
+          }
+        },
+        "required": [
+          "questionnaireId",
+          "questionnaireTitle",
+          "type",
+          "versions"
+        ]
+      },
       "CreateQuestionnaireRequest": {
         "type": "object",
         "properties": {
@@ -819,15 +987,15 @@
           },
           "id": {
             "type": "object",
-            "default": "ac0b7e67-c0d9-4a78-bca3-cfe887d218c0"
+            "default": "c444a014-4991-48f7-895f-31a8b6d5a485"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.128Z"
+            "default": "2026-03-11T03:16:57.075Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.128Z"
+            "default": "2026-03-11T03:16:57.075Z"
           },
           "deletedAt": {
             "type": "object"
@@ -927,15 +1095,15 @@
           },
           "id": {
             "type": "object",
-            "default": "2db6bd71-ff78-4239-b5f7-19cb765e2134"
+            "default": "79c85819-9dee-4776-8000-47f69d5ae186"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.133Z"
+            "default": "2026-03-11T03:16:57.081Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.133Z"
+            "default": "2026-03-11T03:16:57.081Z"
           },
           "deletedAt": {
             "type": "object"
@@ -970,15 +1138,15 @@
           },
           "id": {
             "type": "object",
-            "default": "33a0bf7e-5caa-4d02-b6ad-18e0754fb37d"
+            "default": "15723023-1496-48a8-afdb-72591bdff985"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.135Z"
+            "default": "2026-03-11T03:16:57.083Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.135Z"
+            "default": "2026-03-11T03:16:57.083Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1020,15 +1188,15 @@
           },
           "id": {
             "type": "object",
-            "default": "151aaaba-7b85-4abe-9b34-28862bc4082b"
+            "default": "7732ea50-0bbe-4364-b0b8-b71f8275b59c"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.136Z"
+            "default": "2026-03-11T03:16:57.084Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.136Z"
+            "default": "2026-03-11T03:16:57.084Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1065,15 +1233,15 @@
           },
           "id": {
             "type": "object",
-            "default": "dc96e4c9-5c9b-41fe-a4c7-41ef1252614c"
+            "default": "24ec9dce-e637-4a9a-a0f5-5cb6a85e4293"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.136Z"
+            "default": "2026-03-11T03:16:57.084Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.136Z"
+            "default": "2026-03-11T03:16:57.084Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1110,15 +1278,15 @@
           },
           "id": {
             "type": "object",
-            "default": "978b40d7-39ad-404d-82fe-a2e90a6f38db"
+            "default": "dc682e4f-8056-44f2-a033-bf69336c5b8a"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.137Z"
+            "default": "2026-03-11T03:16:57.085Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.137Z"
+            "default": "2026-03-11T03:16:57.085Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1202,15 +1370,15 @@
           },
           "id": {
             "type": "object",
-            "default": "c1a20cf7-ee5c-41e4-a582-32732d15b5ee"
+            "default": "4882ba6a-c8e6-45a8-a5ef-3ad3a9dbe10f"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.134Z"
+            "default": "2026-03-11T03:16:57.082Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.134Z"
+            "default": "2026-03-11T03:16:57.082Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1270,15 +1438,15 @@
           },
           "id": {
             "type": "object",
-            "default": "e56e213a-ef64-4577-85dd-8bc7369b2929"
+            "default": "ebdae919-22af-4087-a1ce-91ea3fa761b3"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.138Z"
+            "default": "2026-03-11T03:16:57.086Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.138Z"
+            "default": "2026-03-11T03:16:57.086Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1345,7 +1513,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-03-09T06:51:30.131Z"
+            "default": "2026-03-11T03:16:57.079Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -1392,15 +1560,15 @@
           },
           "id": {
             "type": "object",
-            "default": "4251190d-a8ce-4d2a-a096-17402377a8e3"
+            "default": "776acd43-97d2-4a45-b5c9-25a8e8eeb656"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.132Z"
+            "default": "2026-03-11T03:16:57.080Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-09T06:51:30.132Z"
+            "default": "2026-03-11T03:16:57.080Z"
           },
           "deletedAt": {
             "type": "object"
