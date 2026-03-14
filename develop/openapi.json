@@ -591,6 +591,144 @@
           "Questionnaires"
         ]
       }
+    },
+    "/api/v1/analysis/pipelines": {
+      "post": {
+        "operationId": "AnalysisController_CreatePipeline_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePipelineDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisPipeline"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Create an analysis pipeline",
+        "tags": [
+          "Analysis"
+        ]
+      }
+    },
+    "/api/v1/analysis/pipelines/{id}/confirm": {
+      "post": {
+        "operationId": "AnalysisController_ConfirmPipeline_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisPipeline"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Confirm and start pipeline execution",
+        "tags": [
+          "Analysis"
+        ]
+      }
+    },
+    "/api/v1/analysis/pipelines/{id}/cancel": {
+      "post": {
+        "operationId": "AnalysisController_CancelPipeline_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisPipeline"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Cancel a non-terminal pipeline",
+        "tags": [
+          "Analysis"
+        ]
+      }
+    },
+    "/api/v1/analysis/pipelines/{id}/status": {
+      "get": {
+        "operationId": "AnalysisController_GetPipelineStatus_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get pipeline status",
+        "tags": [
+          "Analysis"
+        ]
+      }
     }
   },
   "info": {
@@ -987,15 +1125,15 @@
           },
           "id": {
             "type": "object",
-            "default": "98e56485-cd8f-4037-8910-df4650f7566e"
+            "default": "93f5ee1e-87b8-4437-bf6d-d4218d1be0ed"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.119Z"
+            "default": "2026-03-14T02:45:35.805Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.119Z"
+            "default": "2026-03-14T02:45:35.805Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1095,15 +1233,15 @@
           },
           "id": {
             "type": "object",
-            "default": "f2aefb5d-1e15-4e92-83ba-1e87cbff2294"
+            "default": "9f35d19d-67d0-4cfd-871e-e45bdaf58fa7"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.123Z"
+            "default": "2026-03-14T02:45:35.812Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.123Z"
+            "default": "2026-03-14T02:45:35.812Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1138,15 +1276,15 @@
           },
           "id": {
             "type": "object",
-            "default": "69f94730-6d84-47ed-b5f3-73bc19695aa1"
+            "default": "e69f859e-c11b-4e37-8b4f-f9c83675abaa"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.125Z"
+            "default": "2026-03-14T02:45:35.814Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.125Z"
+            "default": "2026-03-14T02:45:35.814Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1188,15 +1326,15 @@
           },
           "id": {
             "type": "object",
-            "default": "4429366e-1946-4172-95e5-05739eddf548"
+            "default": "f5df9771-712f-4b37-9648-db95a8a28c8d"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.126Z"
+            "default": "2026-03-14T02:45:35.815Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.126Z"
+            "default": "2026-03-14T02:45:35.815Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1233,15 +1371,15 @@
           },
           "id": {
             "type": "object",
-            "default": "92babeab-04c0-4fcc-a037-00807481878e"
+            "default": "b2a81d76-7893-4e3e-8614-7eb1ebeaf641"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.126Z"
+            "default": "2026-03-14T02:45:35.814Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.126Z"
+            "default": "2026-03-14T02:45:35.814Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1278,15 +1416,15 @@
           },
           "id": {
             "type": "object",
-            "default": "26453b1a-2272-42d9-b5cb-69fa91f2e5dd"
+            "default": "85c536f4-a7d7-4987-8e08-fc598b09b142"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.128Z"
+            "default": "2026-03-14T02:45:35.815Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.128Z"
+            "default": "2026-03-14T02:45:35.815Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1370,15 +1508,15 @@
           },
           "id": {
             "type": "object",
-            "default": "bbc8f484-a169-455c-8f1b-206d8dfbc37a"
+            "default": "8af582e5-c2ef-412a-8fac-c4bf031d0a87"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.125Z"
+            "default": "2026-03-14T02:45:35.813Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.125Z"
+            "default": "2026-03-14T02:45:35.813Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1438,15 +1576,15 @@
           },
           "id": {
             "type": "object",
-            "default": "2e5525df-7cf8-45c3-be8a-1f442fe2ef62"
+            "default": "2d1e8eee-bd5f-4e56-a503-498c07a70d91"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.129Z"
+            "default": "2026-03-14T02:45:35.816Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.129Z"
+            "default": "2026-03-14T02:45:35.816Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1513,7 +1651,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-03-12T14:23:56.122Z"
+            "default": "2026-03-14T02:45:35.809Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -1560,15 +1698,15 @@
           },
           "id": {
             "type": "object",
-            "default": "d2744e44-aa3e-495d-aad7-c12f7d735e00"
+            "default": "0266e8d7-ab7d-46c7-b230-2ac268b9a113"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.123Z"
+            "default": "2026-03-14T02:45:35.811Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-12T14:23:56.123Z"
+            "default": "2026-03-14T02:45:35.811Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1638,6 +1776,158 @@
           "facultyId",
           "semesterId",
           "answers"
+        ]
+      },
+      "CreatePipelineDto": {
+        "type": "object",
+        "properties": {
+          "semesterId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Semester ID (required scope)"
+          },
+          "facultyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Faculty user ID"
+          },
+          "questionnaireVersionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Questionnaire version ID"
+          },
+          "departmentId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Department ID"
+          },
+          "programId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Program ID"
+          },
+          "campusId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Campus ID"
+          },
+          "courseId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Course ID"
+          }
+        },
+        "required": [
+          "semesterId"
+        ]
+      },
+      "AnalysisPipeline": {
+        "type": "object",
+        "properties": {
+          "semester": {
+            "$ref": "#/components/schemas/Semester"
+          },
+          "faculty": {
+            "$ref": "#/components/schemas/User"
+          },
+          "questionnaireVersion": {
+            "$ref": "#/components/schemas/QuestionnaireVersion"
+          },
+          "department": {
+            "$ref": "#/components/schemas/Department"
+          },
+          "program": {
+            "$ref": "#/components/schemas/Program"
+          },
+          "campus": {
+            "$ref": "#/components/schemas/Campus"
+          },
+          "course": {
+            "$ref": "#/components/schemas/Course"
+          },
+          "triggeredBy": {
+            "$ref": "#/components/schemas/User"
+          },
+          "totalEnrolled": {
+            "type": "number"
+          },
+          "submissionCount": {
+            "type": "number"
+          },
+          "commentCount": {
+            "type": "number"
+          },
+          "responseRate": {
+            "type": "number"
+          },
+          "warnings": {
+            "type": "object",
+            "default": []
+          },
+          "sentimentGateIncluded": {
+            "type": "number"
+          },
+          "sentimentGateExcluded": {
+            "type": "number"
+          },
+          "status": {
+            "type": "object",
+            "default": "AWAITING_CONFIRMATION"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "confirmedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "completedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "sentimentRuns": {
+            "type": "object",
+            "default": []
+          },
+          "topicModelRuns": {
+            "type": "object",
+            "default": []
+          },
+          "recommendationRuns": {
+            "type": "object",
+            "default": []
+          },
+          "id": {
+            "type": "object",
+            "default": "1cc8cf31-3515-4d78-8263-e8c2297c6117"
+          },
+          "createdAt": {
+            "type": "object",
+            "default": "2026-03-14T02:45:35.823Z"
+          },
+          "updatedAt": {
+            "type": "object",
+            "default": "2026-03-14T02:45:35.823Z"
+          },
+          "deletedAt": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "semester",
+          "triggeredBy",
+          "totalEnrolled",
+          "submissionCount",
+          "commentCount",
+          "responseRate",
+          "warnings",
+          "status",
+          "sentimentRuns",
+          "topicModelRuns",
+          "recommendationRuns",
+          "id",
+          "createdAt",
+          "updatedAt"
         ]
       }
     }
