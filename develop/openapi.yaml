@@ -444,6 +444,155 @@ paths:
       summary: Get pipeline status
       tags:
         - Analysis
+  /api/v1/dimensions:
+    post:
+      operationId: DimensionsController_create_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDimensionRequestDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseDto'
+      security:
+        - accesstoken: []
+      tags:
+        - Dimensions
+    get:
+      operationId: DimensionsController_findAll_v1
+      parameters:
+        - name: questionnaireType
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - FACULTY_IN_CLASSROOM
+              - FACULTY_OUT_OF_CLASSROOM
+              - FACULTY_FEEDBACK
+        - name: active
+          required: false
+          in: query
+          schema:
+            type: boolean
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            default: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionListResponseDto'
+      security:
+        - accesstoken: []
+      tags:
+        - Dimensions
+  /api/v1/dimensions/{id}:
+    get:
+      operationId: DimensionsController_findOne_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseDto'
+      security:
+        - accesstoken: []
+      tags:
+        - Dimensions
+    patch:
+      operationId: DimensionsController_update_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDimensionRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseDto'
+      security:
+        - accesstoken: []
+      tags:
+        - Dimensions
+  /api/v1/dimensions/{id}/deactivate:
+    patch:
+      operationId: DimensionsController_deactivate_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseDto'
+      security:
+        - accesstoken: []
+      tags:
+        - Dimensions
+  /api/v1/dimensions/{id}/activate:
+    patch:
+      operationId: DimensionsController_activate_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionResponseDto'
+      security:
+        - accesstoken: []
+      tags:
+        - Dimensions
 info:
   title: Faculytics API
   description: This is the official API documentation for Faculytics
@@ -724,13 +873,13 @@ components:
           default: []
         id:
           type: object
-          default: 1d26871d-c8d1-4712-a256-8989da9d1fcb
+          default: 88e83703-815b-4d37-be1f-db5bf1f1825a
         createdAt:
           type: object
-          default: '2026-03-14T05:49:12.599Z'
+          default: '2026-03-14T15:50:18.163Z'
         updatedAt:
           type: object
-          default: '2026-03-14T05:49:12.599Z'
+          default: '2026-03-14T15:50:18.163Z'
         deletedAt:
           type: object
       required:
@@ -803,13 +952,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: 7cc6258a-5672-44d2-84f4-ceffd4dcaca6
+          default: 0b57c83f-613d-475e-94da-aca61f57b782
         createdAt:
           type: object
-          default: '2026-03-14T05:49:12.605Z'
+          default: '2026-03-14T15:50:18.169Z'
         updatedAt:
           type: object
-          default: '2026-03-14T05:49:12.605Z'
+          default: '2026-03-14T15:50:18.169Z'
         deletedAt:
           type: object
       required:
@@ -835,13 +984,13 @@ components:
           default: []
         id:
           type: object
-          default: af73da2c-c3e7-4e29-a9bd-c9fcbe29acf1
+          default: d53ffdad-19be-47b9-a2b3-f2f23fc6fd8b
         createdAt:
           type: object
-          default: '2026-03-14T05:49:12.607Z'
+          default: '2026-03-14T15:50:18.171Z'
         updatedAt:
           type: object
-          default: '2026-03-14T05:49:12.607Z'
+          default: '2026-03-14T15:50:18.171Z'
         deletedAt:
           type: object
       required:
@@ -871,13 +1020,13 @@ components:
           type: string
         id:
           type: object
-          default: 19d9efeb-a497-4eeb-b227-c4c7ade44ff8
+          default: ed78e652-dff7-4fe9-85a1-ac20060d79d9
         createdAt:
           type: object
-          default: '2026-03-14T05:49:12.608Z'
+          default: '2026-03-14T15:50:18.174Z'
         updatedAt:
           type: object
-          default: '2026-03-14T05:49:12.608Z'
+          default: '2026-03-14T15:50:18.174Z'
         deletedAt:
           type: object
       required:
@@ -904,13 +1053,13 @@ components:
           default: []
         id:
           type: object
-          default: 75a702a4-148d-43e8-874f-5a72f5f6c210
+          default: 15eb02ca-e7c8-40a5-860d-a8d2211354e7
         createdAt:
           type: object
-          default: '2026-03-14T05:49:12.607Z'
+          default: '2026-03-14T15:50:18.174Z'
         updatedAt:
           type: object
-          default: '2026-03-14T05:49:12.607Z'
+          default: '2026-03-14T15:50:18.174Z'
         deletedAt:
           type: object
       required:
@@ -937,13 +1086,13 @@ components:
           default: []
         id:
           type: object
-          default: d50a7ac0-a694-42c5-9f4c-8ea1e47d31c5
+          default: 43e19c27-2e2c-4f98-b05b-a315d96605e6
         createdAt:
           type: object
-          default: '2026-03-14T05:49:12.608Z'
+          default: '2026-03-14T15:50:18.175Z'
         updatedAt:
           type: object
-          default: '2026-03-14T05:49:12.608Z'
+          default: '2026-03-14T15:50:18.175Z'
         deletedAt:
           type: object
       required:
@@ -1004,13 +1153,13 @@ components:
               - STUDENT
         id:
           type: object
-          default: 8173473b-a3ec-4087-bc47-1bd24c3ae5de
+          default: d5bbedae-0e51-4f12-9ad2-f56b31da141b
         createdAt:
           type: object
-          default: '2026-03-14T05:49:12.607Z'
+          default: '2026-03-14T15:50:18.170Z'
         updatedAt:
           type: object
-          default: '2026-03-14T05:49:12.607Z'
+          default: '2026-03-14T15:50:18.170Z'
         deletedAt:
           type: object
       required:
@@ -1055,13 +1204,13 @@ components:
           type: string
         id:
           type: object
-          default: d59178ee-48e6-4ffe-9e1a-4a957496a90f
+          default: 4f40fcdf-b74c-44d0-b02a-85303a53d5aa
         createdAt:
           type: object
-          default: '2026-03-14T05:49:12.609Z'
+          default: '2026-03-14T15:50:18.176Z'
         updatedAt:
           type: object
-          default: '2026-03-14T05:49:12.609Z'
+          default: '2026-03-14T15:50:18.176Z'
         deletedAt:
           type: object
       required:
@@ -1110,7 +1259,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-14T05:49:12.604Z'
+          default: '2026-03-14T15:50:18.168Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -1142,13 +1291,13 @@ components:
           default: []
         id:
           type: object
-          default: fb4e0f71-cd9c-41f2-b288-9aba4a49daab
+          default: 82def3a0-5a7d-49a8-b79e-9abac6103b6d
         createdAt:
           type: object
-          default: '2026-03-14T05:49:12.605Z'
+          default: '2026-03-14T15:50:18.169Z'
         updatedAt:
           type: object
-          default: '2026-03-14T05:49:12.605Z'
+          default: '2026-03-14T15:50:18.169Z'
         deletedAt:
           type: object
       required:
@@ -1311,3 +1460,70 @@ components:
         - responseRate
         - warnings
         - createdAt
+    CreateDimensionRequestDto:
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: /^[A-Z][A-Z0-9_]*$/
+        displayName:
+          type: string
+          maxLength: 255
+        questionnaireType:
+          type: string
+          enum:
+            - FACULTY_IN_CLASSROOM
+            - FACULTY_OUT_OF_CLASSROOM
+            - FACULTY_FEEDBACK
+      required:
+        - displayName
+        - questionnaireType
+    DimensionResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        displayName:
+          type: string
+        questionnaireType:
+          enum:
+            - FACULTY_IN_CLASSROOM
+            - FACULTY_OUT_OF_CLASSROOM
+            - FACULTY_FEEDBACK
+          type: string
+        active:
+          type: boolean
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - code
+        - displayName
+        - questionnaireType
+        - active
+        - createdAt
+        - updatedAt
+    DimensionListResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DimensionResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
+    UpdateDimensionRequestDto:
+      type: object
+      properties:
+        displayName:
+          type: string
+          maxLength: 255
+      required:
+        - displayName
