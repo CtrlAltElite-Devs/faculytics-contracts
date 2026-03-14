@@ -10,7 +10,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: object
       tags:
         - Health
   /api/v1/auth/login:
@@ -114,6 +114,45 @@ paths:
       summary: Get current user's enrolled courses
       tags:
         - enrollments
+  /api/v1/questionnaires/types:
+    get:
+      operationId: QuestionnaireController_getQuestionnaireTypes_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionnaireTypeResponse'
+      summary: List all questionnaire types
+      tags:
+        - Questionnaires
+  /api/v1/questionnaires/types/{type}/versions:
+    get:
+      operationId: QuestionnaireController_getVersionsByType_v1
+      parameters:
+        - name: type
+          required: true
+          in: path
+          schema:
+            type: string
+            enum:
+              - FACULTY_IN_CLASSROOM
+              - FACULTY_OUT_OF_CLASSROOM
+              - FACULTY_FEEDBACK
+      responses:
+        '200':
+          description: Versions found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionsResponse'
+      summary: Get versions for a questionnaire type
+      tags:
+        - Questionnaires
   /api/v1/questionnaires:
     post:
       operationId: QuestionnaireController_createQuestionnaire_v1
@@ -324,6 +363,87 @@ paths:
       summary: Delete a draft by ID
       tags:
         - Questionnaires
+  /api/v1/analysis/pipelines:
+    post:
+      operationId: AnalysisController_CreatePipeline_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePipelineDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineResponseDto'
+      security:
+        - accesstoken: []
+      summary: Create an analysis pipeline
+      tags:
+        - Analysis
+  /api/v1/analysis/pipelines/{id}/confirm:
+    post:
+      operationId: AnalysisController_ConfirmPipeline_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineResponseDto'
+      security:
+        - accesstoken: []
+      summary: Confirm and start pipeline execution
+      tags:
+        - Analysis
+  /api/v1/analysis/pipelines/{id}/cancel:
+    post:
+      operationId: AnalysisController_CancelPipeline_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineResponseDto'
+      security:
+        - accesstoken: []
+      summary: Cancel a non-terminal pipeline
+      tags:
+        - Analysis
+  /api/v1/analysis/pipelines/{id}/status:
+    get:
+      operationId: AnalysisController_GetPipelineStatus_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - accesstoken: []
+      summary: Get pipeline status
+      tags:
+        - Analysis
 info:
   title: Faculytics API
   description: This is the official API documentation for Faculytics
@@ -419,6 +539,8 @@ components:
           type: string
         fullname:
           type: string
+        courseImage:
+          type: string
       required:
         - id
         - moodleCourseId
@@ -486,6 +608,85 @@ components:
       required:
         - data
         - meta
+    QuestionnaireTypeResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - FACULTY_IN_CLASSROOM
+            - FACULTY_OUT_OF_CLASSROOM
+            - FACULTY_FEEDBACK
+        questionnaireId:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+          enum:
+            - DRAFT
+            - ACTIVE
+            - DEPRECATED
+      required:
+        - type
+        - questionnaireId
+        - title
+        - status
+    QuestionnaireVersionItem:
+      type: object
+      properties:
+        id:
+          type: string
+        versionNumber:
+          type: number
+        status:
+          enum:
+            - DRAFT
+            - ACTIVE
+            - DEPRECATED
+          type: string
+        isActive:
+          type: boolean
+        publishedAt:
+          format: date-time
+          type: string
+          nullable: true
+        createdAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - versionNumber
+        - status
+        - isActive
+        - createdAt
+    QuestionnaireVersionsResponse:
+      type: object
+      properties:
+        questionnaireId:
+          type: string
+          nullable: true
+        questionnaireTitle:
+          type: string
+          nullable: true
+        type:
+          enum:
+            - FACULTY_IN_CLASSROOM
+            - FACULTY_OUT_OF_CLASSROOM
+            - FACULTY_FEEDBACK
+          type: string
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionnaireVersionItem'
+      required:
+        - questionnaireId
+        - questionnaireTitle
+        - type
+        - versions
     CreateQuestionnaireRequest:
       type: object
       properties:
@@ -523,13 +724,13 @@ components:
           default: []
         id:
           type: object
-          default: 9e688658-bafb-4315-82d6-1df2d584ffad
+          default: a3fc7983-73b9-4965-bda4-04be7ff48778
         createdAt:
           type: object
-          default: '2026-03-09T02:40:48.717Z'
+          default: '2026-03-14T06:10:16.440Z'
         updatedAt:
           type: object
-          default: '2026-03-09T02:40:48.717Z'
+          default: '2026-03-14T06:10:16.440Z'
         deletedAt:
           type: object
       required:
@@ -602,13 +803,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: 06570ed8-b6ec-4f56-8eff-22e953eb62f3
+          default: 6839728a-dda0-4f1c-9805-2f47a90504fb
         createdAt:
           type: object
-          default: '2026-03-09T02:40:48.722Z'
+          default: '2026-03-14T06:10:16.445Z'
         updatedAt:
           type: object
-          default: '2026-03-09T02:40:48.722Z'
+          default: '2026-03-14T06:10:16.445Z'
         deletedAt:
           type: object
       required:
@@ -634,13 +835,13 @@ components:
           default: []
         id:
           type: object
-          default: 4afc5c63-5412-4bc8-b557-66f490917c35
+          default: 5c45244b-87f4-4257-9589-27f15b676206
         createdAt:
           type: object
-          default: '2026-03-09T02:40:48.723Z'
+          default: '2026-03-14T06:10:16.447Z'
         updatedAt:
           type: object
-          default: '2026-03-09T02:40:48.723Z'
+          default: '2026-03-14T06:10:16.447Z'
         deletedAt:
           type: object
       required:
@@ -670,13 +871,13 @@ components:
           type: string
         id:
           type: object
-          default: 9f31ac77-26f7-4499-9763-3b61dc6888c8
+          default: f973cc53-30c3-4a16-8616-118f67e450f1
         createdAt:
           type: object
-          default: '2026-03-09T02:40:48.725Z'
+          default: '2026-03-14T06:10:16.448Z'
         updatedAt:
           type: object
-          default: '2026-03-09T02:40:48.725Z'
+          default: '2026-03-14T06:10:16.448Z'
         deletedAt:
           type: object
       required:
@@ -703,13 +904,13 @@ components:
           default: []
         id:
           type: object
-          default: c1bda6d5-fe8c-4498-902e-490e525e99ec
+          default: c2b87df2-a836-4049-90ac-d0c5fb657d12
         createdAt:
           type: object
-          default: '2026-03-09T02:40:48.724Z'
+          default: '2026-03-14T06:10:16.447Z'
         updatedAt:
           type: object
-          default: '2026-03-09T02:40:48.724Z'
+          default: '2026-03-14T06:10:16.447Z'
         deletedAt:
           type: object
       required:
@@ -736,13 +937,13 @@ components:
           default: []
         id:
           type: object
-          default: e7825233-cfc7-4aa3-acbe-82c3ddd6c116
+          default: 41464ca1-1dbe-40d9-8182-0fdfdd0c44d8
         createdAt:
           type: object
-          default: '2026-03-09T02:40:48.726Z'
+          default: '2026-03-14T06:10:16.448Z'
         updatedAt:
           type: object
-          default: '2026-03-09T02:40:48.726Z'
+          default: '2026-03-14T06:10:16.448Z'
         deletedAt:
           type: object
       required:
@@ -803,13 +1004,13 @@ components:
               - STUDENT
         id:
           type: object
-          default: a7cae97e-cabe-4089-a57c-ee6f779f28f9
+          default: 72e6269d-ee58-463b-ab13-aa63d1e990fe
         createdAt:
           type: object
-          default: '2026-03-09T02:40:48.723Z'
+          default: '2026-03-14T06:10:16.447Z'
         updatedAt:
           type: object
-          default: '2026-03-09T02:40:48.723Z'
+          default: '2026-03-14T06:10:16.447Z'
         deletedAt:
           type: object
       required:
@@ -850,15 +1051,17 @@ components:
           type: string
         isActive:
           type: boolean
+        courseImage:
+          type: string
         id:
           type: object
-          default: 8d5a38ae-423a-4b68-9eec-af3eac9607f1
+          default: f3bd305f-a22c-4444-9375-d696ef7caa36
         createdAt:
           type: object
-          default: '2026-03-09T02:40:48.727Z'
+          default: '2026-03-14T06:10:16.449Z'
         updatedAt:
           type: object
-          default: '2026-03-09T02:40:48.727Z'
+          default: '2026-03-14T06:10:16.449Z'
         deletedAt:
           type: object
       required:
@@ -907,7 +1110,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-09T02:40:48.721Z'
+          default: '2026-03-14T06:10:16.444Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -939,13 +1142,13 @@ components:
           default: []
         id:
           type: object
-          default: 3a649c3b-f56f-4637-86d4-c9384cd5d29c
+          default: 4e018acc-5c57-4680-a8f3-d9dea52df7d5
         createdAt:
           type: object
-          default: '2026-03-09T02:40:48.721Z'
+          default: '2026-03-14T06:10:16.445Z'
         updatedAt:
           type: object
-          default: '2026-03-09T02:40:48.721Z'
+          default: '2026-03-14T06:10:16.445Z'
         deletedAt:
           type: object
       required:
@@ -1002,3 +1205,109 @@ components:
         - facultyId
         - semesterId
         - answers
+    CreatePipelineDto:
+      type: object
+      properties:
+        semesterId:
+          type: string
+          format: uuid
+          description: Semester ID (required scope)
+        facultyId:
+          type: string
+          format: uuid
+          description: Faculty user ID
+        questionnaireVersionId:
+          type: string
+          format: uuid
+          description: Questionnaire version ID
+        departmentId:
+          type: string
+          format: uuid
+          description: Department ID
+        programId:
+          type: string
+          format: uuid
+          description: Program ID
+        campusId:
+          type: string
+          format: uuid
+          description: Campus ID
+        courseId:
+          type: string
+          format: uuid
+          description: Course ID
+      required:
+        - semesterId
+    PipelineResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          enum:
+            - AWAITING_CONFIRMATION
+            - EMBEDDING_CHECK
+            - SENTIMENT_ANALYSIS
+            - SENTIMENT_GATE
+            - TOPIC_MODELING
+            - GENERATING_RECOMMENDATIONS
+            - COMPLETED
+            - FAILED
+            - CANCELLED
+          type: string
+        semesterId:
+          type: string
+        facultyId:
+          type: string
+          nullable: true
+        questionnaireVersionId:
+          type: string
+          nullable: true
+        departmentId:
+          type: string
+          nullable: true
+        programId:
+          type: string
+          nullable: true
+        campusId:
+          type: string
+          nullable: true
+        courseId:
+          type: string
+          nullable: true
+        triggeredById:
+          type: string
+        totalEnrolled:
+          type: number
+        submissionCount:
+          type: number
+        commentCount:
+          type: number
+        responseRate:
+          type: number
+        warnings:
+          type: array
+          items:
+            type: string
+        errorMessage:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+        confirmedAt:
+          type: string
+          nullable: true
+        completedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - status
+        - semesterId
+        - triggeredById
+        - totalEnrolled
+        - submissionCount
+        - commentCount
+        - responseRate
+        - warnings
+        - createdAt
