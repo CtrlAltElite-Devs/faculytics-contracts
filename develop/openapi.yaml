@@ -253,6 +253,59 @@ paths:
       summary: Deprecate a questionnaire version
       tags:
         - Questionnaires
+  /api/v1/questionnaires/versions/{versionId}:
+    get:
+      operationId: QuestionnaireController_getVersionById_v1
+      parameters:
+        - name: versionId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Version found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionDetailResponse'
+        '404':
+          description: Version not found
+      security:
+        - accesstoken: []
+      summary: Get a questionnaire version by ID
+      tags:
+        - Questionnaires
+    patch:
+      operationId: QuestionnaireController_updateDraftVersion_v1
+      parameters:
+        - name: versionId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVersionRequest'
+      responses:
+        '200':
+          description: Version updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionDetailResponse'
+        '400':
+          description: Version is not a draft
+        '404':
+          description: Version not found
+      security:
+        - accesstoken: []
+      summary: Update a draft questionnaire version
+      tags:
+        - Questionnaires
   /api/v1/questionnaires/submissions:
     post:
       operationId: QuestionnaireController_submitQuestionnaire_v1
@@ -873,13 +926,13 @@ components:
           default: []
         id:
           type: object
-          default: 88e83703-815b-4d37-be1f-db5bf1f1825a
+          default: a344fca2-dda8-4c60-b8b6-9518aec5a308
         createdAt:
           type: object
-          default: '2026-03-14T15:50:18.163Z'
+          default: '2026-03-14T17:15:29.990Z'
         updatedAt:
           type: object
-          default: '2026-03-14T15:50:18.163Z'
+          default: '2026-03-14T17:15:29.990Z'
         deletedAt:
           type: object
       required:
@@ -895,6 +948,63 @@ components:
       properties:
         schema:
           type: object
+      required:
+        - schema
+    QuestionnaireVersionDetailResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        questionnaireId:
+          type: string
+        questionnaireTitle:
+          type: string
+        questionnaireType:
+          enum:
+            - FACULTY_IN_CLASSROOM
+            - FACULTY_OUT_OF_CLASSROOM
+            - FACULTY_FEEDBACK
+          type: string
+        versionNumber:
+          type: number
+        status:
+          enum:
+            - DRAFT
+            - ACTIVE
+            - DEPRECATED
+          type: string
+        isActive:
+          type: boolean
+        schemaSnapshot:
+          type: object
+        publishedAt:
+          format: date-time
+          type: string
+          nullable: true
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - questionnaireId
+        - questionnaireTitle
+        - questionnaireType
+        - versionNumber
+        - status
+        - isActive
+        - schemaSnapshot
+        - createdAt
+        - updatedAt
+    UpdateVersionRequest:
+      type: object
+      properties:
+        schema:
+          type: object
+        title:
+          type: string
       required:
         - schema
     SubmitQuestionnaireRequest:
@@ -952,13 +1062,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: 0b57c83f-613d-475e-94da-aca61f57b782
+          default: 53532f92-a88d-4f02-b292-d8c730a4ad3d
         createdAt:
           type: object
-          default: '2026-03-14T15:50:18.169Z'
+          default: '2026-03-14T17:15:29.998Z'
         updatedAt:
           type: object
-          default: '2026-03-14T15:50:18.169Z'
+          default: '2026-03-14T17:15:29.998Z'
         deletedAt:
           type: object
       required:
@@ -984,13 +1094,13 @@ components:
           default: []
         id:
           type: object
-          default: d53ffdad-19be-47b9-a2b3-f2f23fc6fd8b
+          default: 3d55f9a6-6be2-4786-b75c-509521d922a2
         createdAt:
           type: object
-          default: '2026-03-14T15:50:18.171Z'
+          default: '2026-03-14T17:15:30.000Z'
         updatedAt:
           type: object
-          default: '2026-03-14T15:50:18.171Z'
+          default: '2026-03-14T17:15:30.000Z'
         deletedAt:
           type: object
       required:
@@ -1020,13 +1130,13 @@ components:
           type: string
         id:
           type: object
-          default: ed78e652-dff7-4fe9-85a1-ac20060d79d9
+          default: b0fac9c3-5cd8-4486-a176-fa16029812a6
         createdAt:
           type: object
-          default: '2026-03-14T15:50:18.174Z'
+          default: '2026-03-14T17:15:30.000Z'
         updatedAt:
           type: object
-          default: '2026-03-14T15:50:18.174Z'
+          default: '2026-03-14T17:15:30.000Z'
         deletedAt:
           type: object
       required:
@@ -1053,13 +1163,13 @@ components:
           default: []
         id:
           type: object
-          default: 15eb02ca-e7c8-40a5-860d-a8d2211354e7
+          default: 6ddc8cd3-eac1-4896-9ba3-aeef205e6c6e
         createdAt:
           type: object
-          default: '2026-03-14T15:50:18.174Z'
+          default: '2026-03-14T17:15:30.000Z'
         updatedAt:
           type: object
-          default: '2026-03-14T15:50:18.174Z'
+          default: '2026-03-14T17:15:30.000Z'
         deletedAt:
           type: object
       required:
@@ -1086,13 +1196,13 @@ components:
           default: []
         id:
           type: object
-          default: 43e19c27-2e2c-4f98-b05b-a315d96605e6
+          default: 0c2ea896-975d-4796-8ece-9fd46ccfc3a4
         createdAt:
           type: object
-          default: '2026-03-14T15:50:18.175Z'
+          default: '2026-03-14T17:15:30.001Z'
         updatedAt:
           type: object
-          default: '2026-03-14T15:50:18.175Z'
+          default: '2026-03-14T17:15:30.001Z'
         deletedAt:
           type: object
       required:
@@ -1153,13 +1263,13 @@ components:
               - STUDENT
         id:
           type: object
-          default: d5bbedae-0e51-4f12-9ad2-f56b31da141b
+          default: 25303549-8091-4c30-a4ca-a2b1f1876db2
         createdAt:
           type: object
-          default: '2026-03-14T15:50:18.170Z'
+          default: '2026-03-14T17:15:29.999Z'
         updatedAt:
           type: object
-          default: '2026-03-14T15:50:18.170Z'
+          default: '2026-03-14T17:15:29.999Z'
         deletedAt:
           type: object
       required:
@@ -1204,13 +1314,13 @@ components:
           type: string
         id:
           type: object
-          default: 4f40fcdf-b74c-44d0-b02a-85303a53d5aa
+          default: dda10a8e-dd2d-4c79-911e-b5cd3b23544e
         createdAt:
           type: object
-          default: '2026-03-14T15:50:18.176Z'
+          default: '2026-03-14T17:15:30.002Z'
         updatedAt:
           type: object
-          default: '2026-03-14T15:50:18.176Z'
+          default: '2026-03-14T17:15:30.002Z'
         deletedAt:
           type: object
       required:
@@ -1259,7 +1369,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-14T15:50:18.168Z'
+          default: '2026-03-14T17:15:29.997Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -1291,13 +1401,13 @@ components:
           default: []
         id:
           type: object
-          default: 82def3a0-5a7d-49a8-b79e-9abac6103b6d
+          default: a84c1fb5-bcec-41fb-98da-dd8a2925a376
         createdAt:
           type: object
-          default: '2026-03-14T15:50:18.169Z'
+          default: '2026-03-14T17:15:29.998Z'
         updatedAt:
           type: object
-          default: '2026-03-14T15:50:18.169Z'
+          default: '2026-03-14T17:15:29.998Z'
         deletedAt:
           type: object
       required:
