@@ -612,7 +612,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AnalysisPipeline"
+                  "$ref": "#/components/schemas/PipelineResponseDto"
                 }
               }
             }
@@ -648,7 +648,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AnalysisPipeline"
+                  "$ref": "#/components/schemas/PipelineResponseDto"
                 }
               }
             }
@@ -684,7 +684,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AnalysisPipeline"
+                  "$ref": "#/components/schemas/PipelineResponseDto"
                 }
               }
             }
@@ -1125,15 +1125,15 @@
           },
           "id": {
             "type": "object",
-            "default": "93f5ee1e-87b8-4437-bf6d-d4218d1be0ed"
+            "default": "1d26871d-c8d1-4712-a256-8989da9d1fcb"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.805Z"
+            "default": "2026-03-14T05:49:12.599Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.805Z"
+            "default": "2026-03-14T05:49:12.599Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1233,15 +1233,15 @@
           },
           "id": {
             "type": "object",
-            "default": "9f35d19d-67d0-4cfd-871e-e45bdaf58fa7"
+            "default": "7cc6258a-5672-44d2-84f4-ceffd4dcaca6"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.812Z"
+            "default": "2026-03-14T05:49:12.605Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.812Z"
+            "default": "2026-03-14T05:49:12.605Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1276,15 +1276,15 @@
           },
           "id": {
             "type": "object",
-            "default": "e69f859e-c11b-4e37-8b4f-f9c83675abaa"
+            "default": "af73da2c-c3e7-4e29-a9bd-c9fcbe29acf1"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.814Z"
+            "default": "2026-03-14T05:49:12.607Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.814Z"
+            "default": "2026-03-14T05:49:12.607Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1326,15 +1326,15 @@
           },
           "id": {
             "type": "object",
-            "default": "f5df9771-712f-4b37-9648-db95a8a28c8d"
+            "default": "19d9efeb-a497-4eeb-b227-c4c7ade44ff8"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.815Z"
+            "default": "2026-03-14T05:49:12.608Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.815Z"
+            "default": "2026-03-14T05:49:12.608Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1371,15 +1371,15 @@
           },
           "id": {
             "type": "object",
-            "default": "b2a81d76-7893-4e3e-8614-7eb1ebeaf641"
+            "default": "75a702a4-148d-43e8-874f-5a72f5f6c210"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.814Z"
+            "default": "2026-03-14T05:49:12.607Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.814Z"
+            "default": "2026-03-14T05:49:12.607Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1416,15 +1416,15 @@
           },
           "id": {
             "type": "object",
-            "default": "85c536f4-a7d7-4987-8e08-fc598b09b142"
+            "default": "d50a7ac0-a694-42c5-9f4c-8ea1e47d31c5"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.815Z"
+            "default": "2026-03-14T05:49:12.608Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.815Z"
+            "default": "2026-03-14T05:49:12.608Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1508,15 +1508,15 @@
           },
           "id": {
             "type": "object",
-            "default": "8af582e5-c2ef-412a-8fac-c4bf031d0a87"
+            "default": "8173473b-a3ec-4087-bc47-1bd24c3ae5de"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.813Z"
+            "default": "2026-03-14T05:49:12.607Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.813Z"
+            "default": "2026-03-14T05:49:12.607Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1576,15 +1576,15 @@
           },
           "id": {
             "type": "object",
-            "default": "2d1e8eee-bd5f-4e56-a503-498c07a70d91"
+            "default": "d59178ee-48e6-4ffe-9e1a-4a957496a90f"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.816Z"
+            "default": "2026-03-14T05:49:12.609Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.816Z"
+            "default": "2026-03-14T05:49:12.609Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1651,7 +1651,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-03-14T02:45:35.809Z"
+            "default": "2026-03-14T05:49:12.604Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -1698,15 +1698,15 @@
           },
           "id": {
             "type": "object",
-            "default": "0266e8d7-ab7d-46c7-b230-2ac268b9a113"
+            "default": "fb4e0f71-cd9c-41f2-b288-9aba4a49daab"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.811Z"
+            "default": "2026-03-14T05:49:12.605Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-14T02:45:35.811Z"
+            "default": "2026-03-14T05:49:12.605Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1821,32 +1821,55 @@
           "semesterId"
         ]
       },
-      "AnalysisPipeline": {
+      "PipelineResponseDto": {
         "type": "object",
         "properties": {
-          "semester": {
-            "$ref": "#/components/schemas/Semester"
+          "id": {
+            "type": "string"
           },
-          "faculty": {
-            "$ref": "#/components/schemas/User"
+          "status": {
+            "enum": [
+              "AWAITING_CONFIRMATION",
+              "EMBEDDING_CHECK",
+              "SENTIMENT_ANALYSIS",
+              "SENTIMENT_GATE",
+              "TOPIC_MODELING",
+              "GENERATING_RECOMMENDATIONS",
+              "COMPLETED",
+              "FAILED",
+              "CANCELLED"
+            ],
+            "type": "string"
           },
-          "questionnaireVersion": {
-            "$ref": "#/components/schemas/QuestionnaireVersion"
+          "semesterId": {
+            "type": "string"
           },
-          "department": {
-            "$ref": "#/components/schemas/Department"
+          "facultyId": {
+            "type": "string",
+            "nullable": true
           },
-          "program": {
-            "$ref": "#/components/schemas/Program"
+          "questionnaireVersionId": {
+            "type": "string",
+            "nullable": true
           },
-          "campus": {
-            "$ref": "#/components/schemas/Campus"
+          "departmentId": {
+            "type": "string",
+            "nullable": true
           },
-          "course": {
-            "$ref": "#/components/schemas/Course"
+          "programId": {
+            "type": "string",
+            "nullable": true
           },
-          "triggeredBy": {
-            "$ref": "#/components/schemas/User"
+          "campusId": {
+            "type": "string",
+            "nullable": true
+          },
+          "courseId": {
+            "type": "string",
+            "nullable": true
+          },
+          "triggeredById": {
+            "type": "string"
           },
           "totalEnrolled": {
             "type": "number"
@@ -1861,73 +1884,38 @@
             "type": "number"
           },
           "warnings": {
-            "type": "object",
-            "default": []
-          },
-          "sentimentGateIncluded": {
-            "type": "number"
-          },
-          "sentimentGateExcluded": {
-            "type": "number"
-          },
-          "status": {
-            "type": "object",
-            "default": "AWAITING_CONFIRMATION"
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "errorMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
             "type": "string"
           },
           "confirmedAt": {
-            "format": "date-time",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "completedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "sentimentRuns": {
-            "type": "object",
-            "default": []
-          },
-          "topicModelRuns": {
-            "type": "object",
-            "default": []
-          },
-          "recommendationRuns": {
-            "type": "object",
-            "default": []
-          },
-          "id": {
-            "type": "object",
-            "default": "1cc8cf31-3515-4d78-8263-e8c2297c6117"
-          },
-          "createdAt": {
-            "type": "object",
-            "default": "2026-03-14T02:45:35.823Z"
-          },
-          "updatedAt": {
-            "type": "object",
-            "default": "2026-03-14T02:45:35.823Z"
-          },
-          "deletedAt": {
-            "type": "object"
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
-          "semester",
-          "triggeredBy",
+          "id",
+          "status",
+          "semesterId",
+          "triggeredById",
           "totalEnrolled",
           "submissionCount",
           "commentCount",
           "responseRate",
           "warnings",
-          "status",
-          "sentimentRuns",
-          "topicModelRuns",
-          "recommendationRuns",
-          "id",
-          "createdAt",
-          "updatedAt"
+          "createdAt"
         ]
       }
     }
