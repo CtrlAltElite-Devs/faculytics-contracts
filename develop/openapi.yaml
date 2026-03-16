@@ -646,6 +646,65 @@ paths:
         - accesstoken: []
       tags:
         - Dimensions
+  /api/v1/faculty:
+    get:
+      operationId: FacultyController_findAll_v1
+      parameters:
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to scope faculty list
+          schema:
+            format: uuid
+            type: string
+        - name: departmentId
+          required: false
+          in: query
+          description: Filter by department UUID
+          schema:
+            format: uuid
+            type: string
+        - name: programId
+          required: false
+          in: query
+          description: Filter by program UUID
+          schema:
+            format: uuid
+            type: string
+        - name: search
+          required: false
+          in: query
+          description: Search faculty by name
+          schema:
+            maxLength: 100
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            default: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacultyListResponseDto'
+      security:
+        - accesstoken: []
+      summary: List faculty members scoped to caller role
+      tags:
+        - Faculty
 info:
   title: Faculytics API
   description: This is the official API documentation for Faculytics
@@ -926,13 +985,13 @@ components:
           default: []
         id:
           type: object
-          default: 4628345f-9043-4b1f-bfa2-b600f5d70f4e
+          default: 275872a8-121c-4c71-87e0-4d802b666952
         createdAt:
           type: object
-          default: '2026-03-16T14:18:27.779Z'
+          default: '2026-03-16T23:47:00.139Z'
         updatedAt:
           type: object
-          default: '2026-03-16T14:18:27.779Z'
+          default: '2026-03-16T23:47:00.139Z'
         deletedAt:
           type: object
       required:
@@ -1062,13 +1121,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: f283cac8-7167-441b-a4e9-bc173c511a58
+          default: f5bca2bf-d8d4-4e01-bef6-a8d506274084
         createdAt:
           type: object
-          default: '2026-03-16T14:18:27.787Z'
+          default: '2026-03-16T23:47:00.147Z'
         updatedAt:
           type: object
-          default: '2026-03-16T14:18:27.787Z'
+          default: '2026-03-16T23:47:00.147Z'
         deletedAt:
           type: object
       required:
@@ -1094,13 +1153,13 @@ components:
           default: []
         id:
           type: object
-          default: c6a3527c-e276-4b25-9653-17b08d04599d
+          default: a3c49731-b0c6-4347-8a30-ddd9bba9ef54
         createdAt:
           type: object
-          default: '2026-03-16T14:18:27.788Z'
+          default: '2026-03-16T23:47:00.148Z'
         updatedAt:
           type: object
-          default: '2026-03-16T14:18:27.788Z'
+          default: '2026-03-16T23:47:00.148Z'
         deletedAt:
           type: object
       required:
@@ -1130,13 +1189,13 @@ components:
           type: string
         id:
           type: object
-          default: 71c627fb-e693-468c-b59b-68e9d3a10971
+          default: 586128ee-481d-4015-aaf5-93b65a181bfe
         createdAt:
           type: object
-          default: '2026-03-16T14:18:27.789Z'
+          default: '2026-03-16T23:47:00.149Z'
         updatedAt:
           type: object
-          default: '2026-03-16T14:18:27.789Z'
+          default: '2026-03-16T23:47:00.149Z'
         deletedAt:
           type: object
       required:
@@ -1163,13 +1222,13 @@ components:
           default: []
         id:
           type: object
-          default: 8f0be381-1950-41ff-97eb-9700a04dd963
+          default: 8dd52c64-242e-4313-9178-c343ca4faeb5
         createdAt:
           type: object
-          default: '2026-03-16T14:18:27.789Z'
+          default: '2026-03-16T23:47:00.149Z'
         updatedAt:
           type: object
-          default: '2026-03-16T14:18:27.789Z'
+          default: '2026-03-16T23:47:00.149Z'
         deletedAt:
           type: object
       required:
@@ -1196,13 +1255,13 @@ components:
           default: []
         id:
           type: object
-          default: 22183324-9919-4665-8776-d7a5b0b71b43
+          default: 831213c8-15ef-4c67-b849-a55bf3fa2b4a
         createdAt:
           type: object
-          default: '2026-03-16T14:18:27.789Z'
+          default: '2026-03-16T23:47:00.150Z'
         updatedAt:
           type: object
-          default: '2026-03-16T14:18:27.789Z'
+          default: '2026-03-16T23:47:00.150Z'
         deletedAt:
           type: object
       required:
@@ -1263,13 +1322,13 @@ components:
               - STUDENT
         id:
           type: object
-          default: f60d23c6-c1da-4af0-8d34-761e8dd1a939
+          default: edd88a89-9ec7-49db-82cb-cb6253d35d31
         createdAt:
           type: object
-          default: '2026-03-16T14:18:27.788Z'
+          default: '2026-03-16T23:47:00.148Z'
         updatedAt:
           type: object
-          default: '2026-03-16T14:18:27.788Z'
+          default: '2026-03-16T23:47:00.148Z'
         deletedAt:
           type: object
       required:
@@ -1314,13 +1373,13 @@ components:
           type: string
         id:
           type: object
-          default: f9437f14-b0a5-427e-89c1-e2a954032760
+          default: 00c7e924-e17a-4e50-8053-5fbab04981de
         createdAt:
           type: object
-          default: '2026-03-16T14:18:27.791Z'
+          default: '2026-03-16T23:47:00.151Z'
         updatedAt:
           type: object
-          default: '2026-03-16T14:18:27.791Z'
+          default: '2026-03-16T23:47:00.151Z'
         deletedAt:
           type: object
       required:
@@ -1371,7 +1430,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-16T14:18:27.786Z'
+          default: '2026-03-16T23:47:00.146Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -1403,13 +1462,13 @@ components:
           default: []
         id:
           type: object
-          default: b48aa9d4-9859-433a-8da1-b6dc0f8cccbd
+          default: 8a33cd6d-70f0-4e4f-a87d-7f12ee321e1b
         createdAt:
           type: object
-          default: '2026-03-16T14:18:27.786Z'
+          default: '2026-03-16T23:47:00.147Z'
         updatedAt:
           type: object
-          default: '2026-03-16T14:18:27.786Z'
+          default: '2026-03-16T23:47:00.147Z'
         deletedAt:
           type: object
       required:
@@ -1639,3 +1698,37 @@ components:
           maxLength: 255
       required:
         - displayName
+    FacultyCardResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Faculty user UUID
+        fullName:
+          type: string
+          description: Faculty full name
+        profilePicture:
+          type: string
+          nullable: true
+          description: Profile picture URL
+        subjects:
+          description: Course shortnames within caller scope, sorted alphabetically
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - fullName
+        - subjects
+    FacultyListResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacultyCardResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
