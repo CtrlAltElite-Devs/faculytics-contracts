@@ -497,6 +497,27 @@ paths:
       summary: Get pipeline status
       tags:
         - Analysis
+  /api/v1/analysis/pipelines/{id}/recommendations:
+    get:
+      operationId: AnalysisController_GetRecommendations_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecommendationsResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get recommendations for a completed pipeline
+      tags:
+        - Analysis
   /api/v1/dimensions:
     post:
       operationId: DimensionsController_create_v1
@@ -985,13 +1006,13 @@ components:
           default: []
         id:
           type: object
-          default: 49a6f052-4efe-4116-a306-13934892ccc9
+          default: 5c05df9f-5ccf-4ccc-a871-ddb4c0fafaa3
         createdAt:
           type: object
-          default: '2026-03-17T13:03:46.416Z'
+          default: '2026-03-18T01:50:15.685Z'
         updatedAt:
           type: object
-          default: '2026-03-17T13:03:46.416Z'
+          default: '2026-03-18T01:50:15.685Z'
         deletedAt:
           type: object
       required:
@@ -1121,13 +1142,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: 8ba81524-1737-487f-aadd-2b2707574496
+          default: 3823978e-4566-4c10-bb7b-2773d5c70e8f
         createdAt:
           type: object
-          default: '2026-03-17T13:03:46.424Z'
+          default: '2026-03-18T01:50:15.693Z'
         updatedAt:
           type: object
-          default: '2026-03-17T13:03:46.424Z'
+          default: '2026-03-18T01:50:15.693Z'
         deletedAt:
           type: object
       required:
@@ -1153,13 +1174,13 @@ components:
           default: []
         id:
           type: object
-          default: 033c65e2-5b4b-4daf-82f8-6869319f6b54
+          default: cd412681-2f79-4402-9517-d3b2a552dedd
         createdAt:
           type: object
-          default: '2026-03-17T13:03:46.425Z'
+          default: '2026-03-18T01:50:15.695Z'
         updatedAt:
           type: object
-          default: '2026-03-17T13:03:46.425Z'
+          default: '2026-03-18T01:50:15.695Z'
         deletedAt:
           type: object
       required:
@@ -1189,13 +1210,13 @@ components:
           type: string
         id:
           type: object
-          default: e8e1b246-c0ad-4446-b905-a10a1bf3a0f7
+          default: a02b723b-a8ec-4ef1-8ff8-c74152172b0a
         createdAt:
           type: object
-          default: '2026-03-17T13:03:46.426Z'
+          default: '2026-03-18T01:50:15.695Z'
         updatedAt:
           type: object
-          default: '2026-03-17T13:03:46.426Z'
+          default: '2026-03-18T01:50:15.695Z'
         deletedAt:
           type: object
       required:
@@ -1222,13 +1243,13 @@ components:
           default: []
         id:
           type: object
-          default: 09ec5a02-7009-4aaf-8455-9439f055d6ec
+          default: d92ec623-41de-4cc1-931b-5879dadd8633
         createdAt:
           type: object
-          default: '2026-03-17T13:03:46.426Z'
+          default: '2026-03-18T01:50:15.695Z'
         updatedAt:
           type: object
-          default: '2026-03-17T13:03:46.426Z'
+          default: '2026-03-18T01:50:15.695Z'
         deletedAt:
           type: object
       required:
@@ -1255,13 +1276,13 @@ components:
           default: []
         id:
           type: object
-          default: eb7be623-594a-4bd3-8b6b-15c9eb699bed
+          default: 59c6c153-9adb-405f-b648-dfbbe3cb9fb1
         createdAt:
           type: object
-          default: '2026-03-17T13:03:46.427Z'
+          default: '2026-03-18T01:50:15.696Z'
         updatedAt:
           type: object
-          default: '2026-03-17T13:03:46.427Z'
+          default: '2026-03-18T01:50:15.696Z'
         deletedAt:
           type: object
       required:
@@ -1322,13 +1343,13 @@ components:
               - STUDENT
         id:
           type: object
-          default: 2c029dcc-2eb6-469c-bc2b-ba98fb8d11c7
+          default: 1ef83d66-6c0a-44c8-8fd8-176d8e8475e6
         createdAt:
           type: object
-          default: '2026-03-17T13:03:46.425Z'
+          default: '2026-03-18T01:50:15.694Z'
         updatedAt:
           type: object
-          default: '2026-03-17T13:03:46.425Z'
+          default: '2026-03-18T01:50:15.694Z'
         deletedAt:
           type: object
       required:
@@ -1373,13 +1394,13 @@ components:
           type: string
         id:
           type: object
-          default: a6a63199-8a0b-4b3a-911b-a1f1a0f27237
+          default: 773acf6b-8983-4b7d-aa2f-7cedfd4b2f43
         createdAt:
           type: object
-          default: '2026-03-17T13:03:46.428Z'
+          default: '2026-03-18T01:50:15.697Z'
         updatedAt:
           type: object
-          default: '2026-03-17T13:03:46.428Z'
+          default: '2026-03-18T01:50:15.697Z'
         deletedAt:
           type: object
       required:
@@ -1430,7 +1451,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-17T13:03:46.423Z'
+          default: '2026-03-18T01:50:15.691Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -1462,13 +1483,13 @@ components:
           default: []
         id:
           type: object
-          default: e8b94c2e-bcde-4c27-878d-a153b2b55320
+          default: 121fa5c0-acba-427b-816d-877c62e27345
         createdAt:
           type: object
-          default: '2026-03-17T13:03:46.423Z'
+          default: '2026-03-18T01:50:15.692Z'
         updatedAt:
           type: object
-          default: '2026-03-17T13:03:46.423Z'
+          default: '2026-03-18T01:50:15.692Z'
         deletedAt:
           type: object
       required:
@@ -1631,6 +1652,67 @@ components:
         - responseRate
         - warnings
         - createdAt
+    RecommendedActionResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        category:
+          enum:
+            - STRENGTH
+            - IMPROVEMENT
+          type: string
+        headline:
+          type: string
+        description:
+          type: string
+        actionPlan:
+          type: string
+        priority:
+          enum:
+            - HIGH
+            - MEDIUM
+            - LOW
+          type: string
+        supportingEvidence:
+          type: object
+        createdAt:
+          type: string
+      required:
+        - id
+        - category
+        - headline
+        - description
+        - actionPlan
+        - priority
+        - supportingEvidence
+        - createdAt
+    RecommendationsResponseDto:
+      type: object
+      properties:
+        pipelineId:
+          type: string
+        runId:
+          type: string
+          nullable: true
+        status:
+          enum:
+            - PENDING
+            - PROCESSING
+            - COMPLETED
+            - FAILED
+          type: string
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecommendedActionResponseDto'
+        completedAt:
+          type: string
+          nullable: true
+      required:
+        - pipelineId
+        - status
+        - actions
     CreateDimensionRequestDto:
       type: object
       properties:
