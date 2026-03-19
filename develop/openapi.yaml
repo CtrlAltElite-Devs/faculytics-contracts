@@ -726,6 +726,123 @@ paths:
       summary: List faculty members scoped to caller role
       tags:
         - Faculty
+  /api/v1/curriculum/departments:
+    get:
+      operationId: CurriculumController_ListDepartments_v1
+      parameters:
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to scope department list
+          schema:
+            format: uuid
+            type: string
+        - name: search
+          required: false
+          in: query
+          description: Search by department code or name
+          schema:
+            maxLength: 100
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DepartmentItemResponseDto'
+      security:
+        - accesstoken: []
+      summary: List departments scoped to caller role
+      tags:
+        - Curriculum
+  /api/v1/curriculum/programs:
+    get:
+      operationId: CurriculumController_ListPrograms_v1
+      parameters:
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to scope program list
+          schema:
+            format: uuid
+            type: string
+        - name: departmentId
+          required: false
+          in: query
+          description: Filter by department UUID
+          schema:
+            format: uuid
+            type: string
+        - name: search
+          required: false
+          in: query
+          description: Search by program code or name
+          schema:
+            maxLength: 100
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProgramItemResponseDto'
+      security:
+        - accesstoken: []
+      summary: List programs scoped to caller role
+      tags:
+        - Curriculum
+  /api/v1/curriculum/courses:
+    get:
+      operationId: CurriculumController_ListCourses_v1
+      parameters:
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to scope course list
+          schema:
+            format: uuid
+            type: string
+        - name: departmentId
+          required: false
+          in: query
+          description: Filter by department UUID
+          schema:
+            format: uuid
+            type: string
+        - name: programId
+          required: false
+          in: query
+          description: Filter by program UUID
+          schema:
+            format: uuid
+            type: string
+        - name: search
+          required: false
+          in: query
+          description: Search by course shortname or fullname
+          schema:
+            maxLength: 100
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseItemResponseDto'
+      security:
+        - accesstoken: []
+      summary: List courses scoped to caller role
+      tags:
+        - Curriculum
 info:
   title: Faculytics API
   description: This is the official API documentation for Faculytics
@@ -1006,13 +1123,13 @@ components:
           default: []
         id:
           type: object
-          default: cba36ad5-a7ac-41b9-81b6-ab40d81bb4c1
+          default: 15db93dd-0f60-4ce2-b1b9-d34d6a8d0000
         createdAt:
           type: object
-          default: '2026-03-18T15:44:58.025Z'
+          default: '2026-03-19T12:53:16.495Z'
         updatedAt:
           type: object
-          default: '2026-03-18T15:44:58.025Z'
+          default: '2026-03-19T12:53:16.495Z'
         deletedAt:
           type: object
       required:
@@ -1142,13 +1259,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: d7a666a3-3450-4e1d-9a4c-8c0310077dac
+          default: 0deec50e-a719-4053-b260-d8d7db19b75b
         createdAt:
           type: object
-          default: '2026-03-18T15:44:58.033Z'
+          default: '2026-03-19T12:53:16.503Z'
         updatedAt:
           type: object
-          default: '2026-03-18T15:44:58.033Z'
+          default: '2026-03-19T12:53:16.503Z'
         deletedAt:
           type: object
       required:
@@ -1174,13 +1291,13 @@ components:
           default: []
         id:
           type: object
-          default: d580bc66-bf10-40a3-975e-40ab6a6d7802
+          default: dc4220a9-2f98-4761-948f-9e60024a8423
         createdAt:
           type: object
-          default: '2026-03-18T15:44:58.034Z'
+          default: '2026-03-19T12:53:16.505Z'
         updatedAt:
           type: object
-          default: '2026-03-18T15:44:58.034Z'
+          default: '2026-03-19T12:53:16.505Z'
         deletedAt:
           type: object
       required:
@@ -1210,13 +1327,13 @@ components:
           type: string
         id:
           type: object
-          default: 314bb253-3b43-4aab-b064-f62d9d894f24
+          default: 8349271d-b1e4-402a-9fa4-46c47d05b3f3
         createdAt:
           type: object
-          default: '2026-03-18T15:44:58.035Z'
+          default: '2026-03-19T12:53:16.506Z'
         updatedAt:
           type: object
-          default: '2026-03-18T15:44:58.035Z'
+          default: '2026-03-19T12:53:16.506Z'
         deletedAt:
           type: object
       required:
@@ -1243,13 +1360,13 @@ components:
           default: []
         id:
           type: object
-          default: 012973db-353c-427e-b3d6-f3c5276bc3b2
+          default: 7ee72de8-55c0-4280-98af-fe6d18f34f3e
         createdAt:
           type: object
-          default: '2026-03-18T15:44:58.034Z'
+          default: '2026-03-19T12:53:16.506Z'
         updatedAt:
           type: object
-          default: '2026-03-18T15:44:58.034Z'
+          default: '2026-03-19T12:53:16.506Z'
         deletedAt:
           type: object
       required:
@@ -1276,13 +1393,13 @@ components:
           default: []
         id:
           type: object
-          default: 7cfca900-39b1-43a2-83c5-f303f03a0f5f
+          default: 7f285908-da55-4fb7-abd2-0708bafa3984
         createdAt:
           type: object
-          default: '2026-03-18T15:44:58.035Z'
+          default: '2026-03-19T12:53:16.507Z'
         updatedAt:
           type: object
-          default: '2026-03-18T15:44:58.035Z'
+          default: '2026-03-19T12:53:16.507Z'
         deletedAt:
           type: object
       required:
@@ -1343,13 +1460,13 @@ components:
               - STUDENT
         id:
           type: object
-          default: a089e4da-c06d-4550-9f4c-1ff4e9db3fa2
+          default: e0db41d9-1db3-4414-8eee-2b8c95b4f999
         createdAt:
           type: object
-          default: '2026-03-18T15:44:58.034Z'
+          default: '2026-03-19T12:53:16.505Z'
         updatedAt:
           type: object
-          default: '2026-03-18T15:44:58.034Z'
+          default: '2026-03-19T12:53:16.505Z'
         deletedAt:
           type: object
       required:
@@ -1394,13 +1511,13 @@ components:
           type: string
         id:
           type: object
-          default: 180f922b-793a-4510-a541-39bd8827a100
+          default: c778fc05-5ea6-424f-97e3-212abbdec20c
         createdAt:
           type: object
-          default: '2026-03-18T15:44:58.036Z'
+          default: '2026-03-19T12:53:16.509Z'
         updatedAt:
           type: object
-          default: '2026-03-18T15:44:58.036Z'
+          default: '2026-03-19T12:53:16.509Z'
         deletedAt:
           type: object
       required:
@@ -1451,7 +1568,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-18T15:44:58.032Z'
+          default: '2026-03-19T12:53:16.502Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -1483,13 +1600,13 @@ components:
           default: []
         id:
           type: object
-          default: c3a6e6df-b712-4e39-a20e-49554b59f0a9
+          default: f6c38d21-24bf-4d23-a35f-751ef30bef65
         createdAt:
           type: object
-          default: '2026-03-18T15:44:58.032Z'
+          default: '2026-03-19T12:53:16.503Z'
         updatedAt:
           type: object
-          default: '2026-03-18T15:44:58.032Z'
+          default: '2026-03-19T12:53:16.503Z'
         deletedAt:
           type: object
       required:
@@ -1814,3 +1931,63 @@ components:
       required:
         - data
         - meta
+    DepartmentItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Department UUID
+        code:
+          type: string
+          description: Department code (e.g., "CCS")
+        name:
+          type: string
+          nullable: true
+          description: Department name
+      required:
+        - id
+        - code
+    ProgramItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Program UUID
+        code:
+          type: string
+          description: Program code (e.g., "BSCS", "BSIT")
+        name:
+          type: string
+          nullable: true
+          description: Program name
+        departmentId:
+          type: string
+          description: Parent department UUID
+      required:
+        - id
+        - code
+        - departmentId
+    CourseItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Course UUID
+        shortname:
+          type: string
+          description: Course shortname (e.g., "FREAI", "ELDNET1")
+        fullname:
+          type: string
+          description: Course fullname (e.g., "Free Elective AI")
+        programId:
+          type: string
+          description: Parent program UUID
+        isActive:
+          type: boolean
+          description: Whether the course is active in Moodle
+      required:
+        - id
+        - shortname
+        - fullname
+        - programId
+        - isActive
