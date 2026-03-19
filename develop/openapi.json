@@ -1195,6 +1195,58 @@
         ]
       }
     },
+    "/api/v1/faculty/{facultyId}/submission-count": {
+      "get": {
+        "operationId": "FacultyController_getSubmissionCount_v1",
+        "parameters": [
+          {
+            "name": "facultyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "description": "Semester UUID to scope submission count",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmissionCountResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid UUID format"
+          },
+          "404": {
+            "description": "Faculty or semester not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get submission count for a faculty member in a semester",
+        "tags": [
+          "Faculty"
+        ]
+      }
+    },
     "/api/v1/curriculum/departments": {
       "get": {
         "operationId": "CurriculumController_ListDepartments_v1",
@@ -1773,15 +1825,15 @@
           },
           "id": {
             "type": "object",
-            "default": "15db93dd-0f60-4ce2-b1b9-d34d6a8d0000"
+            "default": "505dd5ba-2cd1-4a66-9665-88be01dabaa7"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.495Z"
+            "default": "2026-03-19T15:05:22.617Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.495Z"
+            "default": "2026-03-19T15:05:22.617Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1959,15 +2011,15 @@
           },
           "id": {
             "type": "object",
-            "default": "0deec50e-a719-4053-b260-d8d7db19b75b"
+            "default": "00f1cb3e-5947-4242-a86c-6c4977de0351"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.503Z"
+            "default": "2026-03-19T15:05:22.623Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.503Z"
+            "default": "2026-03-19T15:05:22.623Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2002,15 +2054,15 @@
           },
           "id": {
             "type": "object",
-            "default": "dc4220a9-2f98-4761-948f-9e60024a8423"
+            "default": "eb6d1650-9fe1-4661-90c2-7ddc78605ed1"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.505Z"
+            "default": "2026-03-19T15:05:22.625Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.505Z"
+            "default": "2026-03-19T15:05:22.625Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2052,15 +2104,15 @@
           },
           "id": {
             "type": "object",
-            "default": "8349271d-b1e4-402a-9fa4-46c47d05b3f3"
+            "default": "2a046813-9c84-4a6f-b697-b1ad55511896"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.506Z"
+            "default": "2026-03-19T15:05:22.625Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.506Z"
+            "default": "2026-03-19T15:05:22.625Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2097,15 +2149,15 @@
           },
           "id": {
             "type": "object",
-            "default": "7ee72de8-55c0-4280-98af-fe6d18f34f3e"
+            "default": "1c30d894-7182-4b04-8a9e-e102ba9e9b18"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.506Z"
+            "default": "2026-03-19T15:05:22.625Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.506Z"
+            "default": "2026-03-19T15:05:22.625Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2142,15 +2194,15 @@
           },
           "id": {
             "type": "object",
-            "default": "7f285908-da55-4fb7-abd2-0708bafa3984"
+            "default": "933c44c0-da84-43f0-afee-048d0d8b90f6"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.507Z"
+            "default": "2026-03-19T15:05:22.626Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.507Z"
+            "default": "2026-03-19T15:05:22.626Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2234,15 +2286,15 @@
           },
           "id": {
             "type": "object",
-            "default": "e0db41d9-1db3-4414-8eee-2b8c95b4f999"
+            "default": "08831edb-3697-493b-b114-161f73c63168"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.505Z"
+            "default": "2026-03-19T15:05:22.624Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.505Z"
+            "default": "2026-03-19T15:05:22.624Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2302,15 +2354,15 @@
           },
           "id": {
             "type": "object",
-            "default": "c778fc05-5ea6-424f-97e3-212abbdec20c"
+            "default": "26b7ac05-a80d-4cce-b1a5-4d5ca17dcac5"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.509Z"
+            "default": "2026-03-19T15:05:22.627Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.509Z"
+            "default": "2026-03-19T15:05:22.627Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2380,7 +2432,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-03-19T12:53:16.502Z"
+            "default": "2026-03-19T15:05:22.623Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -2427,15 +2479,15 @@
           },
           "id": {
             "type": "object",
-            "default": "f6c38d21-24bf-4d23-a35f-751ef30bef65"
+            "default": "4e61f396-2c6b-4533-ad93-1bc80a00ba2e"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.503Z"
+            "default": "2026-03-19T15:05:22.623Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T12:53:16.503Z"
+            "default": "2026-03-19T15:05:22.623Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2872,6 +2924,18 @@
         "required": [
           "data",
           "meta"
+        ]
+      },
+      "SubmissionCountResponseDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "description": "Number of submissions for this faculty in the given semester"
+          }
+        },
+        "required": [
+          "count"
         ]
       },
       "DepartmentItemResponseDto": {
