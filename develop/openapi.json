@@ -538,6 +538,148 @@
         ]
       }
     },
+    "/api/v1/questionnaires/versions/{versionId}/csv-template": {
+      "get": {
+        "operationId": "QuestionnaireController_GetCsvTemplate_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV template file"
+          },
+          "400": {
+            "description": "Version is not active"
+          },
+          "404": {
+            "description": "Version not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Download CSV template for a questionnaire version",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/ingest": {
+      "post": {
+        "operationId": "QuestionnaireController_IngestCsv_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file",
+                  "versionId"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "versionId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "dryRun": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "delimiter": {
+                    "type": "string",
+                    "maxLength": 1
+                  },
+                  "maxErrors": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "maxRecords": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5000,
+                    "default": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ingestion result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngestionResultDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid file or parameters"
+          },
+          "404": {
+            "description": "Version not found or not active"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Ingest questionnaire submissions from CSV",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/versions/{versionId}/submissions": {
+      "delete": {
+        "operationId": "QuestionnaireController_wipeSubmissions_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Submissions wiped successfully"
+          },
+          "404": {
+            "description": "Version not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Wipe all submissions for a version",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
     "/api/v1/questionnaires/drafts": {
       "post": {
         "operationId": "QuestionnaireController_saveDraft_v1",
@@ -1825,15 +1967,15 @@
           },
           "id": {
             "type": "object",
-            "default": "505dd5ba-2cd1-4a66-9665-88be01dabaa7"
+            "default": "fd77f760-49ab-47fb-9224-b2d521b17c55"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.617Z"
+            "default": "2026-03-21T05:13:47.604Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.617Z"
+            "default": "2026-03-21T05:13:47.604Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2011,15 +2153,15 @@
           },
           "id": {
             "type": "object",
-            "default": "00f1cb3e-5947-4242-a86c-6c4977de0351"
+            "default": "a7b65292-7b8b-4912-b0fd-5110193f05c3"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.623Z"
+            "default": "2026-03-21T05:13:47.610Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.623Z"
+            "default": "2026-03-21T05:13:47.610Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2054,15 +2196,15 @@
           },
           "id": {
             "type": "object",
-            "default": "eb6d1650-9fe1-4661-90c2-7ddc78605ed1"
+            "default": "717acd9c-91f4-4802-8291-5c777fe228a9"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.625Z"
+            "default": "2026-03-21T05:13:47.612Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.625Z"
+            "default": "2026-03-21T05:13:47.612Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2104,15 +2246,15 @@
           },
           "id": {
             "type": "object",
-            "default": "2a046813-9c84-4a6f-b697-b1ad55511896"
+            "default": "89c74555-31c6-4cdf-9999-330f6970f764"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.625Z"
+            "default": "2026-03-21T05:13:47.613Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.625Z"
+            "default": "2026-03-21T05:13:47.613Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2149,15 +2291,15 @@
           },
           "id": {
             "type": "object",
-            "default": "1c30d894-7182-4b04-8a9e-e102ba9e9b18"
+            "default": "00bf953e-9863-4d6f-9728-6bfd0f442693"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.625Z"
+            "default": "2026-03-21T05:13:47.612Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.625Z"
+            "default": "2026-03-21T05:13:47.612Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2194,15 +2336,15 @@
           },
           "id": {
             "type": "object",
-            "default": "933c44c0-da84-43f0-afee-048d0d8b90f6"
+            "default": "0e4fb6b1-c0e3-4d1a-9a56-cdb0a4369e5e"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.626Z"
+            "default": "2026-03-21T05:13:47.614Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.626Z"
+            "default": "2026-03-21T05:13:47.614Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2286,15 +2428,15 @@
           },
           "id": {
             "type": "object",
-            "default": "08831edb-3697-493b-b114-161f73c63168"
+            "default": "94c4a1ba-db36-4ca0-8393-23df00c21bdf"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.624Z"
+            "default": "2026-03-21T05:13:47.611Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.624Z"
+            "default": "2026-03-21T05:13:47.611Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2354,15 +2496,15 @@
           },
           "id": {
             "type": "object",
-            "default": "26b7ac05-a80d-4cce-b1a5-4d5ca17dcac5"
+            "default": "edb2f219-1684-45c8-a5b4-f281bf183a61"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.627Z"
+            "default": "2026-03-21T05:13:47.615Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.627Z"
+            "default": "2026-03-21T05:13:47.615Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2432,7 +2574,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-03-19T15:05:22.623Z"
+            "default": "2026-03-21T05:13:47.610Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -2479,15 +2621,15 @@
           },
           "id": {
             "type": "object",
-            "default": "4e61f396-2c6b-4533-ad93-1bc80a00ba2e"
+            "default": "ca18b1a9-06e1-44c1-bb5c-34c586ffbde8"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.623Z"
+            "default": "2026-03-21T05:13:47.610Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-19T15:05:22.623Z"
+            "default": "2026-03-21T05:13:47.610Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2519,6 +2661,70 @@
           "id",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "IngestionRecordResult": {
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string",
+            "description": "The external identifier of the record"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Whether the record was successfully processed"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if failed"
+          },
+          "internalId": {
+            "type": "string",
+            "description": "Internal ID if created"
+          }
+        },
+        "required": [
+          "externalId",
+          "success"
+        ]
+      },
+      "IngestionResultDto": {
+        "type": "object",
+        "properties": {
+          "ingestionId": {
+            "type": "string",
+            "description": "Unique identifier for the ingestion batch"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total number of records processed"
+          },
+          "successes": {
+            "type": "number",
+            "description": "Number of successful records"
+          },
+          "failures": {
+            "type": "number",
+            "description": "Number of failed records"
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Whether the run was a dry-run"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IngestionRecordResult"
+            }
+          }
+        },
+        "required": [
+          "ingestionId",
+          "total",
+          "successes",
+          "failures",
+          "dryRun",
+          "records"
         ]
       },
       "SaveDraftRequest": {
