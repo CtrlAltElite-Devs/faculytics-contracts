@@ -1069,6 +1069,151 @@
         ]
       }
     },
+    "/api/v1/analytics/overview": {
+      "get": {
+        "operationId": "AnalyticsController_GetDepartmentOverview_v1",
+        "parameters": [
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "description": "Semester UUID to query analytics for",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "programCode",
+            "required": false,
+            "in": "query",
+            "description": "Optional program code filter",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepartmentOverviewResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get department overview with faculty stats",
+        "tags": [
+          "Analytics"
+        ]
+      }
+    },
+    "/api/v1/analytics/attention": {
+      "get": {
+        "operationId": "AnalyticsController_GetAttentionList_v1",
+        "parameters": [
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "description": "Semester UUID to query analytics for",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttentionListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get attention list — faculty flagged for review",
+        "tags": [
+          "Analytics"
+        ]
+      }
+    },
+    "/api/v1/analytics/trends": {
+      "get": {
+        "operationId": "AnalyticsController_GetFacultyTrends_v1",
+        "parameters": [
+          {
+            "name": "semesterId",
+            "required": false,
+            "in": "query",
+            "description": "Semester UUID for scope resolution. Falls back to latest semester if omitted.",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "minSemesters",
+            "required": false,
+            "in": "query",
+            "description": "Minimum number of semesters for trend data",
+            "schema": {
+              "minimum": 1,
+              "default": 3,
+              "type": "number"
+            }
+          },
+          {
+            "name": "minR2",
+            "required": false,
+            "in": "query",
+            "description": "Minimum R² coefficient for trend significance",
+            "schema": {
+              "minimum": 0,
+              "default": 0.5,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FacultyTrendsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get faculty trend data across semesters",
+        "tags": [
+          "Analytics"
+        ]
+      }
+    },
     "/api/v1/dimensions": {
       "post": {
         "operationId": "DimensionsController_create_v1",
@@ -2090,15 +2235,15 @@
           },
           "id": {
             "type": "object",
-            "default": "76e72077-400e-4286-94d4-89e1f460d640"
+            "default": "7ce153a9-93b0-495d-bc5b-9b965ad9f1a4"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.382Z"
+            "default": "2026-03-22T02:04:21.520Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.382Z"
+            "default": "2026-03-22T02:04:21.520Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2276,15 +2421,15 @@
           },
           "id": {
             "type": "object",
-            "default": "d94543a5-26a8-4c87-8740-0e354e88dd12"
+            "default": "9ae82e96-145e-404b-9c2a-eb336e85ee41"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.388Z"
+            "default": "2026-03-22T02:04:21.528Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.388Z"
+            "default": "2026-03-22T02:04:21.528Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2319,15 +2464,15 @@
           },
           "id": {
             "type": "object",
-            "default": "2d7b9616-6829-44ed-9a58-ba8f02a4dc98"
+            "default": "fd664d3b-15d9-4b1f-8c16-a5f8bc7868aa"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.389Z"
+            "default": "2026-03-22T02:04:21.530Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.389Z"
+            "default": "2026-03-22T02:04:21.530Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2369,15 +2514,15 @@
           },
           "id": {
             "type": "object",
-            "default": "d57d5d20-b1d1-4400-95b4-8845fedb5757"
+            "default": "64bdb479-e5dd-4fc7-a87a-d75182998d78"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.390Z"
+            "default": "2026-03-22T02:04:21.531Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.390Z"
+            "default": "2026-03-22T02:04:21.531Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2414,15 +2559,15 @@
           },
           "id": {
             "type": "object",
-            "default": "6d0e0e3f-f2a5-402e-8a12-d8564a9ab83a"
+            "default": "607b80a8-8faa-4df2-9fcd-70e67a309b8c"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.389Z"
+            "default": "2026-03-22T02:04:21.531Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.389Z"
+            "default": "2026-03-22T02:04:21.531Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2459,15 +2604,15 @@
           },
           "id": {
             "type": "object",
-            "default": "135f6aab-61a0-4de6-84c1-2c18b7a2dcc4"
+            "default": "8e41c664-0b32-4175-a02a-4ddbd152703c"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.390Z"
+            "default": "2026-03-22T02:04:21.532Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.390Z"
+            "default": "2026-03-22T02:04:21.532Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2551,15 +2696,15 @@
           },
           "id": {
             "type": "object",
-            "default": "a34413a0-b950-47fe-a3ee-06f73af51717"
+            "default": "abb31c6d-ec52-4fd9-9d2b-c86f68a651ff"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.388Z"
+            "default": "2026-03-22T02:04:21.529Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.388Z"
+            "default": "2026-03-22T02:04:21.529Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2619,15 +2764,15 @@
           },
           "id": {
             "type": "object",
-            "default": "9c729450-5be4-4279-af86-f5bea0f5cdf4"
+            "default": "8772f44a-6d71-4ec3-b704-db557933b3c1"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.391Z"
+            "default": "2026-03-22T02:04:21.533Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.391Z"
+            "default": "2026-03-22T02:04:21.533Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2697,7 +2842,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-03-21T13:49:42.387Z"
+            "default": "2026-03-22T02:04:21.527Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -2744,15 +2889,15 @@
           },
           "id": {
             "type": "object",
-            "default": "964f8f82-9d1f-411c-b09f-cfbfeebde9ea"
+            "default": "d28c78eb-ae71-4854-bbad-fc1c288ebd72"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.387Z"
+            "default": "2026-03-22T02:04:21.528Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-21T13:49:42.387Z"
+            "default": "2026-03-22T02:04:21.528Z"
           },
           "deletedAt": {
             "type": "object"
@@ -3110,6 +3255,264 @@
           "pipelineId",
           "status",
           "actions"
+        ]
+      },
+      "DepartmentSummaryDto": {
+        "type": "object",
+        "properties": {
+          "totalFaculty": {
+            "type": "number"
+          },
+          "totalSubmissions": {
+            "type": "number"
+          },
+          "totalAnalyzed": {
+            "type": "number"
+          },
+          "positiveCount": {
+            "type": "number"
+          },
+          "negativeCount": {
+            "type": "number"
+          },
+          "neutralCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "totalFaculty",
+          "totalSubmissions",
+          "totalAnalyzed",
+          "positiveCount",
+          "negativeCount",
+          "neutralCount"
+        ]
+      },
+      "FacultySemesterStatsDto": {
+        "type": "object",
+        "properties": {
+          "facultyId": {
+            "type": "string"
+          },
+          "facultyName": {
+            "type": "string"
+          },
+          "departmentCode": {
+            "type": "string"
+          },
+          "submissionCount": {
+            "type": "number"
+          },
+          "commentCount": {
+            "type": "number"
+          },
+          "avgNormalizedScore": {
+            "type": "number"
+          },
+          "positiveCount": {
+            "type": "number"
+          },
+          "negativeCount": {
+            "type": "number"
+          },
+          "neutralCount": {
+            "type": "number"
+          },
+          "analyzedCount": {
+            "type": "number"
+          },
+          "topicCount": {
+            "type": "number"
+          },
+          "percentileRank": {
+            "type": "number"
+          },
+          "scoreDelta": {
+            "type": "number",
+            "nullable": true
+          },
+          "sentimentDelta": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "facultyId",
+          "facultyName",
+          "departmentCode",
+          "submissionCount",
+          "commentCount",
+          "avgNormalizedScore",
+          "positiveCount",
+          "negativeCount",
+          "neutralCount",
+          "analyzedCount",
+          "topicCount",
+          "percentileRank"
+        ]
+      },
+      "DepartmentOverviewResponseDto": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "$ref": "#/components/schemas/DepartmentSummaryDto"
+          },
+          "faculty": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FacultySemesterStatsDto"
+            }
+          },
+          "lastRefreshedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "summary",
+          "faculty"
+        ]
+      },
+      "AttentionFlagDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "declining_trend",
+              "quant_qual_gap",
+              "low_coverage"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "metrics": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "type",
+          "description",
+          "metrics"
+        ]
+      },
+      "AttentionItemDto": {
+        "type": "object",
+        "properties": {
+          "facultyId": {
+            "type": "string"
+          },
+          "facultyName": {
+            "type": "string"
+          },
+          "departmentCode": {
+            "type": "string"
+          },
+          "flags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttentionFlagDto"
+            }
+          }
+        },
+        "required": [
+          "facultyId",
+          "facultyName",
+          "departmentCode",
+          "flags"
+        ]
+      },
+      "AttentionListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttentionItemDto"
+            }
+          },
+          "lastRefreshedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "FacultyTrendDto": {
+        "type": "object",
+        "properties": {
+          "facultyId": {
+            "type": "string"
+          },
+          "facultyName": {
+            "type": "string"
+          },
+          "departmentCode": {
+            "type": "string"
+          },
+          "semesterCount": {
+            "type": "number"
+          },
+          "latestAvgScore": {
+            "type": "number",
+            "nullable": true
+          },
+          "latestPositiveRate": {
+            "type": "number",
+            "nullable": true
+          },
+          "scoreSlope": {
+            "type": "number",
+            "nullable": true
+          },
+          "scoreR2": {
+            "type": "number",
+            "nullable": true
+          },
+          "sentimentSlope": {
+            "type": "number",
+            "nullable": true
+          },
+          "sentimentR2": {
+            "type": "number",
+            "nullable": true
+          },
+          "trendDirection": {
+            "type": "string",
+            "enum": [
+              "improving",
+              "declining",
+              "stable"
+            ]
+          }
+        },
+        "required": [
+          "facultyId",
+          "facultyName",
+          "departmentCode",
+          "semesterCount",
+          "trendDirection"
+        ]
+      },
+      "FacultyTrendsResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FacultyTrendDto"
+            }
+          },
+          "lastRefreshedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items"
         ]
       },
       "CreateDimensionRequestDto": {
