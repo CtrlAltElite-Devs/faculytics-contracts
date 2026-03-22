@@ -13,6 +13,48 @@ paths:
                 type: object
       tags:
         - Health
+  /api/v1/moodle/sync/status:
+    get:
+      operationId: MoodleSyncController_GetSyncStatus_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncStatusResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Get current Moodle sync status
+      tags:
+        - Moodle
+  /api/v1/moodle/sync:
+    post:
+      operationId: MoodleSyncController_TriggerSync_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriggerSyncResponseDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden — superadmin only
+        '409':
+          description: Sync already in progress or queued
+        '503':
+          description: Sync queue unavailable
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Trigger a full Moodle sync (categories, courses, enrollments)
+      tags:
+        - Moodle
   /api/v1/auth/login:
     post:
       operationId: AuthController_Login_v1
@@ -306,6 +348,46 @@ paths:
       summary: Update a draft questionnaire version
       tags:
         - Questionnaires
+  /api/v1/questionnaires/submissions/check:
+    get:
+      operationId: QuestionnaireController_checkSubmission_v1
+      parameters:
+        - name: versionId
+          required: true
+          in: query
+          schema:
+            format: uuid
+            type: string
+        - name: facultyId
+          required: true
+          in: query
+          schema:
+            format: uuid
+            type: string
+        - name: semesterId
+          required: true
+          in: query
+          schema:
+            format: uuid
+            type: string
+        - name: courseId
+          required: false
+          in: query
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: Submission status for the given context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckSubmissionResponse'
+      security:
+        - accesstoken: []
+      summary: Check if the current user already submitted an evaluation
+      tags:
+        - Questionnaires
   /api/v1/questionnaires/submissions:
     post:
       operationId: QuestionnaireController_submitQuestionnaire_v1
@@ -326,6 +408,96 @@ paths:
       security:
         - accesstoken: []
       summary: Submit a completed questionnaire
+      tags:
+        - Questionnaires
+  /api/v1/questionnaires/versions/{versionId}/csv-template:
+    get:
+      operationId: QuestionnaireController_GetCsvTemplate_v1
+      parameters:
+        - name: versionId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: CSV template file
+        '400':
+          description: Version is not active
+        '404':
+          description: Version not found
+      security:
+        - accesstoken: []
+      summary: Download CSV template for a questionnaire version
+      tags:
+        - Questionnaires
+  /api/v1/questionnaires/ingest:
+    post:
+      operationId: QuestionnaireController_IngestCsv_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - versionId
+              properties:
+                file:
+                  type: string
+                  format: binary
+                versionId:
+                  type: string
+                  format: uuid
+                dryRun:
+                  type: boolean
+                  default: false
+                delimiter:
+                  type: string
+                  maxLength: 1
+                maxErrors:
+                  type: integer
+                  minimum: 1
+                maxRecords:
+                  type: integer
+                  minimum: 1
+                  maximum: 5000
+                  default: 500
+      responses:
+        '200':
+          description: Ingestion result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestionResultDto'
+        '400':
+          description: Invalid file or parameters
+        '404':
+          description: Version not found or not active
+      security:
+        - accesstoken: []
+      summary: Ingest questionnaire submissions from CSV
+      tags:
+        - Questionnaires
+  /api/v1/questionnaires/versions/{versionId}/submissions:
+    delete:
+      operationId: QuestionnaireController_wipeSubmissions_v1
+      parameters:
+        - name: versionId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Submissions wiped successfully
+        '404':
+          description: Version not found
+      security:
+        - accesstoken: []
+      summary: Wipe all submissions for a version
       tags:
         - Questionnaires
   /api/v1/questionnaires/drafts:
@@ -518,6 +690,97 @@ paths:
       summary: Get recommendations for a completed pipeline
       tags:
         - Analysis
+  /api/v1/analytics/overview:
+    get:
+      operationId: AnalyticsController_GetDepartmentOverview_v1
+      parameters:
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to query analytics for
+          schema:
+            format: uuid
+            type: string
+        - name: programCode
+          required: false
+          in: query
+          description: Optional program code filter
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartmentOverviewResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get department overview with faculty stats
+      tags:
+        - Analytics
+  /api/v1/analytics/attention:
+    get:
+      operationId: AnalyticsController_GetAttentionList_v1
+      parameters:
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to query analytics for
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttentionListResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get attention list — faculty flagged for review
+      tags:
+        - Analytics
+  /api/v1/analytics/trends:
+    get:
+      operationId: AnalyticsController_GetFacultyTrends_v1
+      parameters:
+        - name: semesterId
+          required: false
+          in: query
+          description: Semester UUID for scope resolution. Falls back to latest semester if omitted.
+          schema:
+            format: uuid
+            type: string
+        - name: minSemesters
+          required: false
+          in: query
+          description: Minimum number of semesters for trend data
+          schema:
+            minimum: 1
+            default: 3
+            type: number
+        - name: minR2
+          required: false
+          in: query
+          description: Minimum R² coefficient for trend significance
+          schema:
+            minimum: 0
+            default: 0.5
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacultyTrendsResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get faculty trend data across semesters
+      tags:
+        - Analytics
   /api/v1/dimensions:
     post:
       operationId: DimensionsController_create_v1
@@ -726,6 +989,155 @@ paths:
       summary: List faculty members scoped to caller role
       tags:
         - Faculty
+  /api/v1/faculty/{facultyId}/submission-count:
+    get:
+      operationId: FacultyController_getSubmissionCount_v1
+      parameters:
+        - name: facultyId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to scope submission count
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmissionCountResponseDto'
+        '400':
+          description: Invalid UUID format
+        '404':
+          description: Faculty or semester not found
+      security:
+        - accesstoken: []
+      summary: Get submission count for a faculty member in a semester
+      tags:
+        - Faculty
+  /api/v1/curriculum/departments:
+    get:
+      operationId: CurriculumController_ListDepartments_v1
+      parameters:
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to scope department list
+          schema:
+            format: uuid
+            type: string
+        - name: search
+          required: false
+          in: query
+          description: Search by department code or name
+          schema:
+            maxLength: 100
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DepartmentItemResponseDto'
+      security:
+        - accesstoken: []
+      summary: List departments scoped to caller role
+      tags:
+        - Curriculum
+  /api/v1/curriculum/programs:
+    get:
+      operationId: CurriculumController_ListPrograms_v1
+      parameters:
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to scope program list
+          schema:
+            format: uuid
+            type: string
+        - name: departmentId
+          required: false
+          in: query
+          description: Filter by department UUID
+          schema:
+            format: uuid
+            type: string
+        - name: search
+          required: false
+          in: query
+          description: Search by program code or name
+          schema:
+            maxLength: 100
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProgramItemResponseDto'
+      security:
+        - accesstoken: []
+      summary: List programs scoped to caller role
+      tags:
+        - Curriculum
+  /api/v1/curriculum/courses:
+    get:
+      operationId: CurriculumController_ListCourses_v1
+      parameters:
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID to scope course list
+          schema:
+            format: uuid
+            type: string
+        - name: departmentId
+          required: false
+          in: query
+          description: Filter by department UUID
+          schema:
+            format: uuid
+            type: string
+        - name: programId
+          required: false
+          in: query
+          description: Filter by program UUID
+          schema:
+            format: uuid
+            type: string
+        - name: search
+          required: false
+          in: query
+          description: Search by course shortname or fullname
+          schema:
+            maxLength: 100
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseItemResponseDto'
+      security:
+        - accesstoken: []
+      summary: List courses scoped to caller role
+      tags:
+        - Curriculum
 info:
   title: Faculytics API
   description: This is the official API documentation for Faculytics
@@ -742,6 +1154,43 @@ components:
       name: Authorization
       in: header
   schemas:
+    SyncStatusResponseDto:
+      type: object
+      properties:
+        state:
+          enum:
+            - idle
+            - active
+            - queued
+          type: string
+          description: Current sync pipeline state
+        jobId:
+          type: string
+          description: Job ID of the active or queued sync
+        trigger:
+          type: string
+          description: What triggered the sync (manual or scheduled)
+        startedAt:
+          type: number
+          description: Unix timestamp (ms) when the job was created
+        waitingCount:
+          type: number
+          description: Number of waiting jobs in the queue
+        failedCount:
+          type: number
+          description: Number of failed jobs retained in the queue
+      required:
+        - state
+        - waitingCount
+        - failedCount
+    TriggerSyncResponseDto:
+      type: object
+      properties:
+        jobId:
+          type: string
+          description: The BullMQ job ID for the enqueued sync
+      required:
+        - jobId
     LoginRequest:
       type: object
       properties:
@@ -842,6 +1291,20 @@ components:
       required:
         - id
         - fullName
+    SemesterShortResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        label:
+          type: string
+        academicYear:
+          type: string
+      required:
+        - id
+        - code
     EnrollmentResponseDto:
       type: object
       properties:
@@ -855,6 +1318,10 @@ components:
           nullable: true
           allOf:
             - $ref: '#/components/schemas/FacultyShortResponseDto'
+        semester:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/SemesterShortResponseDto'
       required:
         - id
         - role
@@ -1006,13 +1473,13 @@ components:
           default: []
         id:
           type: object
-          default: 090d8129-23b9-4399-bd77-9681f4637ceb
+          default: 608671c4-d646-4748-97f0-61a1e25a81ca
         createdAt:
           type: object
-          default: '2026-03-18T16:06:18.765Z'
+          default: '2026-03-22T07:03:41.067Z'
         updatedAt:
           type: object
-          default: '2026-03-18T16:06:18.765Z'
+          default: '2026-03-22T07:03:41.067Z'
         deletedAt:
           type: object
       required:
@@ -1087,6 +1554,16 @@ components:
           type: string
       required:
         - schema
+    CheckSubmissionResponse:
+      type: object
+      properties:
+        submitted:
+          type: boolean
+        submittedAt:
+          format: date-time
+          type: string
+      required:
+        - submitted
     SubmitQuestionnaireRequest:
       type: object
       properties:
@@ -1142,13 +1619,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: a9c11b57-965c-4e15-acb3-50d554fad293
+          default: 8e603d9f-f1b6-4464-ac48-be9817525f99
         createdAt:
           type: object
-          default: '2026-03-18T16:06:18.772Z'
+          default: '2026-03-22T07:03:41.077Z'
         updatedAt:
           type: object
-          default: '2026-03-18T16:06:18.772Z'
+          default: '2026-03-22T07:03:41.077Z'
         deletedAt:
           type: object
       required:
@@ -1174,13 +1651,13 @@ components:
           default: []
         id:
           type: object
-          default: b30f4210-2588-450d-aa7f-da1bb9cb33cb
+          default: fc0285da-2a20-4945-9ef7-0e6b0b9a9dc0
         createdAt:
           type: object
-          default: '2026-03-18T16:06:18.774Z'
+          default: '2026-03-22T07:03:41.079Z'
         updatedAt:
           type: object
-          default: '2026-03-18T16:06:18.774Z'
+          default: '2026-03-22T07:03:41.079Z'
         deletedAt:
           type: object
       required:
@@ -1210,13 +1687,13 @@ components:
           type: string
         id:
           type: object
-          default: d141891d-2ef2-4bc2-8432-0e9edd15f8ae
+          default: e8f0bc5a-ec1b-4646-9f50-2b46ad71c6f8
         createdAt:
           type: object
-          default: '2026-03-18T16:06:18.774Z'
+          default: '2026-03-22T07:03:41.080Z'
         updatedAt:
           type: object
-          default: '2026-03-18T16:06:18.774Z'
+          default: '2026-03-22T07:03:41.080Z'
         deletedAt:
           type: object
       required:
@@ -1243,13 +1720,13 @@ components:
           default: []
         id:
           type: object
-          default: 1e270c63-f863-489f-9f79-9ca8062e0529
+          default: c394955e-203a-4f1d-ae5b-fab1ba29d2a3
         createdAt:
           type: object
-          default: '2026-03-18T16:06:18.774Z'
+          default: '2026-03-22T07:03:41.080Z'
         updatedAt:
           type: object
-          default: '2026-03-18T16:06:18.774Z'
+          default: '2026-03-22T07:03:41.080Z'
         deletedAt:
           type: object
       required:
@@ -1276,13 +1753,13 @@ components:
           default: []
         id:
           type: object
-          default: 5e83fa9e-09a9-41fa-8b7c-139a23de0431
+          default: 081b1dc2-b86b-4f10-8956-10f45f443cdd
         createdAt:
           type: object
-          default: '2026-03-18T16:06:18.775Z'
+          default: '2026-03-22T07:03:41.081Z'
         updatedAt:
           type: object
-          default: '2026-03-18T16:06:18.775Z'
+          default: '2026-03-22T07:03:41.081Z'
         deletedAt:
           type: object
       required:
@@ -1343,13 +1820,13 @@ components:
               - STUDENT
         id:
           type: object
-          default: e0163b4f-6abf-452a-85cb-cec7de05d92d
+          default: b987ebac-ba13-4f28-8d55-ccb66fb6ca4b
         createdAt:
           type: object
-          default: '2026-03-18T16:06:18.773Z'
+          default: '2026-03-22T07:03:41.079Z'
         updatedAt:
           type: object
-          default: '2026-03-18T16:06:18.773Z'
+          default: '2026-03-22T07:03:41.079Z'
         deletedAt:
           type: object
       required:
@@ -1394,13 +1871,13 @@ components:
           type: string
         id:
           type: object
-          default: 82ebf70c-ef18-4ae6-a841-ca1569465cde
+          default: 64339670-d088-460b-be74-cdefde64db7d
         createdAt:
           type: object
-          default: '2026-03-18T16:06:18.776Z'
+          default: '2026-03-22T07:03:41.082Z'
         updatedAt:
           type: object
-          default: '2026-03-18T16:06:18.776Z'
+          default: '2026-03-22T07:03:41.082Z'
         deletedAt:
           type: object
       required:
@@ -1451,7 +1928,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-18T16:06:18.771Z'
+          default: '2026-03-22T07:03:41.076Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -1483,13 +1960,13 @@ components:
           default: []
         id:
           type: object
-          default: cf10048a-b860-4e23-8b6f-34748e3a8796
+          default: 8d04c77c-ea42-4495-ac9c-7831a7979919
         createdAt:
           type: object
-          default: '2026-03-18T16:06:18.772Z'
+          default: '2026-03-22T07:03:41.077Z'
         updatedAt:
           type: object
-          default: '2026-03-18T16:06:18.772Z'
+          default: '2026-03-22T07:03:41.077Z'
         deletedAt:
           type: object
       required:
@@ -1518,6 +1995,53 @@ components:
         - id
         - createdAt
         - updatedAt
+    IngestionRecordResult:
+      type: object
+      properties:
+        externalId:
+          type: string
+          description: The external identifier of the record
+        success:
+          type: boolean
+          description: Whether the record was successfully processed
+        error:
+          type: string
+          description: Error message if failed
+        internalId:
+          type: string
+          description: Internal ID if created
+      required:
+        - externalId
+        - success
+    IngestionResultDto:
+      type: object
+      properties:
+        ingestionId:
+          type: string
+          description: Unique identifier for the ingestion batch
+        total:
+          type: number
+          description: Total number of records processed
+        successes:
+          type: number
+          description: Number of successful records
+        failures:
+          type: number
+          description: Number of failed records
+        dryRun:
+          type: boolean
+          description: Whether the run was a dry-run
+        records:
+          type: array
+          items:
+            $ref: '#/components/schemas/IngestionRecordResult'
+      required:
+        - ingestionId
+        - total
+        - successes
+        - failures
+        - dryRun
+        - records
     SaveDraftRequest:
       type: object
       properties:
@@ -1713,6 +2237,189 @@ components:
         - pipelineId
         - status
         - actions
+    DepartmentSummaryDto:
+      type: object
+      properties:
+        totalFaculty:
+          type: number
+        totalSubmissions:
+          type: number
+        totalAnalyzed:
+          type: number
+        positiveCount:
+          type: number
+        negativeCount:
+          type: number
+        neutralCount:
+          type: number
+      required:
+        - totalFaculty
+        - totalSubmissions
+        - totalAnalyzed
+        - positiveCount
+        - negativeCount
+        - neutralCount
+    FacultySemesterStatsDto:
+      type: object
+      properties:
+        facultyId:
+          type: string
+        facultyName:
+          type: string
+        departmentCode:
+          type: string
+        submissionCount:
+          type: number
+        commentCount:
+          type: number
+        avgNormalizedScore:
+          type: number
+        positiveCount:
+          type: number
+        negativeCount:
+          type: number
+        neutralCount:
+          type: number
+        analyzedCount:
+          type: number
+        topicCount:
+          type: number
+        percentileRank:
+          type: number
+        scoreDelta:
+          type: number
+          nullable: true
+        sentimentDelta:
+          type: number
+          nullable: true
+      required:
+        - facultyId
+        - facultyName
+        - departmentCode
+        - submissionCount
+        - commentCount
+        - avgNormalizedScore
+        - positiveCount
+        - negativeCount
+        - neutralCount
+        - analyzedCount
+        - topicCount
+        - percentileRank
+    DepartmentOverviewResponseDto:
+      type: object
+      properties:
+        summary:
+          $ref: '#/components/schemas/DepartmentSummaryDto'
+        faculty:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacultySemesterStatsDto'
+        lastRefreshedAt:
+          type: string
+          nullable: true
+      required:
+        - summary
+        - faculty
+    AttentionFlagDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - declining_trend
+            - quant_qual_gap
+            - low_coverage
+        description:
+          type: string
+        metrics:
+          type: object
+      required:
+        - type
+        - description
+        - metrics
+    AttentionItemDto:
+      type: object
+      properties:
+        facultyId:
+          type: string
+        facultyName:
+          type: string
+        departmentCode:
+          type: string
+        flags:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttentionFlagDto'
+      required:
+        - facultyId
+        - facultyName
+        - departmentCode
+        - flags
+    AttentionListResponseDto:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttentionItemDto'
+        lastRefreshedAt:
+          type: string
+          nullable: true
+      required:
+        - items
+    FacultyTrendDto:
+      type: object
+      properties:
+        facultyId:
+          type: string
+        facultyName:
+          type: string
+        departmentCode:
+          type: string
+        semesterCount:
+          type: number
+        latestAvgScore:
+          type: number
+          nullable: true
+        latestPositiveRate:
+          type: number
+          nullable: true
+        scoreSlope:
+          type: number
+          nullable: true
+        scoreR2:
+          type: number
+          nullable: true
+        sentimentSlope:
+          type: number
+          nullable: true
+        sentimentR2:
+          type: number
+          nullable: true
+        trendDirection:
+          type: string
+          enum:
+            - improving
+            - declining
+            - stable
+      required:
+        - facultyId
+        - facultyName
+        - departmentCode
+        - semesterCount
+        - trendDirection
+    FacultyTrendsResponseDto:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacultyTrendDto'
+        lastRefreshedAt:
+          type: string
+          nullable: true
+      required:
+        - items
     CreateDimensionRequestDto:
       type: object
       properties:
@@ -1814,3 +2521,71 @@ components:
       required:
         - data
         - meta
+    SubmissionCountResponseDto:
+      type: object
+      properties:
+        count:
+          type: number
+          description: Number of submissions for this faculty in the given semester
+      required:
+        - count
+    DepartmentItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Department UUID
+        code:
+          type: string
+          description: Department code (e.g., "CCS")
+        name:
+          type: string
+          nullable: true
+          description: Department name
+      required:
+        - id
+        - code
+    ProgramItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Program UUID
+        code:
+          type: string
+          description: Program code (e.g., "BSCS", "BSIT")
+        name:
+          type: string
+          nullable: true
+          description: Program name
+        departmentId:
+          type: string
+          description: Parent department UUID
+      required:
+        - id
+        - code
+        - departmentId
+    CourseItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Course UUID
+        shortname:
+          type: string
+          description: Course shortname (e.g., "FREAI", "ELDNET1")
+        fullname:
+          type: string
+          description: Course fullname (e.g., "Free Elective AI")
+        programId:
+          type: string
+          description: Parent program UUID
+        isActive:
+          type: boolean
+          description: Whether the course is active in Moodle
+      required:
+        - id
+        - shortname
+        - fullname
+        - programId
+        - isActive
