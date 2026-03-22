@@ -22,6 +22,78 @@
         ]
       }
     },
+    "/api/v1/moodle/sync/status": {
+      "get": {
+        "operationId": "MoodleSyncController_GetSyncStatus_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncStatusResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get current Moodle sync status",
+        "tags": [
+          "Moodle"
+        ]
+      }
+    },
+    "/api/v1/moodle/sync": {
+      "post": {
+        "operationId": "MoodleSyncController_TriggerSync_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TriggerSyncResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden — superadmin only"
+          },
+          "409": {
+            "description": "Sync already in progress or queued"
+          },
+          "503": {
+            "description": "Sync queue unavailable"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Trigger a full Moodle sync (categories, courses, enrollments)",
+        "tags": [
+          "Moodle"
+        ]
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "operationId": "AuthController_Login_v1",
@@ -501,6 +573,70 @@
         ]
       }
     },
+    "/api/v1/questionnaires/submissions/check": {
+      "get": {
+        "operationId": "QuestionnaireController_checkSubmission_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "facultyId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Submission status for the given context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckSubmissionResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Check if the current user already submitted an evaluation",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
     "/api/v1/questionnaires/submissions": {
       "post": {
         "operationId": "QuestionnaireController_submitQuestionnaire_v1",
@@ -533,6 +669,148 @@
           }
         ],
         "summary": "Submit a completed questionnaire",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/versions/{versionId}/csv-template": {
+      "get": {
+        "operationId": "QuestionnaireController_GetCsvTemplate_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV template file"
+          },
+          "400": {
+            "description": "Version is not active"
+          },
+          "404": {
+            "description": "Version not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Download CSV template for a questionnaire version",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/ingest": {
+      "post": {
+        "operationId": "QuestionnaireController_IngestCsv_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file",
+                  "versionId"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "versionId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "dryRun": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "delimiter": {
+                    "type": "string",
+                    "maxLength": 1
+                  },
+                  "maxErrors": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "maxRecords": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5000,
+                    "default": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ingestion result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngestionResultDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid file or parameters"
+          },
+          "404": {
+            "description": "Version not found or not active"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Ingest questionnaire submissions from CSV",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
+    "/api/v1/questionnaires/versions/{versionId}/submissions": {
+      "delete": {
+        "operationId": "QuestionnaireController_wipeSubmissions_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Submissions wiped successfully"
+          },
+          "404": {
+            "description": "Version not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Wipe all submissions for a version",
         "tags": [
           "Questionnaires"
         ]
@@ -852,6 +1130,151 @@
         "summary": "Get recommendations for a completed pipeline",
         "tags": [
           "Analysis"
+        ]
+      }
+    },
+    "/api/v1/analytics/overview": {
+      "get": {
+        "operationId": "AnalyticsController_GetDepartmentOverview_v1",
+        "parameters": [
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "description": "Semester UUID to query analytics for",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "programCode",
+            "required": false,
+            "in": "query",
+            "description": "Optional program code filter",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DepartmentOverviewResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get department overview with faculty stats",
+        "tags": [
+          "Analytics"
+        ]
+      }
+    },
+    "/api/v1/analytics/attention": {
+      "get": {
+        "operationId": "AnalyticsController_GetAttentionList_v1",
+        "parameters": [
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "description": "Semester UUID to query analytics for",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttentionListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get attention list — faculty flagged for review",
+        "tags": [
+          "Analytics"
+        ]
+      }
+    },
+    "/api/v1/analytics/trends": {
+      "get": {
+        "operationId": "AnalyticsController_GetFacultyTrends_v1",
+        "parameters": [
+          {
+            "name": "semesterId",
+            "required": false,
+            "in": "query",
+            "description": "Semester UUID for scope resolution. Falls back to latest semester if omitted.",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "minSemesters",
+            "required": false,
+            "in": "query",
+            "description": "Minimum number of semesters for trend data",
+            "schema": {
+              "minimum": 1,
+              "default": 3,
+              "type": "number"
+            }
+          },
+          {
+            "name": "minR2",
+            "required": false,
+            "in": "query",
+            "description": "Minimum R² coefficient for trend significance",
+            "schema": {
+              "minimum": 0,
+              "default": 0.5,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FacultyTrendsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get faculty trend data across semesters",
+        "tags": [
+          "Analytics"
         ]
       }
     },
@@ -1194,6 +1617,241 @@
           "Faculty"
         ]
       }
+    },
+    "/api/v1/faculty/{facultyId}/submission-count": {
+      "get": {
+        "operationId": "FacultyController_getSubmissionCount_v1",
+        "parameters": [
+          {
+            "name": "facultyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "description": "Semester UUID to scope submission count",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmissionCountResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid UUID format"
+          },
+          "404": {
+            "description": "Faculty or semester not found"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get submission count for a faculty member in a semester",
+        "tags": [
+          "Faculty"
+        ]
+      }
+    },
+    "/api/v1/curriculum/departments": {
+      "get": {
+        "operationId": "CurriculumController_ListDepartments_v1",
+        "parameters": [
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "description": "Semester UUID to scope department list",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search by department code or name",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DepartmentItemResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List departments scoped to caller role",
+        "tags": [
+          "Curriculum"
+        ]
+      }
+    },
+    "/api/v1/curriculum/programs": {
+      "get": {
+        "operationId": "CurriculumController_ListPrograms_v1",
+        "parameters": [
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "description": "Semester UUID to scope program list",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "departmentId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by department UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search by program code or name",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProgramItemResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List programs scoped to caller role",
+        "tags": [
+          "Curriculum"
+        ]
+      }
+    },
+    "/api/v1/curriculum/courses": {
+      "get": {
+        "operationId": "CurriculumController_ListCourses_v1",
+        "parameters": [
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "description": "Semester UUID to scope course list",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "departmentId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by department UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "programId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by program UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search by course shortname or fullname",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CourseItemResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List courses scoped to caller role",
+        "tags": [
+          "Curriculum"
+        ]
+      }
     }
   },
   "info": {
@@ -1215,6 +1873,57 @@
       }
     },
     "schemas": {
+      "SyncStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "enum": [
+              "idle",
+              "active",
+              "queued"
+            ],
+            "type": "string",
+            "description": "Current sync pipeline state"
+          },
+          "jobId": {
+            "type": "string",
+            "description": "Job ID of the active or queued sync"
+          },
+          "trigger": {
+            "type": "string",
+            "description": "What triggered the sync (manual or scheduled)"
+          },
+          "startedAt": {
+            "type": "number",
+            "description": "Unix timestamp (ms) when the job was created"
+          },
+          "waitingCount": {
+            "type": "number",
+            "description": "Number of waiting jobs in the queue"
+          },
+          "failedCount": {
+            "type": "number",
+            "description": "Number of failed jobs retained in the queue"
+          }
+        },
+        "required": [
+          "state",
+          "waitingCount",
+          "failedCount"
+        ]
+      },
+      "TriggerSyncResponseDto": {
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "description": "The BullMQ job ID for the enqueued sync"
+          }
+        },
+        "required": [
+          "jobId"
+        ]
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -1362,6 +2071,27 @@
           "fullName"
         ]
       },
+      "SemesterShortResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "academicYear": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code"
+        ]
+      },
       "EnrollmentResponseDto": {
         "type": "object",
         "properties": {
@@ -1379,6 +2109,14 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/FacultyShortResponseDto"
+              }
+            ]
+          },
+          "semester": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SemesterShortResponseDto"
               }
             ]
           }
@@ -1590,15 +2328,15 @@
           },
           "id": {
             "type": "object",
-            "default": "f4a44d64-b70b-43b3-86b5-65db230a256d"
+            "default": "bdf11acd-547f-45ca-80d2-3f962e302d5f"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.710Z"
+            "default": "2026-03-22T06:57:21.915Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.710Z"
+            "default": "2026-03-22T06:57:21.915Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1703,6 +2441,21 @@
           "schema"
         ]
       },
+      "CheckSubmissionResponse": {
+        "type": "object",
+        "properties": {
+          "submitted": {
+            "type": "boolean"
+          },
+          "submittedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "submitted"
+        ]
+      },
       "SubmitQuestionnaireRequest": {
         "type": "object",
         "properties": {
@@ -1776,15 +2529,15 @@
           },
           "id": {
             "type": "object",
-            "default": "070087f5-40d6-4c27-b4b1-1725331d9593"
+            "default": "9e7b43a6-18c0-43c0-9615-99429114fa34"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.717Z"
+            "default": "2026-03-22T06:57:21.925Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.717Z"
+            "default": "2026-03-22T06:57:21.925Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1819,15 +2572,15 @@
           },
           "id": {
             "type": "object",
-            "default": "c17a1164-5a40-4aeb-b97d-127d616032bf"
+            "default": "3929c8f3-5334-4b9d-997a-c465302d7c1d"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.718Z"
+            "default": "2026-03-22T06:57:21.927Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.718Z"
+            "default": "2026-03-22T06:57:21.927Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1869,15 +2622,15 @@
           },
           "id": {
             "type": "object",
-            "default": "6a12eb70-e09e-4671-b9ef-e0b6a1634b9b"
+            "default": "dae316b7-2977-40cd-b292-79a3d7e41936"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.719Z"
+            "default": "2026-03-22T06:57:21.928Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.719Z"
+            "default": "2026-03-22T06:57:21.928Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1914,15 +2667,15 @@
           },
           "id": {
             "type": "object",
-            "default": "915095cf-8bdc-439a-867f-61ba7a611c7a"
+            "default": "94db7f2c-34a5-4334-ba2a-c8b103602b46"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.719Z"
+            "default": "2026-03-22T06:57:21.927Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.719Z"
+            "default": "2026-03-22T06:57:21.927Z"
           },
           "deletedAt": {
             "type": "object"
@@ -1959,15 +2712,15 @@
           },
           "id": {
             "type": "object",
-            "default": "75b15712-8855-4d46-8993-56bddc065381"
+            "default": "e45f7da9-7543-497b-96d4-486f10ba5c24"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.719Z"
+            "default": "2026-03-22T06:57:21.928Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.719Z"
+            "default": "2026-03-22T06:57:21.928Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2051,15 +2804,15 @@
           },
           "id": {
             "type": "object",
-            "default": "2b6b2624-4443-481b-b344-f2dcccbbf65a"
+            "default": "3a7a7825-d895-40ee-8aaa-62411763f666"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.718Z"
+            "default": "2026-03-22T06:57:21.926Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.718Z"
+            "default": "2026-03-22T06:57:21.926Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2119,15 +2872,15 @@
           },
           "id": {
             "type": "object",
-            "default": "76893cd8-e6e7-42be-a993-bba79bcf7cd6"
+            "default": "6d624789-020f-47c1-834e-6255707665d8"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.721Z"
+            "default": "2026-03-22T06:57:21.929Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.721Z"
+            "default": "2026-03-22T06:57:21.929Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2197,7 +2950,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-03-18T15:58:27.716Z"
+            "default": "2026-03-22T06:57:21.924Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -2244,15 +2997,15 @@
           },
           "id": {
             "type": "object",
-            "default": "2f1fd2a6-e2d8-4992-8580-daba0f906c67"
+            "default": "2c79f1b4-88ca-4a32-9683-aa606c7f4a9e"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.717Z"
+            "default": "2026-03-22T06:57:21.925Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-18T15:58:27.717Z"
+            "default": "2026-03-22T06:57:21.925Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2284,6 +3037,70 @@
           "id",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "IngestionRecordResult": {
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string",
+            "description": "The external identifier of the record"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Whether the record was successfully processed"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if failed"
+          },
+          "internalId": {
+            "type": "string",
+            "description": "Internal ID if created"
+          }
+        },
+        "required": [
+          "externalId",
+          "success"
+        ]
+      },
+      "IngestionResultDto": {
+        "type": "object",
+        "properties": {
+          "ingestionId": {
+            "type": "string",
+            "description": "Unique identifier for the ingestion batch"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total number of records processed"
+          },
+          "successes": {
+            "type": "number",
+            "description": "Number of successful records"
+          },
+          "failures": {
+            "type": "number",
+            "description": "Number of failed records"
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Whether the run was a dry-run"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IngestionRecordResult"
+            }
+          }
+        },
+        "required": [
+          "ingestionId",
+          "total",
+          "successes",
+          "failures",
+          "dryRun",
+          "records"
         ]
       },
       "SaveDraftRequest": {
@@ -2548,6 +3365,264 @@
           "actions"
         ]
       },
+      "DepartmentSummaryDto": {
+        "type": "object",
+        "properties": {
+          "totalFaculty": {
+            "type": "number"
+          },
+          "totalSubmissions": {
+            "type": "number"
+          },
+          "totalAnalyzed": {
+            "type": "number"
+          },
+          "positiveCount": {
+            "type": "number"
+          },
+          "negativeCount": {
+            "type": "number"
+          },
+          "neutralCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "totalFaculty",
+          "totalSubmissions",
+          "totalAnalyzed",
+          "positiveCount",
+          "negativeCount",
+          "neutralCount"
+        ]
+      },
+      "FacultySemesterStatsDto": {
+        "type": "object",
+        "properties": {
+          "facultyId": {
+            "type": "string"
+          },
+          "facultyName": {
+            "type": "string"
+          },
+          "departmentCode": {
+            "type": "string"
+          },
+          "submissionCount": {
+            "type": "number"
+          },
+          "commentCount": {
+            "type": "number"
+          },
+          "avgNormalizedScore": {
+            "type": "number"
+          },
+          "positiveCount": {
+            "type": "number"
+          },
+          "negativeCount": {
+            "type": "number"
+          },
+          "neutralCount": {
+            "type": "number"
+          },
+          "analyzedCount": {
+            "type": "number"
+          },
+          "topicCount": {
+            "type": "number"
+          },
+          "percentileRank": {
+            "type": "number"
+          },
+          "scoreDelta": {
+            "type": "number",
+            "nullable": true
+          },
+          "sentimentDelta": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "facultyId",
+          "facultyName",
+          "departmentCode",
+          "submissionCount",
+          "commentCount",
+          "avgNormalizedScore",
+          "positiveCount",
+          "negativeCount",
+          "neutralCount",
+          "analyzedCount",
+          "topicCount",
+          "percentileRank"
+        ]
+      },
+      "DepartmentOverviewResponseDto": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "$ref": "#/components/schemas/DepartmentSummaryDto"
+          },
+          "faculty": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FacultySemesterStatsDto"
+            }
+          },
+          "lastRefreshedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "summary",
+          "faculty"
+        ]
+      },
+      "AttentionFlagDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "declining_trend",
+              "quant_qual_gap",
+              "low_coverage"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "metrics": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "type",
+          "description",
+          "metrics"
+        ]
+      },
+      "AttentionItemDto": {
+        "type": "object",
+        "properties": {
+          "facultyId": {
+            "type": "string"
+          },
+          "facultyName": {
+            "type": "string"
+          },
+          "departmentCode": {
+            "type": "string"
+          },
+          "flags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttentionFlagDto"
+            }
+          }
+        },
+        "required": [
+          "facultyId",
+          "facultyName",
+          "departmentCode",
+          "flags"
+        ]
+      },
+      "AttentionListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttentionItemDto"
+            }
+          },
+          "lastRefreshedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "FacultyTrendDto": {
+        "type": "object",
+        "properties": {
+          "facultyId": {
+            "type": "string"
+          },
+          "facultyName": {
+            "type": "string"
+          },
+          "departmentCode": {
+            "type": "string"
+          },
+          "semesterCount": {
+            "type": "number"
+          },
+          "latestAvgScore": {
+            "type": "number",
+            "nullable": true
+          },
+          "latestPositiveRate": {
+            "type": "number",
+            "nullable": true
+          },
+          "scoreSlope": {
+            "type": "number",
+            "nullable": true
+          },
+          "scoreR2": {
+            "type": "number",
+            "nullable": true
+          },
+          "sentimentSlope": {
+            "type": "number",
+            "nullable": true
+          },
+          "sentimentR2": {
+            "type": "number",
+            "nullable": true
+          },
+          "trendDirection": {
+            "type": "string",
+            "enum": [
+              "improving",
+              "declining",
+              "stable"
+            ]
+          }
+        },
+        "required": [
+          "facultyId",
+          "facultyName",
+          "departmentCode",
+          "semesterCount",
+          "trendDirection"
+        ]
+      },
+      "FacultyTrendsResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FacultyTrendDto"
+            }
+          },
+          "lastRefreshedAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "CreateDimensionRequestDto": {
         "type": "object",
         "properties": {
@@ -2689,6 +3764,99 @@
         "required": [
           "data",
           "meta"
+        ]
+      },
+      "SubmissionCountResponseDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "description": "Number of submissions for this faculty in the given semester"
+          }
+        },
+        "required": [
+          "count"
+        ]
+      },
+      "DepartmentItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Department UUID"
+          },
+          "code": {
+            "type": "string",
+            "description": "Department code (e.g., \"CCS\")"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Department name"
+          }
+        },
+        "required": [
+          "id",
+          "code"
+        ]
+      },
+      "ProgramItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Program UUID"
+          },
+          "code": {
+            "type": "string",
+            "description": "Program code (e.g., \"BSCS\", \"BSIT\")"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Program name"
+          },
+          "departmentId": {
+            "type": "string",
+            "description": "Parent department UUID"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "departmentId"
+        ]
+      },
+      "CourseItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Course UUID"
+          },
+          "shortname": {
+            "type": "string",
+            "description": "Course shortname (e.g., \"FREAI\", \"ELDNET1\")"
+          },
+          "fullname": {
+            "type": "string",
+            "description": "Course fullname (e.g., \"Free Elective AI\")"
+          },
+          "programId": {
+            "type": "string",
+            "description": "Parent program UUID"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Whether the course is active in Moodle"
+          }
+        },
+        "required": [
+          "id",
+          "shortname",
+          "fullname",
+          "programId",
+          "isActive"
         ]
       }
     }
