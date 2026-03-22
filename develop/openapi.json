@@ -573,6 +573,70 @@
         ]
       }
     },
+    "/api/v1/questionnaires/submissions/check": {
+      "get": {
+        "operationId": "QuestionnaireController_checkSubmission_v1",
+        "parameters": [
+          {
+            "name": "versionId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "facultyId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "semesterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Submission status for the given context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckSubmissionResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Check if the current user already submitted an evaluation",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
     "/api/v1/questionnaires/submissions": {
       "post": {
         "operationId": "QuestionnaireController_submitQuestionnaire_v1",
@@ -2264,15 +2328,15 @@
           },
           "id": {
             "type": "object",
-            "default": "0c534077-3574-48b9-9899-e3c8f5ed7e06"
+            "default": "7624abd9-9d45-45d0-b8f2-d79b97bbd55d"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.074Z"
+            "default": "2026-03-22T03:50:13.632Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.074Z"
+            "default": "2026-03-22T03:50:13.632Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2377,6 +2441,21 @@
           "schema"
         ]
       },
+      "CheckSubmissionResponse": {
+        "type": "object",
+        "properties": {
+          "submitted": {
+            "type": "boolean"
+          },
+          "submittedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "submitted"
+        ]
+      },
       "SubmitQuestionnaireRequest": {
         "type": "object",
         "properties": {
@@ -2450,15 +2529,15 @@
           },
           "id": {
             "type": "object",
-            "default": "fa5c8f40-04aa-4839-8e16-4b0fb1351cc3"
+            "default": "ceaa833c-36fd-4fb0-8e8b-858815251589"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.082Z"
+            "default": "2026-03-22T03:50:13.640Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.082Z"
+            "default": "2026-03-22T03:50:13.640Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2493,15 +2572,15 @@
           },
           "id": {
             "type": "object",
-            "default": "2db6497c-b7b5-438a-a0c9-2c2e2e228384"
+            "default": "ec504a66-55e5-4d78-8b25-a9b43b670355"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.084Z"
+            "default": "2026-03-22T03:50:13.642Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.084Z"
+            "default": "2026-03-22T03:50:13.642Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2543,15 +2622,15 @@
           },
           "id": {
             "type": "object",
-            "default": "fbe2e86a-94f8-4a4f-90f7-ed2d598a9ee7"
+            "default": "64b5dd3d-5d57-4786-81a2-73701942b5ec"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.085Z"
+            "default": "2026-03-22T03:50:13.643Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.085Z"
+            "default": "2026-03-22T03:50:13.643Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2588,15 +2667,15 @@
           },
           "id": {
             "type": "object",
-            "default": "13548f8a-41cb-4342-90c0-824e82b75c24"
+            "default": "28a42d72-fbd9-44c4-b046-d41c90f66ba9"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.084Z"
+            "default": "2026-03-22T03:50:13.643Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.084Z"
+            "default": "2026-03-22T03:50:13.643Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2633,15 +2712,15 @@
           },
           "id": {
             "type": "object",
-            "default": "33715225-9812-4079-a30f-5e9a500c200e"
+            "default": "a50d3993-8d00-49c1-b02c-7b3a4bad6662"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.086Z"
+            "default": "2026-03-22T03:50:13.643Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.086Z"
+            "default": "2026-03-22T03:50:13.643Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2725,15 +2804,15 @@
           },
           "id": {
             "type": "object",
-            "default": "0f9a8bf8-6e3e-4364-adb4-57af991e515e"
+            "default": "6b8d98cc-8c09-4768-9510-a37e372a4c01"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.083Z"
+            "default": "2026-03-22T03:50:13.642Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.083Z"
+            "default": "2026-03-22T03:50:13.642Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2793,15 +2872,15 @@
           },
           "id": {
             "type": "object",
-            "default": "81a91f5d-492d-488c-89b6-11c197c37ea8"
+            "default": "583bf28d-2ce3-4209-88aa-dd143338125b"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.087Z"
+            "default": "2026-03-22T03:50:13.644Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.087Z"
+            "default": "2026-03-22T03:50:13.644Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2871,7 +2950,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-03-22T03:27:13.080Z"
+            "default": "2026-03-22T03:50:13.639Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -2918,15 +2997,15 @@
           },
           "id": {
             "type": "object",
-            "default": "7e454376-ab03-483a-924f-42194c99caf6"
+            "default": "37f9bd3d-dc66-4874-ba44-2c807b24b3b8"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.081Z"
+            "default": "2026-03-22T03:50:13.640Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-22T03:27:13.081Z"
+            "default": "2026-03-22T03:50:13.640Z"
           },
           "deletedAt": {
             "type": "object"
