@@ -1138,6 +1138,47 @@ paths:
       summary: List courses scoped to caller role
       tags:
         - Curriculum
+  /api/v1/admin/institutional-roles:
+    post:
+      operationId: AdminController_AssignRole_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignInstitutionalRoleDto'
+      responses:
+        '200':
+          description: Role assigned successfully
+        '201':
+          description: ''
+        '404':
+          description: User or category not found
+      security:
+        - accesstoken: []
+      summary: Assign an institutional role (DEAN/CHAIRPERSON) to a user
+      tags:
+        - Admin
+    delete:
+      operationId: AdminController_RemoveRole_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveInstitutionalRoleDto'
+      responses:
+        '200':
+          description: Role removed successfully
+        '404':
+          description: Role assignment not found
+      security:
+        - accesstoken: []
+      summary: Remove an institutional role from a user
+      tags:
+        - Admin
 info:
   title: Faculytics API
   description: This is the official API documentation for Faculytics
@@ -1487,13 +1528,13 @@ components:
           default: []
         id:
           type: object
-          default: 21b5cf01-0733-4244-99d2-fdbf12dcaf77
+          default: 7b8cde60-b34b-4151-b19e-00e331deb7b0
         createdAt:
           type: object
-          default: '2026-03-24T16:28:57.469Z'
+          default: '2026-03-24T19:30:55.671Z'
         updatedAt:
           type: object
-          default: '2026-03-24T16:28:57.469Z'
+          default: '2026-03-24T19:30:55.671Z'
         deletedAt:
           type: object
       required:
@@ -1633,13 +1674,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: 6e4344f2-9f69-4f4c-8834-df4f3dbe6df5
+          default: a98e5dc3-20db-49d9-a205-f50adc7dcc1e
         createdAt:
           type: object
-          default: '2026-03-24T16:28:57.479Z'
+          default: '2026-03-24T19:30:55.679Z'
         updatedAt:
           type: object
-          default: '2026-03-24T16:28:57.479Z'
+          default: '2026-03-24T19:30:55.679Z'
         deletedAt:
           type: object
       required:
@@ -1665,13 +1706,13 @@ components:
           default: []
         id:
           type: object
-          default: 5a7ee20a-1403-4205-928a-ecfd19c210c7
+          default: c6775723-2216-4216-9387-75d2050fc357
         createdAt:
           type: object
-          default: '2026-03-24T16:28:57.481Z'
+          default: '2026-03-24T19:30:55.681Z'
         updatedAt:
           type: object
-          default: '2026-03-24T16:28:57.481Z'
+          default: '2026-03-24T19:30:55.681Z'
         deletedAt:
           type: object
       required:
@@ -1701,13 +1742,13 @@ components:
           type: string
         id:
           type: object
-          default: 49e468a4-05d7-45e8-a72e-848522d4483e
+          default: 1f99c65f-ef61-40fa-8800-4050e5f5ea0b
         createdAt:
           type: object
-          default: '2026-03-24T16:28:57.482Z'
+          default: '2026-03-24T19:30:55.684Z'
         updatedAt:
           type: object
-          default: '2026-03-24T16:28:57.482Z'
+          default: '2026-03-24T19:30:55.684Z'
         deletedAt:
           type: object
       required:
@@ -1734,13 +1775,13 @@ components:
           default: []
         id:
           type: object
-          default: 11bb5e8c-d1c6-4865-8cf2-97ceb1234910
+          default: 5a2eaed8-8b77-4f00-8920-752fa530699e
         createdAt:
           type: object
-          default: '2026-03-24T16:28:57.482Z'
+          default: '2026-03-24T19:30:55.684Z'
         updatedAt:
           type: object
-          default: '2026-03-24T16:28:57.482Z'
+          default: '2026-03-24T19:30:55.684Z'
         deletedAt:
           type: object
       required:
@@ -1767,13 +1808,13 @@ components:
           default: []
         id:
           type: object
-          default: 0fe091e8-7529-4277-850b-e0b333833436
+          default: f51b8c87-4828-4d05-bf9f-00531101c7ea
         createdAt:
           type: object
-          default: '2026-03-24T16:28:57.482Z'
+          default: '2026-03-24T19:30:55.685Z'
         updatedAt:
           type: object
-          default: '2026-03-24T16:28:57.482Z'
+          default: '2026-03-24T19:30:55.685Z'
         deletedAt:
           type: object
       required:
@@ -1830,17 +1871,18 @@ components:
               - SUPER_ADMIN
               - ADMIN
               - DEAN
+              - CHAIRPERSON
               - FACULTY
               - STUDENT
         id:
           type: object
-          default: 7730f3e5-05a7-48d2-830d-d6db5d71cd99
+          default: 53088506-2196-4d00-b1f6-59e08ed6ed82
         createdAt:
           type: object
-          default: '2026-03-24T16:28:57.481Z'
+          default: '2026-03-24T19:30:55.680Z'
         updatedAt:
           type: object
-          default: '2026-03-24T16:28:57.481Z'
+          default: '2026-03-24T19:30:55.680Z'
         deletedAt:
           type: object
       required:
@@ -1885,13 +1927,13 @@ components:
           type: string
         id:
           type: object
-          default: 64edd7fd-2be1-46d5-adb7-121713bfb510
+          default: 3d0fd423-0975-4ad1-92e9-787a207356d0
         createdAt:
           type: object
-          default: '2026-03-24T16:28:57.483Z'
+          default: '2026-03-24T19:30:55.685Z'
         updatedAt:
           type: object
-          default: '2026-03-24T16:28:57.483Z'
+          default: '2026-03-24T19:30:55.686Z'
         deletedAt:
           type: object
       required:
@@ -1921,6 +1963,7 @@ components:
           enum:
             - STUDENT
             - DEAN
+            - CHAIRPERSON
         semester:
           $ref: '#/components/schemas/Semester'
         course:
@@ -1942,7 +1985,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-24T16:28:57.478Z'
+          default: '2026-03-24T19:30:55.678Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -1974,13 +2017,13 @@ components:
           default: []
         id:
           type: object
-          default: 3016a32f-cbd6-4c54-a87d-39569cbf9992
+          default: d5be6a04-a09a-4d85-bdd0-fc0bf12da6e9
         createdAt:
           type: object
-          default: '2026-03-24T16:28:57.479Z'
+          default: '2026-03-24T19:30:55.679Z'
         updatedAt:
           type: object
-          default: '2026-03-24T16:28:57.479Z'
+          default: '2026-03-24T19:30:55.679Z'
         deletedAt:
           type: object
       required:
@@ -2603,3 +2646,41 @@ components:
         - fullname
         - programId
         - isActive
+    AssignInstitutionalRoleDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: UUID of the user to assign the role to
+        role:
+          enum:
+            - DEAN
+            - CHAIRPERSON
+          type: string
+          description: The institutional role to assign
+        moodleCategoryId:
+          type: number
+          description: Moodle category ID to scope the role to
+      required:
+        - userId
+        - role
+        - moodleCategoryId
+    RemoveInstitutionalRoleDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: UUID of the user to remove the role from
+        role:
+          enum:
+            - DEAN
+            - CHAIRPERSON
+          type: string
+          description: The institutional role to remove
+        moodleCategoryId:
+          type: number
+          description: Moodle category ID the role is scoped to
+      required:
+        - userId
+        - role
+        - moodleCategoryId
