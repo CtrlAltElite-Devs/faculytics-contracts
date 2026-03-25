@@ -94,6 +94,121 @@
         ]
       }
     },
+    "/api/v1/moodle/sync/history": {
+      "get": {
+        "operationId": "MoodleSyncController_GetSyncHistory_v1",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncHistoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get paginated Moodle sync history",
+        "tags": [
+          "Moodle"
+        ]
+      }
+    },
+    "/api/v1/moodle/sync/schedule": {
+      "get": {
+        "operationId": "MoodleSyncController_GetSyncSchedule_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncScheduleResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get current sync schedule",
+        "tags": [
+          "Moodle"
+        ]
+      },
+      "put": {
+        "operationId": "MoodleSyncController_UpdateSyncSchedule_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSyncScheduleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncScheduleResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Update sync schedule interval",
+        "tags": [
+          "Moodle"
+        ]
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "operationId": "AuthController_Login_v1",
@@ -1991,6 +2106,174 @@
           "jobId"
         ]
       },
+      "SyncPhaseResultDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "object"
+          },
+          "durationMs": {
+            "type": "number"
+          },
+          "fetched": {
+            "type": "number"
+          },
+          "inserted": {
+            "type": "number"
+          },
+          "updated": {
+            "type": "number"
+          },
+          "deactivated": {
+            "type": "number"
+          },
+          "errors": {
+            "type": "number"
+          },
+          "errorMessage": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "durationMs",
+          "fetched",
+          "inserted",
+          "updated",
+          "deactivated",
+          "errors"
+        ]
+      },
+      "SyncLogResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "string"
+          },
+          "triggeredById": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "startedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "completedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "durationMs": {
+            "type": "number"
+          },
+          "categories": {
+            "$ref": "#/components/schemas/SyncPhaseResultDto"
+          },
+          "courses": {
+            "$ref": "#/components/schemas/SyncPhaseResultDto"
+          },
+          "enrollments": {
+            "$ref": "#/components/schemas/SyncPhaseResultDto"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "jobId": {
+            "type": "string"
+          },
+          "cronExpression": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "trigger",
+          "status",
+          "startedAt"
+        ]
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "type": "number"
+          },
+          "itemCount": {
+            "type": "number"
+          },
+          "itemsPerPage": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          },
+          "currentPage": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "totalItems",
+          "itemCount",
+          "itemsPerPage",
+          "totalPages",
+          "currentPage"
+        ]
+      },
+      "SyncHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncLogResponseDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "SyncScheduleResponseDto": {
+        "type": "object",
+        "properties": {
+          "intervalMinutes": {
+            "type": "number"
+          },
+          "cronExpression": {
+            "type": "string"
+          },
+          "nextExecution": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "intervalMinutes",
+          "cronExpression"
+        ]
+      },
+      "UpdateSyncScheduleDto": {
+        "type": "object",
+        "properties": {
+          "intervalMinutes": {
+            "type": "number",
+            "minimum": 30,
+            "description": "Sync interval in minutes (minimum 30)",
+            "example": 60
+          }
+        },
+        "required": [
+          "intervalMinutes"
+        ]
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -2217,33 +2500,6 @@
           "course"
         ]
       },
-      "PaginationMeta": {
-        "type": "object",
-        "properties": {
-          "totalItems": {
-            "type": "number"
-          },
-          "itemCount": {
-            "type": "number"
-          },
-          "itemsPerPage": {
-            "type": "number"
-          },
-          "totalPages": {
-            "type": "number"
-          },
-          "currentPage": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "totalItems",
-          "itemCount",
-          "itemsPerPage",
-          "totalPages",
-          "currentPage"
-        ]
-      },
       "MyEnrollmentsResponseDto": {
         "type": "object",
         "properties": {
@@ -2418,15 +2674,15 @@
           },
           "id": {
             "type": "object",
-            "default": "b18ea18f-d362-4411-852a-449a39fb24aa"
+            "default": "06a7d42e-c09f-4be0-bcfc-1309706445ff"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.300Z"
+            "default": "2026-03-25T13:24:32.929Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.300Z"
+            "default": "2026-03-25T13:24:32.929Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2619,15 +2875,15 @@
           },
           "id": {
             "type": "object",
-            "default": "0a961902-2659-48ed-b7cb-02601385362a"
+            "default": "9fc581c4-1748-4b4e-984f-ebb48c1d168c"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.308Z"
+            "default": "2026-03-25T13:24:32.938Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.308Z"
+            "default": "2026-03-25T13:24:32.938Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2662,15 +2918,15 @@
           },
           "id": {
             "type": "object",
-            "default": "a95ce2ed-85b5-419a-b186-2d92fe2b5fb3"
+            "default": "05964ea3-7230-47de-831d-3adc5a413d41"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.309Z"
+            "default": "2026-03-25T13:24:32.940Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.310Z"
+            "default": "2026-03-25T13:24:32.940Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2712,15 +2968,15 @@
           },
           "id": {
             "type": "object",
-            "default": "42c00688-e2b9-4be5-b69c-7f9c1f36b696"
+            "default": "e095f275-7855-43f1-a93c-190de2dcafe4"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.310Z"
+            "default": "2026-03-25T13:24:32.941Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.310Z"
+            "default": "2026-03-25T13:24:32.941Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2757,15 +3013,15 @@
           },
           "id": {
             "type": "object",
-            "default": "4e291c26-f44d-47a3-a281-25c47a587cad"
+            "default": "90c69d32-72fa-4c6f-a350-0072ba16598e"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.310Z"
+            "default": "2026-03-25T13:24:32.941Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.310Z"
+            "default": "2026-03-25T13:24:32.941Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2802,15 +3058,15 @@
           },
           "id": {
             "type": "object",
-            "default": "3827e0fc-96a1-4747-879e-24ac527291c5"
+            "default": "97d366ad-074c-4fe3-8611-408d0d97d40a"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.311Z"
+            "default": "2026-03-25T13:24:32.942Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.311Z"
+            "default": "2026-03-25T13:24:32.942Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2895,15 +3151,15 @@
           },
           "id": {
             "type": "object",
-            "default": "82c7f06b-5d5b-4307-8720-d6a430bcccca"
+            "default": "64116b0f-60b4-4bfe-9c80-43996e01ac7e"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.309Z"
+            "default": "2026-03-25T13:24:32.940Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.309Z"
+            "default": "2026-03-25T13:24:32.940Z"
           },
           "deletedAt": {
             "type": "object"
@@ -2963,15 +3219,15 @@
           },
           "id": {
             "type": "object",
-            "default": "8960d5f4-4f4e-44d9-b9a0-6dfde767b261"
+            "default": "13c16e0f-0296-4d16-89ce-1bda6359dd2e"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.316Z"
+            "default": "2026-03-25T13:24:32.943Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.316Z"
+            "default": "2026-03-25T13:24:32.943Z"
           },
           "deletedAt": {
             "type": "object"
@@ -3042,7 +3298,7 @@
           "submittedAt": {
             "format": "date-time",
             "type": "string",
-            "default": "2026-03-25T02:31:12.307Z"
+            "default": "2026-03-25T13:24:32.937Z"
           },
           "facultyNameSnapshot": {
             "type": "string"
@@ -3089,15 +3345,15 @@
           },
           "id": {
             "type": "object",
-            "default": "f2b3e7a1-89a4-48dc-baec-cba07d6ee2bd"
+            "default": "1b25c94f-180a-49f3-bf79-5aa0705311ce"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.308Z"
+            "default": "2026-03-25T13:24:32.938Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T02:31:12.308Z"
+            "default": "2026-03-25T13:24:32.938Z"
           },
           "deletedAt": {
             "type": "object"
