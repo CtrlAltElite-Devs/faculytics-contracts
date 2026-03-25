@@ -470,7 +470,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QuestionnaireSubmission'
+                $ref: '#/components/schemas/SubmitQuestionnaireResponse'
       security:
         - accesstoken: []
       summary: Submit a completed questionnaire
@@ -1692,13 +1692,13 @@ components:
           default: []
         id:
           type: object
-          default: 06a7d42e-c09f-4be0-bcfc-1309706445ff
+          default: 126c2b12-3b7f-46e8-afa5-bbba3f7037ac
         createdAt:
           type: object
-          default: '2026-03-25T13:24:32.929Z'
+          default: '2026-03-25T14:02:49.228Z'
         updatedAt:
           type: object
-          default: '2026-03-25T13:24:32.929Z'
+          default: '2026-03-25T14:02:49.228Z'
         deletedAt:
           type: object
       required:
@@ -1814,408 +1814,42 @@ components:
         - facultyId
         - semesterId
         - answers
-    QuestionnaireVersion:
+    SubmitQuestionnaireResponse:
       type: object
       properties:
-        questionnaire:
-          $ref: '#/components/schemas/Questionnaire'
-        versionNumber:
-          type: number
-        schemaSnapshot:
-          type: object
-        publishedAt:
-          format: date-time
-          type: string
-        isActive:
-          type: boolean
-          default: false
-        status:
-          type: string
-          default: DRAFT
-          enum:
-            - DRAFT
-            - ACTIVE
-            - DEPRECATED
         id:
-          type: object
-          default: 9fc581c4-1748-4b4e-984f-ebb48c1d168c
-        createdAt:
-          type: object
-          default: '2026-03-25T13:24:32.938Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T13:24:32.938Z'
-        deletedAt:
-          type: object
-      required:
-        - questionnaire
-        - versionNumber
-        - schemaSnapshot
-        - isActive
-        - status
-        - id
-        - createdAt
-        - updatedAt
-    Campus:
-      type: object
-      properties:
-        moodleCategoryId:
-          type: number
-        code:
-          type: string
-        name:
-          type: string
-        semesters:
-          type: object
-          default: []
-        id:
-          type: object
-          default: 05964ea3-7230-47de-831d-3adc5a413d41
-        createdAt:
-          type: object
-          default: '2026-03-25T13:24:32.940Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T13:24:32.940Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCategoryId
-        - code
-        - semesters
-        - id
-        - createdAt
-        - updatedAt
-    Semester:
-      type: object
-      properties:
-        moodleCategoryId:
-          type: number
-        code:
-          type: string
-        label:
-          type: string
-        academicYear:
-          type: string
-        campus:
-          $ref: '#/components/schemas/Campus'
-        departments:
-          type: object
-          default: []
-        description:
-          type: string
-        id:
-          type: object
-          default: e095f275-7855-43f1-a93c-190de2dcafe4
-        createdAt:
-          type: object
-          default: '2026-03-25T13:24:32.941Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T13:24:32.941Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCategoryId
-        - code
-        - campus
-        - departments
-        - id
-        - createdAt
-        - updatedAt
-    Department:
-      type: object
-      properties:
-        moodleCategoryId:
-          type: number
-        code:
-          type: string
-        name:
-          type: string
-        semester:
-          $ref: '#/components/schemas/Semester'
-        programs:
-          type: object
-          default: []
-        id:
-          type: object
-          default: 90c69d32-72fa-4c6f-a350-0072ba16598e
-        createdAt:
-          type: object
-          default: '2026-03-25T13:24:32.941Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T13:24:32.941Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCategoryId
-        - code
-        - semester
-        - programs
-        - id
-        - createdAt
-        - updatedAt
-    Program:
-      type: object
-      properties:
-        moodleCategoryId:
-          type: number
-        code:
-          type: string
-        name:
-          type: string
-        department:
-          $ref: '#/components/schemas/Department'
-        courses:
-          type: object
-          default: []
-        id:
-          type: object
-          default: 97d366ad-074c-4fe3-8611-408d0d97d40a
-        createdAt:
-          type: object
-          default: '2026-03-25T13:24:32.942Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T13:24:32.942Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCategoryId
-        - code
-        - department
-        - courses
-        - id
-        - createdAt
-        - updatedAt
-    User:
-      type: object
-      properties:
-        userName:
-          type: string
-        moodleUserId:
-          type: number
-        password:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        userProfilePicture:
-          type: string
-        fullName:
-          type: string
-        campus:
-          $ref: '#/components/schemas/Campus'
-        department:
-          $ref: '#/components/schemas/Department'
-        program:
-          $ref: '#/components/schemas/Program'
-        moodleTokens:
-          type: object
-          default: []
-        enrollments:
-          type: object
-          default: []
-        institutionalRoles:
-          type: object
-          default: []
-        lastLoginAt:
-          format: date-time
-          type: string
-        isActive:
-          type: boolean
-        roles:
-          type: array
-          default: []
-          items:
-            type: string
-            enum:
-              - SUPER_ADMIN
-              - ADMIN
-              - DEAN
-              - CHAIRPERSON
-              - FACULTY
-              - STUDENT
-        id:
-          type: object
-          default: 64116b0f-60b4-4bfe-9c80-43996e01ac7e
-        createdAt:
-          type: object
-          default: '2026-03-25T13:24:32.940Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T13:24:32.940Z'
-        deletedAt:
-          type: object
-      required:
-        - userName
-        - firstName
-        - lastName
-        - userProfilePicture
-        - moodleTokens
-        - enrollments
-        - institutionalRoles
-        - lastLoginAt
-        - isActive
-        - roles
-        - id
-        - createdAt
-        - updatedAt
-    Course:
-      type: object
-      properties:
-        moodleCourseId:
-          type: number
-        shortname:
-          type: string
-        fullname:
-          type: string
-        program:
-          $ref: '#/components/schemas/Program'
-        startDate:
-          format: date-time
-          type: string
-        endDate:
-          format: date-time
-          type: string
-        isVisible:
-          type: boolean
-        timeModified:
-          format: date-time
-          type: string
-        isActive:
-          type: boolean
-        courseImage:
-          type: string
-        id:
-          type: object
-          default: 13c16e0f-0296-4d16-89ce-1bda6359dd2e
-        createdAt:
-          type: object
-          default: '2026-03-25T13:24:32.943Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T13:24:32.943Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCourseId
-        - shortname
-        - fullname
-        - program
-        - startDate
-        - endDate
-        - isVisible
-        - timeModified
-        - isActive
-        - id
-        - createdAt
-        - updatedAt
-    QuestionnaireSubmission:
-      type: object
-      properties:
-        questionnaireVersion:
-          $ref: '#/components/schemas/QuestionnaireVersion'
-        respondent:
-          $ref: '#/components/schemas/User'
-        faculty:
-          $ref: '#/components/schemas/User'
-        respondentRole:
-          type: string
-          enum:
-            - STUDENT
-            - DEAN
-            - CHAIRPERSON
-        semester:
-          $ref: '#/components/schemas/Semester'
-        course:
-          $ref: '#/components/schemas/Course'
-        department:
-          $ref: '#/components/schemas/Department'
-        program:
-          $ref: '#/components/schemas/Program'
-        campus:
-          $ref: '#/components/schemas/Campus'
-        totalScore:
-          type: number
-        normalizedScore:
-          type: number
-        qualitativeComment:
-          type: string
-        cleanedComment:
           type: string
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-25T13:24:32.937Z'
-        facultyNameSnapshot:
+        respondentRole:
+          enum:
+            - STUDENT
+            - DEAN
+            - CHAIRPERSON
           type: string
-        facultyEmployeeNumberSnapshot:
+        totalScore:
+          type: number
+        normalizedScore:
+          type: number
+        faculty:
           type: string
-        departmentCodeSnapshot:
+        course:
           type: string
-        departmentNameSnapshot:
+          nullable: true
+        semester:
           type: string
-        programCodeSnapshot:
+        academicYear:
           type: string
-        programNameSnapshot:
-          type: string
-        campusCodeSnapshot:
-          type: string
-        campusNameSnapshot:
-          type: string
-        courseCodeSnapshot:
-          type: string
-        courseTitleSnapshot:
-          type: string
-        semesterCodeSnapshot:
-          type: string
-        semesterLabelSnapshot:
-          type: string
-        academicYearSnapshot:
-          type: string
-        answers:
-          type: object
-          default: []
-        id:
-          type: object
-          default: 1b25c94f-180a-49f3-bf79-5aa0705311ce
-        createdAt:
-          type: object
-          default: '2026-03-25T13:24:32.938Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T13:24:32.938Z'
-        deletedAt:
-          type: object
       required:
-        - questionnaireVersion
-        - respondent
-        - faculty
+        - id
+        - submittedAt
         - respondentRole
-        - semester
-        - department
-        - program
-        - campus
         - totalScore
         - normalizedScore
-        - submittedAt
-        - facultyNameSnapshot
-        - departmentCodeSnapshot
-        - departmentNameSnapshot
-        - programCodeSnapshot
-        - programNameSnapshot
-        - campusCodeSnapshot
-        - campusNameSnapshot
-        - semesterCodeSnapshot
-        - semesterLabelSnapshot
-        - academicYearSnapshot
-        - answers
-        - id
-        - createdAt
-        - updatedAt
+        - faculty
+        - semester
+        - academicYear
     IngestionRecordResult:
       type: object
       properties:
