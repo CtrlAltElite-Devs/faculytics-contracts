@@ -1138,6 +1138,47 @@ paths:
       summary: List courses scoped to caller role
       tags:
         - Curriculum
+  /api/v1/admin/institutional-roles:
+    post:
+      operationId: AdminController_AssignRole_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignInstitutionalRoleDto'
+      responses:
+        '200':
+          description: Role assigned successfully
+        '201':
+          description: ''
+        '404':
+          description: User or category not found
+      security:
+        - accesstoken: []
+      summary: Assign an institutional role (DEAN/CHAIRPERSON) to a user
+      tags:
+        - Admin
+    delete:
+      operationId: AdminController_RemoveRole_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveInstitutionalRoleDto'
+      responses:
+        '200':
+          description: Role removed successfully
+        '404':
+          description: Role assignment not found
+      security:
+        - accesstoken: []
+      summary: Remove an institutional role from a user
+      tags:
+        - Admin
 info:
   title: Faculytics API
   description: This is the official API documentation for Faculytics
@@ -1305,6 +1346,16 @@ components:
       required:
         - id
         - code
+    SectionShortResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
     EnrollmentResponseDto:
       type: object
       properties:
@@ -1322,6 +1373,10 @@ components:
           nullable: true
           allOf:
             - $ref: '#/components/schemas/SemesterShortResponseDto'
+        section:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/SectionShortResponseDto'
       required:
         - id
         - role
@@ -1473,13 +1528,13 @@ components:
           default: []
         id:
           type: object
-          default: bdf11acd-547f-45ca-80d2-3f962e302d5f
+          default: ac9f226f-0660-439d-a70a-a8d37b8510bc
         createdAt:
           type: object
-          default: '2026-03-22T06:57:21.915Z'
+          default: '2026-03-25T02:39:47.731Z'
         updatedAt:
           type: object
-          default: '2026-03-22T06:57:21.915Z'
+          default: '2026-03-25T02:39:47.731Z'
         deletedAt:
           type: object
       required:
@@ -1619,13 +1674,13 @@ components:
             - DEPRECATED
         id:
           type: object
-          default: 9e7b43a6-18c0-43c0-9615-99429114fa34
+          default: bf32d2d1-a9b6-48ee-9700-5346f717847c
         createdAt:
           type: object
-          default: '2026-03-22T06:57:21.925Z'
+          default: '2026-03-25T02:39:47.739Z'
         updatedAt:
           type: object
-          default: '2026-03-22T06:57:21.925Z'
+          default: '2026-03-25T02:39:47.739Z'
         deletedAt:
           type: object
       required:
@@ -1651,13 +1706,13 @@ components:
           default: []
         id:
           type: object
-          default: 3929c8f3-5334-4b9d-997a-c465302d7c1d
+          default: 9631fe3d-bfa3-4e56-bea3-0daf6571d40f
         createdAt:
           type: object
-          default: '2026-03-22T06:57:21.927Z'
+          default: '2026-03-25T02:39:47.740Z'
         updatedAt:
           type: object
-          default: '2026-03-22T06:57:21.927Z'
+          default: '2026-03-25T02:39:47.740Z'
         deletedAt:
           type: object
       required:
@@ -1687,13 +1742,13 @@ components:
           type: string
         id:
           type: object
-          default: dae316b7-2977-40cd-b292-79a3d7e41936
+          default: 1a1c8626-8914-46f5-8a6e-82cb738990fe
         createdAt:
           type: object
-          default: '2026-03-22T06:57:21.928Z'
+          default: '2026-03-25T02:39:47.741Z'
         updatedAt:
           type: object
-          default: '2026-03-22T06:57:21.928Z'
+          default: '2026-03-25T02:39:47.741Z'
         deletedAt:
           type: object
       required:
@@ -1720,13 +1775,13 @@ components:
           default: []
         id:
           type: object
-          default: 94db7f2c-34a5-4334-ba2a-c8b103602b46
+          default: c1831fe2-a71e-4fc9-a1f2-ebf1d7dc1bf2
         createdAt:
           type: object
-          default: '2026-03-22T06:57:21.927Z'
+          default: '2026-03-25T02:39:47.741Z'
         updatedAt:
           type: object
-          default: '2026-03-22T06:57:21.927Z'
+          default: '2026-03-25T02:39:47.741Z'
         deletedAt:
           type: object
       required:
@@ -1753,13 +1808,13 @@ components:
           default: []
         id:
           type: object
-          default: e45f7da9-7543-497b-96d4-486f10ba5c24
+          default: 86138b40-1def-4bec-b0b0-10f38c311449
         createdAt:
           type: object
-          default: '2026-03-22T06:57:21.928Z'
+          default: '2026-03-25T02:39:47.742Z'
         updatedAt:
           type: object
-          default: '2026-03-22T06:57:21.928Z'
+          default: '2026-03-25T02:39:47.742Z'
         deletedAt:
           type: object
       required:
@@ -1816,17 +1871,18 @@ components:
               - SUPER_ADMIN
               - ADMIN
               - DEAN
+              - CHAIRPERSON
               - FACULTY
               - STUDENT
         id:
           type: object
-          default: 3a7a7825-d895-40ee-8aaa-62411763f666
+          default: fd6345bd-acc2-4965-ba8c-c29d92afc4de
         createdAt:
           type: object
-          default: '2026-03-22T06:57:21.926Z'
+          default: '2026-03-25T02:39:47.740Z'
         updatedAt:
           type: object
-          default: '2026-03-22T06:57:21.926Z'
+          default: '2026-03-25T02:39:47.740Z'
         deletedAt:
           type: object
       required:
@@ -1871,13 +1927,13 @@ components:
           type: string
         id:
           type: object
-          default: 6d624789-020f-47c1-834e-6255707665d8
+          default: 8eef988b-6c16-44fd-822e-ab7eb150268d
         createdAt:
           type: object
-          default: '2026-03-22T06:57:21.929Z'
+          default: '2026-03-25T02:39:47.743Z'
         updatedAt:
           type: object
-          default: '2026-03-22T06:57:21.929Z'
+          default: '2026-03-25T02:39:47.743Z'
         deletedAt:
           type: object
       required:
@@ -1907,6 +1963,7 @@ components:
           enum:
             - STUDENT
             - DEAN
+            - CHAIRPERSON
         semester:
           $ref: '#/components/schemas/Semester'
         course:
@@ -1928,7 +1985,7 @@ components:
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-22T06:57:21.924Z'
+          default: '2026-03-25T02:39:47.737Z'
         facultyNameSnapshot:
           type: string
         facultyEmployeeNumberSnapshot:
@@ -1960,13 +2017,13 @@ components:
           default: []
         id:
           type: object
-          default: 2c79f1b4-88ca-4a32-9683-aa606c7f4a9e
+          default: dc409255-3c33-4129-822b-71ca3e34cb31
         createdAt:
           type: object
-          default: '2026-03-22T06:57:21.925Z'
+          default: '2026-03-25T02:39:47.738Z'
         updatedAt:
           type: object
-          default: '2026-03-22T06:57:21.925Z'
+          default: '2026-03-25T02:39:47.738Z'
         deletedAt:
           type: object
       required:
@@ -2589,3 +2646,41 @@ components:
         - fullname
         - programId
         - isActive
+    AssignInstitutionalRoleDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: UUID of the user to assign the role to
+        role:
+          enum:
+            - DEAN
+            - CHAIRPERSON
+          type: string
+          description: The institutional role to assign
+        moodleCategoryId:
+          type: number
+          description: Moodle category ID to scope the role to
+      required:
+        - userId
+        - role
+        - moodleCategoryId
+    RemoveInstitutionalRoleDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: UUID of the user to remove the role from
+        role:
+          enum:
+            - DEAN
+            - CHAIRPERSON
+          type: string
+          description: The institutional role to remove
+        moodleCategoryId:
+          type: number
+          description: Moodle category ID the role is scoped to
+      required:
+        - userId
+        - role
+        - moodleCategoryId
