@@ -2457,6 +2457,21 @@
           "name"
         ]
       },
+      "SubmissionStatusDto": {
+        "type": "object",
+        "properties": {
+          "submitted": {
+            "type": "boolean"
+          },
+          "submittedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "submitted"
+        ]
+      },
       "EnrollmentResponseDto": {
         "type": "object",
         "properties": {
@@ -2492,12 +2507,16 @@
                 "$ref": "#/components/schemas/SectionShortResponseDto"
               }
             ]
+          },
+          "submission": {
+            "$ref": "#/components/schemas/SubmissionStatusDto"
           }
         },
         "required": [
           "id",
           "role",
-          "course"
+          "course",
+          "submission"
         ]
       },
       "MyEnrollmentsResponseDto": {
@@ -2674,15 +2693,15 @@
           },
           "id": {
             "type": "object",
-            "default": "126c2b12-3b7f-46e8-afa5-bbba3f7037ac"
+            "default": "a05745ad-321e-45e6-a30b-207b2d9283ca"
           },
           "createdAt": {
             "type": "object",
-            "default": "2026-03-25T14:02:49.228Z"
+            "default": "2026-03-25T15:31:03.307Z"
           },
           "updatedAt": {
             "type": "object",
-            "default": "2026-03-25T14:02:49.228Z"
+            "default": "2026-03-25T15:31:03.307Z"
           },
           "deletedAt": {
             "type": "object"
