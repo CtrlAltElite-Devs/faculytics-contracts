@@ -273,11 +273,11 @@ paths:
               $ref: '#/components/schemas/CreateQuestionnaireRequest'
       responses:
         '201':
-          description: ''
+          description: Questionnaire created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Questionnaire'
+                $ref: '#/components/schemas/QuestionnaireResponseDto'
       summary: Create a new questionnaire
       tags:
         - Questionnaires
@@ -299,6 +299,10 @@ paths:
       responses:
         '201':
           description: Version created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionDetailResponse'
         '404':
           description: Questionnaire not found
         '409':
@@ -335,6 +339,10 @@ paths:
       responses:
         '200':
           description: Version published successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionDetailResponse'
         '400':
           description: Version already published or invalid schema
         '404':
@@ -354,6 +362,10 @@ paths:
       responses:
         '200':
           description: Version deprecated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionDetailResponse'
         '400':
           description: Version already deprecated
         '404':
@@ -1682,46 +1694,30 @@ components:
       required:
         - title
         - type
-    Questionnaire:
+    QuestionnaireResponseDto:
       type: object
       properties:
+        id:
+          type: string
         title:
           type: string
-        status:
-          type: string
-          default: DRAFT
-          enum:
-            - DRAFT
-            - ACTIVE
-            - DEPRECATED
         type:
-          type: string
           enum:
             - FACULTY_IN_CLASSROOM
             - FACULTY_OUT_OF_CLASSROOM
             - FACULTY_FEEDBACK
-        versions:
-          type: object
-          default: []
-        id:
-          type: object
-          default: 6653f7a9-956a-4550-9216-964ffe1fb0f5
-        createdAt:
-          type: object
-          default: '2026-03-25T23:25:30.231Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T23:25:30.231Z'
-        deletedAt:
-          type: object
+          type: string
+        status:
+          enum:
+            - DRAFT
+            - ACTIVE
+            - DEPRECATED
+          type: string
       required:
-        - title
-        - status
-        - type
-        - versions
         - id
-        - createdAt
-        - updatedAt
+        - title
+        - type
+        - status
     CreateVersionRequest:
       type: object
       properties:

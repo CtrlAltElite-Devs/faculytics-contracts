@@ -456,11 +456,11 @@
         },
         "responses": {
           "201": {
-            "description": "",
+            "description": "Questionnaire created successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Questionnaire"
+                  "$ref": "#/components/schemas/QuestionnaireResponseDto"
                 }
               }
             }
@@ -497,7 +497,14 @@
         },
         "responses": {
           "201": {
-            "description": "Version created successfully"
+            "description": "Version created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireVersionDetailResponse"
+                }
+              }
+            }
           },
           "404": {
             "description": "Questionnaire not found"
@@ -554,7 +561,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Version published successfully"
+            "description": "Version published successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireVersionDetailResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Version already published or invalid schema"
@@ -584,7 +598,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Version deprecated successfully"
+            "description": "Version deprecated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireVersionDetailResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Version already deprecated"
@@ -2664,57 +2685,37 @@
           "type"
         ]
       },
-      "Questionnaire": {
+      "QuestionnaireResponseDto": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
           "title": {
             "type": "string"
           },
-          "status": {
-            "type": "string",
-            "default": "DRAFT",
-            "enum": [
-              "DRAFT",
-              "ACTIVE",
-              "DEPRECATED"
-            ]
-          },
           "type": {
-            "type": "string",
             "enum": [
               "FACULTY_IN_CLASSROOM",
               "FACULTY_OUT_OF_CLASSROOM",
               "FACULTY_FEEDBACK"
-            ]
+            ],
+            "type": "string"
           },
-          "versions": {
-            "type": "object",
-            "default": []
-          },
-          "id": {
-            "type": "object",
-            "default": "6653f7a9-956a-4550-9216-964ffe1fb0f5"
-          },
-          "createdAt": {
-            "type": "object",
-            "default": "2026-03-25T23:25:30.231Z"
-          },
-          "updatedAt": {
-            "type": "object",
-            "default": "2026-03-25T23:25:30.231Z"
-          },
-          "deletedAt": {
-            "type": "object"
+          "status": {
+            "enum": [
+              "DRAFT",
+              "ACTIVE",
+              "DEPRECATED"
+            ],
+            "type": "string"
           }
         },
         "required": [
-          "title",
-          "status",
-          "type",
-          "versions",
           "id",
-          "createdAt",
-          "updatedAt"
+          "title",
+          "type",
+          "status"
         ]
       },
       "CreateVersionRequest": {
