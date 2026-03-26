@@ -283,6 +283,60 @@ paths:
       summary: Create a new questionnaire
       tags:
         - Questionnaires
+  /api/v1/questionnaires/{id}/archive:
+    patch:
+      operationId: QuestionnaireController_archiveQuestionnaire_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Questionnaire archived successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireResponseDto'
+        '400':
+          description: Questionnaire already archived
+        '404':
+          description: Questionnaire not found
+      security:
+        - accesstoken: []
+      summary: Archive a questionnaire
+      tags:
+        - Questionnaires
+  /api/v1/questionnaires/{id}:
+    patch:
+      operationId: QuestionnaireController_updateTitle_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateQuestionnaireTitleRequest'
+      responses:
+        '200':
+          description: Questionnaire updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireResponseDto'
+        '404':
+          description: Questionnaire not found
+      security:
+        - accesstoken: []
+      summary: Update questionnaire title
+      tags:
+        - Questionnaires
   /api/v1/questionnaires/{id}/versions:
     post:
       operationId: QuestionnaireController_createVersion_v1
@@ -1734,6 +1788,7 @@ components:
             - DRAFT
             - ACTIVE
             - DEPRECATED
+            - ARCHIVED
       required:
         - id
         - name
@@ -1755,6 +1810,7 @@ components:
             - DRAFT
             - ACTIVE
             - DEPRECATED
+            - ARCHIVED
           type: string
         isActive:
           type: boolean
@@ -1839,12 +1895,20 @@ components:
             - DRAFT
             - ACTIVE
             - DEPRECATED
+            - ARCHIVED
           type: string
       required:
         - id
         - title
         - type
         - status
+    UpdateQuestionnaireTitleRequest:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
     CreateVersionRequest:
       type: object
       properties:
@@ -1881,6 +1945,7 @@ components:
             - DRAFT
             - ACTIVE
             - DEPRECATED
+            - ARCHIVED
           type: string
         isActive:
           type: boolean
@@ -1924,6 +1989,8 @@ components:
         submittedAt:
           format: date-time
           type: string
+        archived:
+          type: boolean
       required:
         - submitted
     SubmitQuestionnaireRequest:
