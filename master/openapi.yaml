@@ -55,6 +55,72 @@ paths:
       summary: Trigger a full Moodle sync (categories, courses, enrollments)
       tags:
         - Moodle
+  /api/v1/moodle/sync/history:
+    get:
+      operationId: MoodleSyncController_GetSyncHistory_v1
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          schema:
+            type: number
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncHistoryResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Get paginated Moodle sync history
+      tags:
+        - Moodle
+  /api/v1/moodle/sync/schedule:
+    get:
+      operationId: MoodleSyncController_GetSyncSchedule_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncScheduleResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Get current sync schedule
+      tags:
+        - Moodle
+    put:
+      operationId: MoodleSyncController_UpdateSyncSchedule_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSyncScheduleDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncScheduleResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Update sync schedule interval
+      tags:
+        - Moodle
   /api/v1/auth/login:
     post:
       operationId: AuthController_Login_v1
@@ -135,14 +201,19 @@ paths:
       operationId: EnrollmentsController_getMyEnrollments_v1
       parameters:
         - name: page
-          required: true
+          required: false
           in: query
           schema:
+            minimum: 1
+            default: 1
             type: number
         - name: limit
-          required: true
+          required: false
           in: query
           schema:
+            minimum: 1
+            maximum: 100
+            default: 10
             type: number
       responses:
         '200':
@@ -207,11 +278,11 @@ paths:
               $ref: '#/components/schemas/CreateQuestionnaireRequest'
       responses:
         '201':
-          description: ''
+          description: Questionnaire created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Questionnaire'
+                $ref: '#/components/schemas/QuestionnaireResponseDto'
       summary: Create a new questionnaire
       tags:
         - Questionnaires
@@ -233,6 +304,10 @@ paths:
       responses:
         '201':
           description: Version created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionDetailResponse'
         '404':
           description: Questionnaire not found
         '409':
@@ -269,6 +344,10 @@ paths:
       responses:
         '200':
           description: Version published successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionDetailResponse'
         '400':
           description: Version already published or invalid schema
         '404':
@@ -288,6 +367,10 @@ paths:
       responses:
         '200':
           description: Version deprecated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionDetailResponse'
         '400':
           description: Version already deprecated
         '404':
@@ -404,7 +487,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QuestionnaireSubmission'
+                $ref: '#/components/schemas/SubmitQuestionnaireResponse'
       security:
         - accesstoken: []
       summary: Submit a completed questionnaire
@@ -1232,6 +1315,123 @@ components:
           description: The BullMQ job ID for the enqueued sync
       required:
         - jobId
+    SyncPhaseResultDto:
+      type: object
+      properties:
+        status:
+          type: object
+        durationMs:
+          type: number
+        fetched:
+          type: number
+        inserted:
+          type: number
+        updated:
+          type: number
+        deactivated:
+          type: number
+        errors:
+          type: number
+        errorMessage:
+          type: string
+      required:
+        - status
+        - durationMs
+        - fetched
+        - inserted
+        - updated
+        - deactivated
+        - errors
+    SyncLogResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        trigger:
+          type: string
+        triggeredById:
+          type: string
+        status:
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        completedAt:
+          format: date-time
+          type: string
+        durationMs:
+          type: number
+        categories:
+          $ref: '#/components/schemas/SyncPhaseResultDto'
+        courses:
+          $ref: '#/components/schemas/SyncPhaseResultDto'
+        enrollments:
+          $ref: '#/components/schemas/SyncPhaseResultDto'
+        errorMessage:
+          type: string
+        jobId:
+          type: string
+        cronExpression:
+          type: string
+      required:
+        - id
+        - trigger
+        - status
+        - startedAt
+    PaginationMeta:
+      type: object
+      properties:
+        totalItems:
+          type: number
+        itemCount:
+          type: number
+        itemsPerPage:
+          type: number
+        totalPages:
+          type: number
+        currentPage:
+          type: number
+      required:
+        - totalItems
+        - itemCount
+        - itemsPerPage
+        - totalPages
+        - currentPage
+    SyncHistoryResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncLogResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
+    SyncScheduleResponseDto:
+      type: object
+      properties:
+        intervalMinutes:
+          type: number
+        cronExpression:
+          type: string
+        nextExecution:
+          type: string
+          nullable: true
+      required:
+        - intervalMinutes
+        - cronExpression
+    UpdateSyncScheduleDto:
+      type: object
+      properties:
+        intervalMinutes:
+          type: number
+          minimum: 30
+          description: Sync interval in minutes (minimum 30)
+          example: 60
+      required:
+        - intervalMinutes
     LoginRequest:
       type: object
       properties:
@@ -1356,6 +1556,16 @@ components:
       required:
         - id
         - name
+    SubmissionStatusDto:
+      type: object
+      properties:
+        submitted:
+          type: boolean
+        submittedAt:
+          format: date-time
+          type: string
+      required:
+        - submitted
     EnrollmentResponseDto:
       type: object
       properties:
@@ -1377,29 +1587,13 @@ components:
           nullable: true
           allOf:
             - $ref: '#/components/schemas/SectionShortResponseDto'
+        submission:
+          $ref: '#/components/schemas/SubmissionStatusDto'
       required:
         - id
         - role
         - course
-    PaginationMeta:
-      type: object
-      properties:
-        totalItems:
-          type: number
-        itemCount:
-          type: number
-        itemsPerPage:
-          type: number
-        totalPages:
-          type: number
-        currentPage:
-          type: number
-      required:
-        - totalItems
-        - itemCount
-        - itemsPerPage
-        - totalPages
-        - currentPage
+        - submission
     MyEnrollmentsResponseDto:
       type: object
       properties:
@@ -1505,46 +1699,30 @@ components:
       required:
         - title
         - type
-    Questionnaire:
+    QuestionnaireResponseDto:
       type: object
       properties:
+        id:
+          type: string
         title:
           type: string
-        status:
-          type: string
-          default: DRAFT
-          enum:
-            - DRAFT
-            - ACTIVE
-            - DEPRECATED
         type:
-          type: string
           enum:
             - FACULTY_IN_CLASSROOM
             - FACULTY_OUT_OF_CLASSROOM
             - FACULTY_FEEDBACK
-        versions:
-          type: object
-          default: []
-        id:
-          type: object
-          default: 52414f39-839c-4a97-848c-c6f65e31dbfd
-        createdAt:
-          type: object
-          default: '2026-03-25T02:44:46.973Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T02:44:46.973Z'
-        deletedAt:
-          type: object
+          type: string
+        status:
+          enum:
+            - DRAFT
+            - ACTIVE
+            - DEPRECATED
+          type: string
       required:
-        - title
-        - status
-        - type
-        - versions
         - id
-        - createdAt
-        - updatedAt
+        - title
+        - type
+        - status
     CreateVersionRequest:
       type: object
       properties:
@@ -1650,408 +1828,42 @@ components:
         - facultyId
         - semesterId
         - answers
-    QuestionnaireVersion:
+    SubmitQuestionnaireResponse:
       type: object
       properties:
-        questionnaire:
-          $ref: '#/components/schemas/Questionnaire'
-        versionNumber:
-          type: number
-        schemaSnapshot:
-          type: object
-        publishedAt:
-          format: date-time
-          type: string
-        isActive:
-          type: boolean
-          default: false
-        status:
-          type: string
-          default: DRAFT
-          enum:
-            - DRAFT
-            - ACTIVE
-            - DEPRECATED
         id:
-          type: object
-          default: 2761c616-710d-4947-af07-88610cd9f919
-        createdAt:
-          type: object
-          default: '2026-03-25T02:44:46.983Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T02:44:46.983Z'
-        deletedAt:
-          type: object
-      required:
-        - questionnaire
-        - versionNumber
-        - schemaSnapshot
-        - isActive
-        - status
-        - id
-        - createdAt
-        - updatedAt
-    Campus:
-      type: object
-      properties:
-        moodleCategoryId:
-          type: number
-        code:
-          type: string
-        name:
-          type: string
-        semesters:
-          type: object
-          default: []
-        id:
-          type: object
-          default: 8820fb05-56df-4491-ac3f-b6283502b2d2
-        createdAt:
-          type: object
-          default: '2026-03-25T02:44:46.985Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T02:44:46.985Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCategoryId
-        - code
-        - semesters
-        - id
-        - createdAt
-        - updatedAt
-    Semester:
-      type: object
-      properties:
-        moodleCategoryId:
-          type: number
-        code:
-          type: string
-        label:
-          type: string
-        academicYear:
-          type: string
-        campus:
-          $ref: '#/components/schemas/Campus'
-        departments:
-          type: object
-          default: []
-        description:
-          type: string
-        id:
-          type: object
-          default: 764c2f4b-00e9-4711-bfa8-583052a10df7
-        createdAt:
-          type: object
-          default: '2026-03-25T02:44:46.986Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T02:44:46.986Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCategoryId
-        - code
-        - campus
-        - departments
-        - id
-        - createdAt
-        - updatedAt
-    Department:
-      type: object
-      properties:
-        moodleCategoryId:
-          type: number
-        code:
-          type: string
-        name:
-          type: string
-        semester:
-          $ref: '#/components/schemas/Semester'
-        programs:
-          type: object
-          default: []
-        id:
-          type: object
-          default: fadad620-00e7-419e-ad8b-c9ad8af00257
-        createdAt:
-          type: object
-          default: '2026-03-25T02:44:46.985Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T02:44:46.985Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCategoryId
-        - code
-        - semester
-        - programs
-        - id
-        - createdAt
-        - updatedAt
-    Program:
-      type: object
-      properties:
-        moodleCategoryId:
-          type: number
-        code:
-          type: string
-        name:
-          type: string
-        department:
-          $ref: '#/components/schemas/Department'
-        courses:
-          type: object
-          default: []
-        id:
-          type: object
-          default: 3aab8674-f9d0-4335-8441-050f5ab499ce
-        createdAt:
-          type: object
-          default: '2026-03-25T02:44:46.986Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T02:44:46.986Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCategoryId
-        - code
-        - department
-        - courses
-        - id
-        - createdAt
-        - updatedAt
-    User:
-      type: object
-      properties:
-        userName:
-          type: string
-        moodleUserId:
-          type: number
-        password:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        userProfilePicture:
-          type: string
-        fullName:
-          type: string
-        campus:
-          $ref: '#/components/schemas/Campus'
-        department:
-          $ref: '#/components/schemas/Department'
-        program:
-          $ref: '#/components/schemas/Program'
-        moodleTokens:
-          type: object
-          default: []
-        enrollments:
-          type: object
-          default: []
-        institutionalRoles:
-          type: object
-          default: []
-        lastLoginAt:
-          format: date-time
-          type: string
-        isActive:
-          type: boolean
-        roles:
-          type: array
-          default: []
-          items:
-            type: string
-            enum:
-              - SUPER_ADMIN
-              - ADMIN
-              - DEAN
-              - CHAIRPERSON
-              - FACULTY
-              - STUDENT
-        id:
-          type: object
-          default: 5ade1483-e156-455f-8a78-a9c52d90aeaa
-        createdAt:
-          type: object
-          default: '2026-03-25T02:44:46.984Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T02:44:46.984Z'
-        deletedAt:
-          type: object
-      required:
-        - userName
-        - firstName
-        - lastName
-        - userProfilePicture
-        - moodleTokens
-        - enrollments
-        - institutionalRoles
-        - lastLoginAt
-        - isActive
-        - roles
-        - id
-        - createdAt
-        - updatedAt
-    Course:
-      type: object
-      properties:
-        moodleCourseId:
-          type: number
-        shortname:
-          type: string
-        fullname:
-          type: string
-        program:
-          $ref: '#/components/schemas/Program'
-        startDate:
-          format: date-time
-          type: string
-        endDate:
-          format: date-time
-          type: string
-        isVisible:
-          type: boolean
-        timeModified:
-          format: date-time
-          type: string
-        isActive:
-          type: boolean
-        courseImage:
-          type: string
-        id:
-          type: object
-          default: 00f00534-d74a-46b2-8b5d-b9c98168c32c
-        createdAt:
-          type: object
-          default: '2026-03-25T02:44:46.990Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T02:44:46.990Z'
-        deletedAt:
-          type: object
-      required:
-        - moodleCourseId
-        - shortname
-        - fullname
-        - program
-        - startDate
-        - endDate
-        - isVisible
-        - timeModified
-        - isActive
-        - id
-        - createdAt
-        - updatedAt
-    QuestionnaireSubmission:
-      type: object
-      properties:
-        questionnaireVersion:
-          $ref: '#/components/schemas/QuestionnaireVersion'
-        respondent:
-          $ref: '#/components/schemas/User'
-        faculty:
-          $ref: '#/components/schemas/User'
-        respondentRole:
-          type: string
-          enum:
-            - STUDENT
-            - DEAN
-            - CHAIRPERSON
-        semester:
-          $ref: '#/components/schemas/Semester'
-        course:
-          $ref: '#/components/schemas/Course'
-        department:
-          $ref: '#/components/schemas/Department'
-        program:
-          $ref: '#/components/schemas/Program'
-        campus:
-          $ref: '#/components/schemas/Campus'
-        totalScore:
-          type: number
-        normalizedScore:
-          type: number
-        qualitativeComment:
-          type: string
-        cleanedComment:
           type: string
         submittedAt:
           format: date-time
           type: string
-          default: '2026-03-25T02:44:46.981Z'
-        facultyNameSnapshot:
+        respondentRole:
+          enum:
+            - STUDENT
+            - DEAN
+            - CHAIRPERSON
           type: string
-        facultyEmployeeNumberSnapshot:
+        totalScore:
+          type: number
+        normalizedScore:
+          type: number
+        faculty:
           type: string
-        departmentCodeSnapshot:
+        course:
           type: string
-        departmentNameSnapshot:
+          nullable: true
+        semester:
           type: string
-        programCodeSnapshot:
+        academicYear:
           type: string
-        programNameSnapshot:
-          type: string
-        campusCodeSnapshot:
-          type: string
-        campusNameSnapshot:
-          type: string
-        courseCodeSnapshot:
-          type: string
-        courseTitleSnapshot:
-          type: string
-        semesterCodeSnapshot:
-          type: string
-        semesterLabelSnapshot:
-          type: string
-        academicYearSnapshot:
-          type: string
-        answers:
-          type: object
-          default: []
-        id:
-          type: object
-          default: cc465f5b-590f-4359-9c48-adcd695fc08d
-        createdAt:
-          type: object
-          default: '2026-03-25T02:44:46.982Z'
-        updatedAt:
-          type: object
-          default: '2026-03-25T02:44:46.982Z'
-        deletedAt:
-          type: object
       required:
-        - questionnaireVersion
-        - respondent
-        - faculty
+        - id
+        - submittedAt
         - respondentRole
-        - semester
-        - department
-        - program
-        - campus
         - totalScore
         - normalizedScore
-        - submittedAt
-        - facultyNameSnapshot
-        - departmentCodeSnapshot
-        - departmentNameSnapshot
-        - programCodeSnapshot
-        - programNameSnapshot
-        - campusCodeSnapshot
-        - campusNameSnapshot
-        - semesterCodeSnapshot
-        - semesterLabelSnapshot
-        - academicYearSnapshot
-        - answers
-        - id
-        - createdAt
-        - updatedAt
+        - faculty
+        - semester
+        - academicYear
     IngestionRecordResult:
       type: object
       properties:
