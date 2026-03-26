@@ -409,21 +409,17 @@
         ]
       }
     },
-    "/api/v1/questionnaires/types/{type}/versions": {
+    "/api/v1/questionnaires/types/{typeId}/versions": {
       "get": {
         "operationId": "QuestionnaireController_getVersionsByType_v1",
         "parameters": [
           {
-            "name": "type",
+            "name": "typeId",
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string",
-              "enum": [
-                "FACULTY_IN_CLASSROOM",
-                "FACULTY_OUT_OF_CLASSROOM",
-                "FACULTY_FEEDBACK"
-              ]
+              "format": "uuid",
+              "type": "string"
             }
           }
         ],
@@ -1100,6 +1096,187 @@
         ]
       }
     },
+    "/api/v1/questionnaire-types": {
+      "post": {
+        "operationId": "QuestionnaireTypeController_create_v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateQuestionnaireTypeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireTypeDetailResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Create a new questionnaire type (admin)",
+        "tags": [
+          "Questionnaire Types"
+        ]
+      },
+      "get": {
+        "operationId": "QuestionnaireTypeController_findAll_v1",
+        "parameters": [
+          {
+            "name": "isSystem",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuestionnaireTypeDetailResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List all questionnaire types (admin management view)",
+        "tags": [
+          "Questionnaire Types"
+        ]
+      }
+    },
+    "/api/v1/questionnaire-types/{id}": {
+      "get": {
+        "operationId": "QuestionnaireTypeController_findOne_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireTypeDetailResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get a questionnaire type by ID",
+        "tags": [
+          "Questionnaire Types"
+        ]
+      },
+      "patch": {
+        "operationId": "QuestionnaireTypeController_update_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuestionnaireTypeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireTypeDetailResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Update a questionnaire type (admin)",
+        "tags": [
+          "Questionnaire Types"
+        ]
+      },
+      "delete": {
+        "operationId": "QuestionnaireTypeController_remove_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Delete a questionnaire type (admin)",
+        "tags": [
+          "Questionnaire Types"
+        ]
+      }
+    },
     "/api/v1/analysis/pipelines": {
       "post": {
         "operationId": "AnalysisController_CreatePipeline_v1",
@@ -1458,16 +1635,12 @@
         "operationId": "DimensionsController_findAll_v1",
         "parameters": [
           {
-            "name": "questionnaireType",
+            "name": "questionnaireTypeId",
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "enum": [
-                "FACULTY_IN_CLASSROOM",
-                "FACULTY_OUT_OF_CLASSROOM",
-                "FACULTY_FEEDBACK"
-              ]
+              "format": "uuid",
+              "type": "string"
             }
           },
           {
@@ -2566,23 +2739,31 @@
       "QuestionnaireTypeResponse": {
         "type": "object",
         "properties": {
-          "type": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
             "type": "string",
-            "enum": [
-              "FACULTY_IN_CLASSROOM",
-              "FACULTY_OUT_OF_CLASSROOM",
-              "FACULTY_FEEDBACK"
-            ]
+            "nullable": true
+          },
+          "isSystem": {
+            "type": "boolean"
           },
           "questionnaireId": {
             "type": "string",
             "nullable": true
           },
-          "title": {
+          "questionnaireTitle": {
             "type": "string",
             "nullable": true
           },
-          "status": {
+          "questionnaireStatus": {
             "type": "string",
             "nullable": true,
             "enum": [
@@ -2593,10 +2774,14 @@
           }
         },
         "required": [
-          "type",
+          "id",
+          "name",
+          "code",
+          "description",
+          "isSystem",
           "questionnaireId",
-          "title",
-          "status"
+          "questionnaireTitle",
+          "questionnaireStatus"
         ]
       },
       "QuestionnaireVersionItem": {
@@ -2649,12 +2834,23 @@
             "nullable": true
           },
           "type": {
-            "enum": [
-              "FACULTY_IN_CLASSROOM",
-              "FACULTY_OUT_OF_CLASSROOM",
-              "FACULTY_FEEDBACK"
-            ],
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "code"
+            ]
           },
           "versions": {
             "type": "array",
@@ -2676,18 +2872,15 @@
           "title": {
             "type": "string"
           },
-          "type": {
-            "enum": [
-              "FACULTY_IN_CLASSROOM",
-              "FACULTY_OUT_OF_CLASSROOM",
-              "FACULTY_FEEDBACK"
-            ],
-            "type": "string"
+          "typeId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the questionnaire type"
           }
         },
         "required": [
           "title",
-          "type"
+          "typeId"
         ]
       },
       "QuestionnaireResponseDto": {
@@ -2700,12 +2893,23 @@
             "type": "string"
           },
           "type": {
-            "enum": [
-              "FACULTY_IN_CLASSROOM",
-              "FACULTY_OUT_OF_CLASSROOM",
-              "FACULTY_FEEDBACK"
-            ],
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "code"
+            ]
           },
           "status": {
             "enum": [
@@ -2747,12 +2951,23 @@
             "type": "string"
           },
           "questionnaireType": {
-            "enum": [
-              "FACULTY_IN_CLASSROOM",
-              "FACULTY_OUT_OF_CLASSROOM",
-              "FACULTY_FEEDBACK"
-            ],
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "code"
+            ]
           },
           "versionNumber": {
             "type": "number"
@@ -3019,6 +3234,70 @@
           "semesterId",
           "answers"
         ]
+      },
+      "CreateQuestionnaireTypeRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "/^[A-Z][A-Z0-9_]*$/",
+            "description": "SCREAMING_SNAKE_CASE identifier (e.g. PEER_REVIEW)"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "code"
+        ]
+      },
+      "QuestionnaireTypeDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSystem": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "code",
+          "description",
+          "isSystem",
+          "createdAt"
+        ]
+      },
+      "UpdateQuestionnaireTypeRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
       },
       "CreatePipelineDto": {
         "type": "object",
@@ -3513,18 +3792,14 @@
             "type": "string",
             "maxLength": 255
           },
-          "questionnaireType": {
+          "questionnaireTypeId": {
             "type": "string",
-            "enum": [
-              "FACULTY_IN_CLASSROOM",
-              "FACULTY_OUT_OF_CLASSROOM",
-              "FACULTY_FEEDBACK"
-            ]
+            "format": "uuid"
           }
         },
         "required": [
           "displayName",
-          "questionnaireType"
+          "questionnaireTypeId"
         ]
       },
       "DimensionResponseDto": {
@@ -3540,12 +3815,23 @@
             "type": "string"
           },
           "questionnaireType": {
-            "enum": [
-              "FACULTY_IN_CLASSROOM",
-              "FACULTY_OUT_OF_CLASSROOM",
-              "FACULTY_FEEDBACK"
-            ],
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "code"
+            ]
           },
           "active": {
             "type": "boolean"
