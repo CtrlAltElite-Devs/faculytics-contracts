@@ -1473,6 +1473,94 @@ paths:
       summary: List courses scoped to caller role
       tags:
         - Curriculum
+  /api/v1/admin/users:
+    get:
+      operationId: AdminController_ListUsers_v1
+      parameters:
+        - name: search
+          required: false
+          in: query
+          description: Search by username, full name, first name, last name, or id
+          schema:
+            maxLength: 100
+            example: john
+            type: string
+        - name: role
+          required: false
+          in: query
+          description: Filter by a role contained in the user roles array
+          schema:
+            enum:
+              - SUPER_ADMIN
+              - ADMIN
+              - DEAN
+              - CHAIRPERSON
+              - FACULTY
+              - STUDENT
+            type: string
+        - name: isActive
+          required: false
+          in: query
+          description: Filter by active or inactive users
+          schema:
+            example: true
+            type: boolean
+        - name: campusId
+          required: false
+          in: query
+          description: Filter by campus UUID
+          schema:
+            format: uuid
+            example: 3f6dd1dd-8f33-4b2e-bb0b-6ac2d8bbf5d7
+            type: string
+        - name: departmentId
+          required: false
+          in: query
+          description: Filter by department UUID
+          schema:
+            format: uuid
+            example: 9ad12fa1-6286-4461-93f8-33b48d2e5725
+            type: string
+        - name: programId
+          required: false
+          in: query
+          description: Filter by program UUID
+          schema:
+            format: uuid
+            example: d8be53aa-59c0-4d1f-b7c8-1e739bf6e1e2
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: Page number starting at 1
+          schema:
+            minimum: 1
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: Items per page, max 100
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserListResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List users for the admin console
+      tags:
+        - Admin
   /api/v1/admin/institutional-roles:
     post:
       operationId: AdminController_AssignRole_v1
@@ -1491,6 +1579,7 @@ paths:
         '404':
           description: User or category not found
       security:
+        - bearer: []
         - accesstoken: []
       summary: Assign an institutional role (DEAN/CHAIRPERSON) to a user
       tags:
@@ -1510,6 +1599,7 @@ paths:
         '404':
           description: Role assignment not found
       security:
+        - bearer: []
         - accesstoken: []
       summary: Remove an institutional role from a user
       tags:
@@ -2951,6 +3041,72 @@ components:
         - fullname
         - programId
         - isActive
+    AdminUserScopedRelationDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - code
+    AdminUserItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        userName:
+          type: string
+        fullName:
+          type: string
+        moodleUserId:
+          type: number
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+              - SUPER_ADMIN
+              - ADMIN
+              - DEAN
+              - CHAIRPERSON
+              - FACULTY
+              - STUDENT
+        isActive:
+          type: boolean
+        campus:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/AdminUserScopedRelationDto'
+        department:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/AdminUserScopedRelationDto'
+        program:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/AdminUserScopedRelationDto'
+      required:
+        - id
+        - userName
+        - fullName
+        - roles
+        - isActive
+    AdminUserListResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminUserItemResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
     AssignInstitutionalRoleDto:
       type: object
       properties:
