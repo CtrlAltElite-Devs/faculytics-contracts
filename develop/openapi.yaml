@@ -1022,6 +1022,103 @@ paths:
       summary: Get faculty trend data across semesters
       tags:
         - Analytics
+  /api/v1/analytics/faculty/{facultyId}/report:
+    get:
+      operationId: AnalyticsController_GetFacultyReport_v1
+      parameters:
+        - name: facultyId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID
+          schema:
+            format: uuid
+            type: string
+        - name: questionnaireTypeCode
+          required: true
+          in: query
+          description: Questionnaire type code
+          schema:
+            type: string
+        - name: courseId
+          required: false
+          in: query
+          description: Optional course UUID filter
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacultyReportResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get per-question faculty evaluation report
+      tags:
+        - Analytics
+  /api/v1/analytics/faculty/{facultyId}/report/comments:
+    get:
+      operationId: AnalyticsController_GetFacultyReportComments_v1
+      parameters:
+        - name: facultyId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID
+          schema:
+            format: uuid
+            type: string
+        - name: questionnaireTypeCode
+          required: true
+          in: query
+          description: Questionnaire type code
+          schema:
+            type: string
+        - name: courseId
+          required: false
+          in: query
+          description: Optional course UUID filter
+          schema:
+            format: uuid
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            default: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 10
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacultyReportCommentsResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get paginated qualitative comments for faculty report
+      tags:
+        - Analytics
   /api/v1/dimensions:
     post:
       operationId: DimensionsController_create_v1
@@ -2530,6 +2627,157 @@ components:
           nullable: true
       required:
         - items
+    ReportFacultyDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
+    ReportSemesterDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        label:
+          type: string
+        academicYear:
+          type: string
+      required:
+        - id
+        - code
+        - label
+        - academicYear
+    ReportQuestionnaireTypeDto:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+      required:
+        - code
+        - name
+    ReportCourseFilterDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        title:
+          type: string
+      required:
+        - id
+        - code
+        - title
+    ReportQuestionDto:
+      type: object
+      properties:
+        questionId:
+          type: string
+        order:
+          type: number
+        text:
+          type: string
+        average:
+          type: number
+        responseCount:
+          type: number
+        interpretation:
+          type: string
+      required:
+        - questionId
+        - order
+        - text
+        - average
+        - responseCount
+        - interpretation
+    ReportSectionDto:
+      type: object
+      properties:
+        sectionId:
+          type: string
+        title:
+          type: string
+        order:
+          type: number
+        weight:
+          type: number
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportQuestionDto'
+        sectionAverage:
+          type: number
+        sectionInterpretation:
+          type: string
+      required:
+        - sectionId
+        - title
+        - order
+        - weight
+        - questions
+        - sectionAverage
+        - sectionInterpretation
+    FacultyReportResponseDto:
+      type: object
+      properties:
+        faculty:
+          $ref: '#/components/schemas/ReportFacultyDto'
+        semester:
+          $ref: '#/components/schemas/ReportSemesterDto'
+        questionnaireType:
+          $ref: '#/components/schemas/ReportQuestionnaireTypeDto'
+        courseFilter:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/ReportCourseFilterDto'
+        submissionCount:
+          type: number
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportSectionDto'
+        overallRating:
+          type: number
+          nullable: true
+        overallInterpretation:
+          type: string
+          nullable: true
+      required:
+        - faculty
+        - semester
+        - questionnaireType
+        - submissionCount
+        - sections
+    ReportCommentDto:
+      type: object
+      properties:
+        text:
+          type: string
+        submittedAt:
+          type: string
+      required:
+        - text
+        - submittedAt
+    FacultyReportCommentsResponseDto:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportCommentDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - items
+        - meta
     CreateDimensionRequestDto:
       type: object
       properties:
