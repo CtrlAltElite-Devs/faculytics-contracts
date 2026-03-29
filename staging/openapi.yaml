@@ -243,19 +243,16 @@ paths:
       summary: List all questionnaire types
       tags:
         - Questionnaires
-  /api/v1/questionnaires/types/{type}/versions:
+  /api/v1/questionnaires/types/{typeId}/versions:
     get:
       operationId: QuestionnaireController_getVersionsByType_v1
       parameters:
-        - name: type
+        - name: typeId
           required: true
           in: path
           schema:
+            format: uuid
             type: string
-            enum:
-              - FACULTY_IN_CLASSROOM
-              - FACULTY_OUT_OF_CLASSROOM
-              - FACULTY_FEEDBACK
       responses:
         '200':
           description: Versions found
@@ -284,6 +281,60 @@ paths:
               schema:
                 $ref: '#/components/schemas/QuestionnaireResponseDto'
       summary: Create a new questionnaire
+      tags:
+        - Questionnaires
+  /api/v1/questionnaires/{id}/archive:
+    patch:
+      operationId: QuestionnaireController_archiveQuestionnaire_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Questionnaire archived successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireResponseDto'
+        '400':
+          description: Questionnaire already archived
+        '404':
+          description: Questionnaire not found
+      security:
+        - accesstoken: []
+      summary: Archive a questionnaire
+      tags:
+        - Questionnaires
+  /api/v1/questionnaires/{id}:
+    patch:
+      operationId: QuestionnaireController_updateTitle_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateQuestionnaireTitleRequest'
+      responses:
+        '200':
+          description: Questionnaire updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireResponseDto'
+        '404':
+          description: Questionnaire not found
+      security:
+        - accesstoken: []
+      summary: Update questionnaire title
       tags:
         - Questionnaires
   /api/v1/questionnaires/{id}/versions:
@@ -671,6 +722,113 @@ paths:
       summary: Delete a draft by ID
       tags:
         - Questionnaires
+  /api/v1/questionnaire-types:
+    post:
+      operationId: QuestionnaireTypeController_create_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQuestionnaireTypeRequest'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireTypeDetailResponse'
+      security:
+        - accesstoken: []
+      summary: Create a new questionnaire type (admin)
+      tags:
+        - Questionnaire Types
+    get:
+      operationId: QuestionnaireTypeController_findAll_v1
+      parameters:
+        - name: isSystem
+          required: false
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionnaireTypeDetailResponse'
+      security:
+        - accesstoken: []
+      summary: List all questionnaire types (admin management view)
+      tags:
+        - Questionnaire Types
+  /api/v1/questionnaire-types/{id}:
+    get:
+      operationId: QuestionnaireTypeController_findOne_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireTypeDetailResponse'
+      security:
+        - accesstoken: []
+      summary: Get a questionnaire type by ID
+      tags:
+        - Questionnaire Types
+    patch:
+      operationId: QuestionnaireTypeController_update_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateQuestionnaireTypeRequest'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireTypeDetailResponse'
+      security:
+        - accesstoken: []
+      summary: Update a questionnaire type (admin)
+      tags:
+        - Questionnaire Types
+    delete:
+      operationId: QuestionnaireTypeController_remove_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - accesstoken: []
+      summary: Delete a questionnaire type (admin)
+      tags:
+        - Questionnaire Types
   /api/v1/analysis/pipelines:
     post:
       operationId: AnalysisController_CreatePipeline_v1
@@ -864,6 +1022,103 @@ paths:
       summary: Get faculty trend data across semesters
       tags:
         - Analytics
+  /api/v1/analytics/faculty/{facultyId}/report:
+    get:
+      operationId: AnalyticsController_GetFacultyReport_v1
+      parameters:
+        - name: facultyId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID
+          schema:
+            format: uuid
+            type: string
+        - name: questionnaireTypeCode
+          required: true
+          in: query
+          description: Questionnaire type code
+          schema:
+            type: string
+        - name: courseId
+          required: false
+          in: query
+          description: Optional course UUID filter
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacultyReportResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get per-question faculty evaluation report
+      tags:
+        - Analytics
+  /api/v1/analytics/faculty/{facultyId}/report/comments:
+    get:
+      operationId: AnalyticsController_GetFacultyReportComments_v1
+      parameters:
+        - name: facultyId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: semesterId
+          required: true
+          in: query
+          description: Semester UUID
+          schema:
+            format: uuid
+            type: string
+        - name: questionnaireTypeCode
+          required: true
+          in: query
+          description: Questionnaire type code
+          schema:
+            type: string
+        - name: courseId
+          required: false
+          in: query
+          description: Optional course UUID filter
+          schema:
+            format: uuid
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            default: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 10
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacultyReportCommentsResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get paginated qualitative comments for faculty report
+      tags:
+        - Analytics
   /api/v1/dimensions:
     post:
       operationId: DimensionsController_create_v1
@@ -888,15 +1143,12 @@ paths:
     get:
       operationId: DimensionsController_findAll_v1
       parameters:
-        - name: questionnaireType
+        - name: questionnaireTypeId
           required: false
           in: query
           schema:
+            format: uuid
             type: string
-            enum:
-              - FACULTY_IN_CLASSROOM
-              - FACULTY_OUT_OF_CLASSROOM
-              - FACULTY_FEEDBACK
         - name: active
           required: false
           in: query
@@ -1221,6 +1473,94 @@ paths:
       summary: List courses scoped to caller role
       tags:
         - Curriculum
+  /api/v1/admin/users:
+    get:
+      operationId: AdminController_ListUsers_v1
+      parameters:
+        - name: search
+          required: false
+          in: query
+          description: Search by username, full name, first name, last name, or id
+          schema:
+            maxLength: 100
+            example: john
+            type: string
+        - name: role
+          required: false
+          in: query
+          description: Filter by a role contained in the user roles array
+          schema:
+            enum:
+              - SUPER_ADMIN
+              - ADMIN
+              - DEAN
+              - CHAIRPERSON
+              - FACULTY
+              - STUDENT
+            type: string
+        - name: isActive
+          required: false
+          in: query
+          description: Filter by active or inactive users
+          schema:
+            example: true
+            type: boolean
+        - name: campusId
+          required: false
+          in: query
+          description: Filter by campus UUID
+          schema:
+            format: uuid
+            example: 3f6dd1dd-8f33-4b2e-bb0b-6ac2d8bbf5d7
+            type: string
+        - name: departmentId
+          required: false
+          in: query
+          description: Filter by department UUID
+          schema:
+            format: uuid
+            example: 9ad12fa1-6286-4461-93f8-33b48d2e5725
+            type: string
+        - name: programId
+          required: false
+          in: query
+          description: Filter by program UUID
+          schema:
+            format: uuid
+            example: d8be53aa-59c0-4d1f-b7c8-1e739bf6e1e2
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: Page number starting at 1
+          schema:
+            minimum: 1
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: Items per page, max 100
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserListResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List users for the admin console
+      tags:
+        - Admin
   /api/v1/admin/institutional-roles:
     post:
       operationId: AdminController_AssignRole_v1
@@ -1239,6 +1579,7 @@ paths:
         '404':
           description: User or category not found
       security:
+        - bearer: []
         - accesstoken: []
       summary: Assign an institutional role (DEAN/CHAIRPERSON) to a user
       tags:
@@ -1258,8 +1599,109 @@ paths:
         '404':
           description: Role assignment not found
       security:
+        - bearer: []
         - accesstoken: []
       summary: Remove an institutional role from a user
+      tags:
+        - Admin
+  /api/v1/admin/filters/campuses:
+    get:
+      operationId: AdminFiltersController_GetCampuses_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FilterOptionResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List all campuses for filter dropdowns
+      tags:
+        - Admin
+  /api/v1/admin/filters/departments:
+    get:
+      operationId: AdminFiltersController_GetDepartments_v1
+      parameters:
+        - name: campusId
+          required: false
+          in: query
+          description: Filter by campus UUID
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FilterOptionResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List departments for filter dropdowns
+      tags:
+        - Admin
+  /api/v1/admin/filters/programs:
+    get:
+      operationId: AdminFiltersController_GetPrograms_v1
+      parameters:
+        - name: departmentId
+          required: false
+          in: query
+          description: Filter by department UUID
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FilterOptionResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List programs for filter dropdowns
+      tags:
+        - Admin
+  /api/v1/admin/filters/roles:
+    get:
+      operationId: AdminFiltersController_GetRoles_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                        - SUPER_ADMIN
+                        - ADMIN
+                        - DEAN
+                        - CHAIRPERSON
+                        - FACULTY
+                        - STUDENT
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List available user roles for filter dropdowns
       tags:
         - Admin
 info:
@@ -1609,30 +2051,40 @@ components:
     QuestionnaireTypeResponse:
       type: object
       properties:
-        type:
+        id:
           type: string
-          enum:
-            - FACULTY_IN_CLASSROOM
-            - FACULTY_OUT_OF_CLASSROOM
-            - FACULTY_FEEDBACK
+        name:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+          nullable: true
+        isSystem:
+          type: boolean
         questionnaireId:
           type: string
           nullable: true
-        title:
+        questionnaireTitle:
           type: string
           nullable: true
-        status:
+        questionnaireStatus:
           type: string
           nullable: true
           enum:
             - DRAFT
             - ACTIVE
             - DEPRECATED
+            - ARCHIVED
       required:
-        - type
+        - id
+        - name
+        - code
+        - description
+        - isSystem
         - questionnaireId
-        - title
-        - status
+        - questionnaireTitle
+        - questionnaireStatus
     QuestionnaireVersionItem:
       type: object
       properties:
@@ -1645,6 +2097,7 @@ components:
             - DRAFT
             - ACTIVE
             - DEPRECATED
+            - ARCHIVED
           type: string
         isActive:
           type: boolean
@@ -1671,11 +2124,18 @@ components:
           type: string
           nullable: true
         type:
-          enum:
-            - FACULTY_IN_CLASSROOM
-            - FACULTY_OUT_OF_CLASSROOM
-            - FACULTY_FEEDBACK
-          type: string
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            code:
+              type: string
+          required:
+            - id
+            - name
+            - code
         versions:
           type: array
           items:
@@ -1690,15 +2150,13 @@ components:
       properties:
         title:
           type: string
-        type:
-          enum:
-            - FACULTY_IN_CLASSROOM
-            - FACULTY_OUT_OF_CLASSROOM
-            - FACULTY_FEEDBACK
+        typeId:
           type: string
+          format: uuid
+          description: UUID of the questionnaire type
       required:
         - title
-        - type
+        - typeId
     QuestionnaireResponseDto:
       type: object
       properties:
@@ -1707,22 +2165,37 @@ components:
         title:
           type: string
         type:
-          enum:
-            - FACULTY_IN_CLASSROOM
-            - FACULTY_OUT_OF_CLASSROOM
-            - FACULTY_FEEDBACK
-          type: string
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            code:
+              type: string
+          required:
+            - id
+            - name
+            - code
         status:
           enum:
             - DRAFT
             - ACTIVE
             - DEPRECATED
+            - ARCHIVED
           type: string
       required:
         - id
         - title
         - type
         - status
+    UpdateQuestionnaireTitleRequest:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
     CreateVersionRequest:
       type: object
       properties:
@@ -1740,11 +2213,18 @@ components:
         questionnaireTitle:
           type: string
         questionnaireType:
-          enum:
-            - FACULTY_IN_CLASSROOM
-            - FACULTY_OUT_OF_CLASSROOM
-            - FACULTY_FEEDBACK
-          type: string
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            code:
+              type: string
+          required:
+            - id
+            - name
+            - code
         versionNumber:
           type: number
         status:
@@ -1752,6 +2232,7 @@ components:
             - DRAFT
             - ACTIVE
             - DEPRECATED
+            - ARCHIVED
           type: string
         isActive:
           type: boolean
@@ -1795,6 +2276,8 @@ components:
         submittedAt:
           format: date-time
           type: string
+        archived:
+          type: boolean
       required:
         - submitted
     SubmitQuestionnaireRequest:
@@ -1939,6 +2422,51 @@ components:
         - facultyId
         - semesterId
         - answers
+    CreateQuestionnaireTypeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+          pattern: /^[A-Z][A-Z0-9_]*$/
+          description: SCREAMING_SNAKE_CASE identifier (e.g. PEER_REVIEW)
+        description:
+          type: string
+      required:
+        - name
+        - code
+    QuestionnaireTypeDetailResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+          nullable: true
+        isSystem:
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - name
+        - code
+        - description
+        - isSystem
+        - createdAt
+    UpdateQuestionnaireTypeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
     CreatePipelineDto:
       type: object
       properties:
@@ -2289,6 +2817,157 @@ components:
           nullable: true
       required:
         - items
+    ReportFacultyDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
+    ReportSemesterDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        label:
+          type: string
+        academicYear:
+          type: string
+      required:
+        - id
+        - code
+        - label
+        - academicYear
+    ReportQuestionnaireTypeDto:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+      required:
+        - code
+        - name
+    ReportCourseFilterDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        title:
+          type: string
+      required:
+        - id
+        - code
+        - title
+    ReportQuestionDto:
+      type: object
+      properties:
+        questionId:
+          type: string
+        order:
+          type: number
+        text:
+          type: string
+        average:
+          type: number
+        responseCount:
+          type: number
+        interpretation:
+          type: string
+      required:
+        - questionId
+        - order
+        - text
+        - average
+        - responseCount
+        - interpretation
+    ReportSectionDto:
+      type: object
+      properties:
+        sectionId:
+          type: string
+        title:
+          type: string
+        order:
+          type: number
+        weight:
+          type: number
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportQuestionDto'
+        sectionAverage:
+          type: number
+        sectionInterpretation:
+          type: string
+      required:
+        - sectionId
+        - title
+        - order
+        - weight
+        - questions
+        - sectionAverage
+        - sectionInterpretation
+    FacultyReportResponseDto:
+      type: object
+      properties:
+        faculty:
+          $ref: '#/components/schemas/ReportFacultyDto'
+        semester:
+          $ref: '#/components/schemas/ReportSemesterDto'
+        questionnaireType:
+          $ref: '#/components/schemas/ReportQuestionnaireTypeDto'
+        courseFilter:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/ReportCourseFilterDto'
+        submissionCount:
+          type: number
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportSectionDto'
+        overallRating:
+          type: number
+          nullable: true
+        overallInterpretation:
+          type: string
+          nullable: true
+      required:
+        - faculty
+        - semester
+        - questionnaireType
+        - submissionCount
+        - sections
+    ReportCommentDto:
+      type: object
+      properties:
+        text:
+          type: string
+        submittedAt:
+          type: string
+      required:
+        - text
+        - submittedAt
+    FacultyReportCommentsResponseDto:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportCommentDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - items
+        - meta
     CreateDimensionRequestDto:
       type: object
       properties:
@@ -2298,15 +2977,12 @@ components:
         displayName:
           type: string
           maxLength: 255
-        questionnaireType:
+        questionnaireTypeId:
           type: string
-          enum:
-            - FACULTY_IN_CLASSROOM
-            - FACULTY_OUT_OF_CLASSROOM
-            - FACULTY_FEEDBACK
+          format: uuid
       required:
         - displayName
-        - questionnaireType
+        - questionnaireTypeId
     DimensionResponseDto:
       type: object
       properties:
@@ -2317,11 +2993,18 @@ components:
         displayName:
           type: string
         questionnaireType:
-          enum:
-            - FACULTY_IN_CLASSROOM
-            - FACULTY_OUT_OF_CLASSROOM
-            - FACULTY_FEEDBACK
-          type: string
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            code:
+              type: string
+          required:
+            - id
+            - name
+            - code
         active:
           type: boolean
         createdAt:
@@ -2458,6 +3141,72 @@ components:
         - fullname
         - programId
         - isActive
+    AdminUserScopedRelationDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - code
+    AdminUserItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        userName:
+          type: string
+        fullName:
+          type: string
+        moodleUserId:
+          type: number
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+              - SUPER_ADMIN
+              - ADMIN
+              - DEAN
+              - CHAIRPERSON
+              - FACULTY
+              - STUDENT
+        isActive:
+          type: boolean
+        campus:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/AdminUserScopedRelationDto'
+        department:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/AdminUserScopedRelationDto'
+        program:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/AdminUserScopedRelationDto'
+      required:
+        - id
+        - userName
+        - fullName
+        - roles
+        - isActive
+    AdminUserListResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminUserItemResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
     AssignInstitutionalRoleDto:
       type: object
       properties:
@@ -2496,3 +3245,16 @@ components:
         - userId
         - role
         - moodleCategoryId
+    FilterOptionResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+          nullable: true
+      required:
+        - id
+        - code
