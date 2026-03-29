@@ -1360,6 +1360,21 @@ paths:
     get:
       operationId: CurriculumController_ListDepartments_v1
       parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            default: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 10
+            type: number
         - name: semesterId
           required: true
           in: query
@@ -1380,9 +1395,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DepartmentItemResponseDto'
+                $ref: '#/components/schemas/DepartmentListResponseDto'
       security:
         - accesstoken: []
       summary: List departments scoped to caller role
@@ -1392,6 +1405,21 @@ paths:
     get:
       operationId: CurriculumController_ListPrograms_v1
       parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            default: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 10
+            type: number
         - name: semesterId
           required: true
           in: query
@@ -1419,9 +1447,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProgramItemResponseDto'
+                $ref: '#/components/schemas/ProgramListResponseDto'
       security:
         - accesstoken: []
       summary: List programs scoped to caller role
@@ -1431,6 +1457,21 @@ paths:
     get:
       operationId: CurriculumController_ListCourses_v1
       parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            default: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 10
+            type: number
         - name: semesterId
           required: true
           in: query
@@ -1465,9 +1506,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CourseItemResponseDto'
+                $ref: '#/components/schemas/CourseListResponseDto'
       security:
         - accesstoken: []
       summary: List courses scoped to caller role
@@ -3099,6 +3138,18 @@ components:
       required:
         - id
         - code
+    DepartmentListResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepartmentItemResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
     ProgramItemResponseDto:
       type: object
       properties:
@@ -3119,6 +3170,18 @@ components:
         - id
         - code
         - departmentId
+    ProgramListResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgramItemResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
     CourseItemResponseDto:
       type: object
       properties:
@@ -3143,6 +3206,18 @@ components:
         - fullname
         - programId
         - isActive
+    CourseListResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseItemResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
     AdminUserScopedRelationDto:
       type: object
       properties:
