@@ -2608,6 +2608,173 @@
           "Admin"
         ]
       }
+    },
+    "/api/v1/admin/filters/campuses": {
+      "get": {
+        "operationId": "AdminFiltersController_GetCampuses_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FilterOptionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List all campuses for filter dropdowns",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/filters/departments": {
+      "get": {
+        "operationId": "AdminFiltersController_GetDepartments_v1",
+        "parameters": [
+          {
+            "name": "campusId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by campus UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FilterOptionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List departments for filter dropdowns",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/filters/programs": {
+      "get": {
+        "operationId": "AdminFiltersController_GetPrograms_v1",
+        "parameters": [
+          {
+            "name": "departmentId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by department UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FilterOptionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List programs for filter dropdowns",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/filters/roles": {
+      "get": {
+        "operationId": "AdminFiltersController_GetRoles_v1",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "SUPER_ADMIN",
+                          "ADMIN",
+                          "DEAN",
+                          "CHAIRPERSON",
+                          "FACULTY",
+                          "STUDENT"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List available user roles for filter dropdowns",
+        "tags": [
+          "Admin"
+        ]
+      }
     }
   },
   "info": {
@@ -4788,6 +4955,25 @@
           "userId",
           "role",
           "moodleCategoryId"
+        ]
+      },
+      "FilterOptionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "code"
         ]
       }
     }
