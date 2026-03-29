@@ -3019,10 +3019,12 @@
         "type": "object",
         "properties": {
           "username": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 100
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 255
           }
         },
         "required": [

@@ -1879,8 +1879,10 @@ components:
       properties:
         username:
           type: string
+          maxLength: 100
         password:
           type: string
+          maxLength: 255
       required:
         - username
         - password
