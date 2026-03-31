@@ -2829,6 +2829,44 @@
           "Admin"
         ]
       }
+    },
+    "/api/v1/semesters": {
+      "get": {
+        "operationId": "SemestersController_list_v1",
+        "parameters": [
+          {
+            "name": "campusId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by campus UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SemesterListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List all semesters with campus info",
+        "tags": [
+          "semesters"
+        ]
+      }
     }
   },
   "info": {
@@ -5084,6 +5122,63 @@
         "required": [
           "id",
           "code"
+        ]
+      },
+      "CampusShortResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code"
+        ]
+      },
+      "SemesterItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "academicYear": {
+            "type": "string"
+          },
+          "campus": {
+            "$ref": "#/components/schemas/CampusShortResponseDto"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "campus"
+        ]
+      },
+      "SemesterListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SemesterItemResponseDto"
+            }
+          }
+        },
+        "required": [
+          "data"
         ]
       }
     }
