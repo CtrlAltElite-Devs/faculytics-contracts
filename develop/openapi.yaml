@@ -2079,6 +2079,30 @@ components:
           required:
             - id
             - code
+        program:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            code:
+              type: string
+          required:
+            - id
+            - code
+        department:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            code:
+              type: string
+          required:
+            - id
+            - code
       required:
         - id
         - userName
