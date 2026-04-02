@@ -1600,6 +1600,34 @@ paths:
       summary: List users for the admin console
       tags:
         - Admin
+  /api/v1/admin/institutional-roles/dean-eligible-categories:
+    get:
+      operationId: AdminController_GetDeanEligibleCategories_v1
+      parameters:
+        - name: userId
+          required: true
+          in: query
+          description: UUID of the user to check eligibility for
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeanEligibleCategoryResponseDto'
+        '404':
+          description: User not found
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List eligible department categories for DEAN promotion
+      tags:
+        - Admin
   /api/v1/admin/institutional-roles:
     post:
       operationId: AdminController_AssignRole_v1
@@ -3419,6 +3447,20 @@ components:
       required:
         - data
         - meta
+    DeanEligibleCategoryResponseDto:
+      type: object
+      properties:
+        moodleCategoryId:
+          type: number
+          description: Moodle category ID for the department
+          example: 8
+        name:
+          type: string
+          description: Department name
+          example: CCS
+      required:
+        - moodleCategoryId
+        - name
     AssignInstitutionalRoleDto:
       type: object
       properties:
