@@ -1743,6 +1743,117 @@ paths:
       summary: List available user roles for filter dropdowns
       tags:
         - Admin
+  /api/v1/semesters:
+    get:
+      operationId: SemestersController_list_v1
+      parameters:
+        - name: campusId
+          required: false
+          in: query
+          description: Filter by campus UUID
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemesterListResponseDto'
+      security:
+        - accesstoken: []
+      summary: List all semesters with campus info
+      tags:
+        - semesters
+  /api/v1/reports/generate:
+    post:
+      operationId: ReportsController_GenerateReport_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateReportDto'
+      responses:
+        '202':
+          description: Report generation queued
+      security:
+        - accesstoken: []
+      summary: Generate a single faculty evaluation PDF report
+      tags:
+        - Reports
+  /api/v1/reports/generate/batch:
+    post:
+      operationId: ReportsController_GenerateBatchReport_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateBatchReportDto'
+      responses:
+        '202':
+          description: Batch report generation queued
+      security:
+        - accesstoken: []
+      summary: Generate batch faculty evaluation PDF reports
+      tags:
+        - Reports
+  /api/v1/reports/status/{jobId}:
+    get:
+      operationId: ReportsController_GetReportStatus_v1
+      parameters:
+        - name: jobId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportStatusResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get status of a single report job
+      tags:
+        - Reports
+  /api/v1/reports/batch/{batchId}:
+    get:
+      operationId: ReportsController_GetBatchStatus_v1
+      parameters:
+        - name: batchId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchStatusResponseDto'
+      security:
+        - accesstoken: []
+      summary: Get status of a batch report generation
+      tags:
+        - Reports
 info:
   title: Faculytics API
   description: This is the official API documentation for Faculytics
@@ -3335,3 +3446,149 @@ components:
       required:
         - id
         - code
+    CampusShortResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - code
+    SemesterItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        label:
+          type: string
+        academicYear:
+          type: string
+        campus:
+          $ref: '#/components/schemas/CampusShortResponseDto'
+      required:
+        - id
+        - code
+        - campus
+    SemesterListResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SemesterItemResponseDto'
+      required:
+        - data
+    GenerateReportDto:
+      type: object
+      properties:
+        facultyId:
+          type: string
+          format: uuid
+          description: UUID of the faculty member
+        semesterId:
+          type: string
+          format: uuid
+          description: UUID of the semester
+        questionnaireTypeCode:
+          type: string
+          description: Questionnaire type code
+      required:
+        - facultyId
+        - semesterId
+        - questionnaireTypeCode
+    GenerateBatchReportDto:
+      type: object
+      properties:
+        semesterId:
+          type: string
+          format: uuid
+          description: UUID of the semester
+        questionnaireTypeCode:
+          type: string
+          description: Questionnaire type code
+        departmentId:
+          type: string
+          format: uuid
+          description: Optional department UUID to filter by
+        programId:
+          type: string
+          format: uuid
+          description: Optional program UUID to filter by
+      required:
+        - semesterId
+        - questionnaireTypeCode
+    ReportStatusResponseDto:
+      type: object
+      properties:
+        jobId:
+          type: string
+        status:
+          type: string
+          enum:
+            - waiting
+            - active
+            - completed
+            - failed
+            - skipped
+        facultyName:
+          type: string
+        downloadUrl:
+          type: string
+          description: Presigned download URL, present when completed
+        expiresAt:
+          type: string
+          description: ISO timestamp of URL expiry
+        error:
+          type: string
+          description: Error message, present when failed
+        message:
+          type: string
+          description: Info message, present when skipped
+        createdAt:
+          type: string
+        completedAt:
+          type: string
+      required:
+        - jobId
+        - status
+        - facultyName
+        - createdAt
+    BatchStatusResponseDto:
+      type: object
+      properties:
+        batchId:
+          type: string
+        total:
+          type: number
+        completed:
+          type: number
+        failed:
+          type: number
+        skipped:
+          type: number
+        active:
+          type: number
+        waiting:
+          type: number
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportStatusResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - batchId
+        - total
+        - completed
+        - failed
+        - skipped
+        - active
+        - waiting
+        - jobs
+        - meta
