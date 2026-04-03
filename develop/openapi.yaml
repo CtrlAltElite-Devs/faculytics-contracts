@@ -366,6 +366,39 @@ paths:
       summary: Create a new version for a questionnaire
       tags:
         - Questionnaires
+  /api/v1/questionnaires/{id}/versions/from-template:
+    post:
+      operationId: QuestionnaireController_createVersionFromTemplate_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVersionFromTemplateRequest'
+      responses:
+        '201':
+          description: Version created from template
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireVersionDetailResponse'
+        '400':
+          description: Source version is a draft, archived questionnaire, or belongs to different questionnaire
+        '404':
+          description: Questionnaire or source version not found
+        '409':
+          description: Draft version already exists
+      security:
+        - accesstoken: []
+      summary: Create a new version from an existing version template
+      tags:
+        - Questionnaires
   /api/v1/questionnaires/{id}/latest-active-version:
     get:
       operationId: QuestionnaireController_getLatestActiveVersion_v1
@@ -2490,6 +2523,15 @@ components:
         - schemaSnapshot
         - createdAt
         - updatedAt
+    CreateVersionFromTemplateRequest:
+      type: object
+      properties:
+        sourceVersionId:
+          type: string
+          format: uuid
+          description: UUID of the version to copy the schema from
+      required:
+        - sourceVersionId
     UpdateVersionRequest:
       type: object
       properties:
