@@ -611,6 +611,61 @@
         ]
       }
     },
+    "/api/v1/questionnaires/{id}/versions/from-template": {
+      "post": {
+        "operationId": "QuestionnaireController_createVersionFromTemplate_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVersionFromTemplateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Version created from template",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireVersionDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Source version is a draft, archived questionnaire, or belongs to different questionnaire"
+          },
+          "404": {
+            "description": "Questionnaire or source version not found"
+          },
+          "409": {
+            "description": "Draft version already exists"
+          }
+        },
+        "security": [
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Create a new version from an existing version template",
+        "tags": [
+          "Questionnaires"
+        ]
+      }
+    },
     "/api/v1/questionnaires/{id}/latest-active-version": {
       "get": {
         "operationId": "QuestionnaireController_getLatestActiveVersion_v1",
@@ -2590,6 +2645,99 @@
         ]
       }
     },
+    "/api/v1/admin/users/{id}": {
+      "get": {
+        "operationId": "AdminController_GetUserDetail_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserDetailResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid UUID format"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "Get detailed information about a single user",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/institutional-roles/dean-eligible-categories": {
+      "get": {
+        "operationId": "AdminController_GetDeanEligibleCategories_v1",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "description": "UUID of the user to check eligibility for",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeanEligibleCategoryResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "accesstoken": []
+          }
+        ],
+        "summary": "List eligible department categories for DEAN promotion",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/v1/admin/institutional-roles": {
       "post": {
         "operationId": "AdminController_AssignRole_v1",
@@ -3334,6 +3482,42 @@
               "id",
               "code"
             ]
+          },
+          "program": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "code"
+            ]
+          },
+          "department": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "code"
+            ]
           }
         },
         "required": [
@@ -3810,6 +3994,19 @@
           "schemaSnapshot",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "CreateVersionFromTemplateRequest": {
+        "type": "object",
+        "properties": {
+          "sourceVersionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the version to copy the schema from"
+          }
+        },
+        "required": [
+          "sourceVersionId"
         ]
       },
       "UpdateVersionRequest": {
@@ -5199,6 +5396,210 @@
         "required": [
           "data",
           "meta"
+        ]
+      },
+      "AdminEnrollmentCourseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "shortname": {
+            "type": "string"
+          },
+          "fullname": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "shortname",
+          "fullname"
+        ]
+      },
+      "AdminEnrollmentItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "course": {
+            "$ref": "#/components/schemas/AdminEnrollmentCourseDto"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "isActive",
+          "course"
+        ]
+      },
+      "AdminInstitutionalRoleCategoryDto": {
+        "type": "object",
+        "properties": {
+          "moodleCategoryId": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "depth": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "moodleCategoryId",
+          "name",
+          "depth"
+        ]
+      },
+      "AdminInstitutionalRoleItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AdminInstitutionalRoleCategoryDto"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "source",
+          "category"
+        ]
+      },
+      "AdminUserDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "moodleUserId": {
+            "type": "number"
+          },
+          "userProfilePicture": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "SUPER_ADMIN",
+                "ADMIN",
+                "DEAN",
+                "CHAIRPERSON",
+                "FACULTY",
+                "STUDENT"
+              ]
+            }
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "lastLoginAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "campus": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminUserScopedRelationDto"
+              }
+            ]
+          },
+          "department": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminUserScopedRelationDto"
+              }
+            ]
+          },
+          "program": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminUserScopedRelationDto"
+              }
+            ]
+          },
+          "enrollments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminEnrollmentItemDto"
+            }
+          },
+          "institutionalRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminInstitutionalRoleItemDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "userName",
+          "fullName",
+          "firstName",
+          "lastName",
+          "userProfilePicture",
+          "roles",
+          "isActive",
+          "lastLoginAt",
+          "createdAt",
+          "enrollments",
+          "institutionalRoles"
+        ]
+      },
+      "DeanEligibleCategoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "moodleCategoryId": {
+            "type": "number",
+            "description": "Moodle category ID for the department",
+            "example": 8
+          },
+          "name": {
+            "type": "string",
+            "description": "Department name",
+            "example": "CCS"
+          }
+        },
+        "required": [
+          "moodleCategoryId",
+          "name"
         ]
       },
       "AssignInstitutionalRoleDto": {
