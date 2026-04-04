@@ -980,6 +980,7 @@ paths:
           in: query
           description: Optional program code filter
           schema:
+            maxLength: 20
             type: string
       responses:
         '200':
@@ -1003,6 +1004,13 @@ paths:
           description: Semester UUID to query analytics for
           schema:
             format: uuid
+            type: string
+        - name: programCode
+          required: false
+          in: query
+          description: Optional program code filter
+          schema:
+            maxLength: 20
             type: string
       responses:
         '200':
