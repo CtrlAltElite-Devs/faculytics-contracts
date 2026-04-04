@@ -1839,6 +1839,177 @@ paths:
       summary: List available user roles for filter dropdowns
       tags:
         - Admin
+  /api/v1/admin/filters/faculty:
+    get:
+      operationId: AdminFiltersController_GetFaculty_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FilterFacultyResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List faculty members (users with active editing teacher enrollments)
+      tags:
+        - Admin
+  /api/v1/admin/filters/courses:
+    get:
+      operationId: AdminFiltersController_GetCourses_v1
+      parameters:
+        - name: facultyUsername
+          required: true
+          in: query
+          description: Faculty username to filter courses by
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FilterCourseResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List courses for a specific faculty member
+      tags:
+        - Admin
+  /api/v1/admin/filters/questionnaire-types:
+    get:
+      operationId: AdminFiltersController_GetQuestionnaireTypes_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FilterOptionResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List all questionnaire types
+      tags:
+        - Admin
+  /api/v1/admin/filters/questionnaire-versions:
+    get:
+      operationId: AdminFiltersController_GetQuestionnaireVersions_v1
+      parameters:
+        - name: typeId
+          required: true
+          in: query
+          description: Questionnaire type UUID
+          schema:
+            format: uuid
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FilterVersionResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List active versions for a questionnaire type
+      tags:
+        - Admin
+  /api/v1/admin/generate-submissions/status:
+    get:
+      operationId: AdminGenerateController_Status_v1
+      parameters:
+        - name: versionId
+          required: true
+          in: query
+          description: Questionnaire version UUID
+          schema:
+            format: uuid
+            type: string
+        - name: facultyUsername
+          required: true
+          in: query
+          description: Faculty username (exact match)
+          schema:
+            type: string
+        - name: courseShortname
+          required: true
+          in: query
+          description: Course shortname (exact match)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmissionStatusResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Check submission status for a faculty+course+version combination
+      tags:
+        - Admin
+  /api/v1/admin/generate-submissions/preview:
+    post:
+      operationId: AdminGenerateController_Preview_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeneratePreviewRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneratePreviewResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Generate preview of test submissions for a questionnaire version
+      tags:
+        - Admin
+  /api/v1/admin/generate-submissions/commit:
+    post:
+      operationId: AdminGenerateController_Commit_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateCommitRequestDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommitResultDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Commit generated submissions (may take time due to per-row processing)
+      tags:
+        - Admin
   /api/v1/semesters:
     get:
       operationId: SemestersController_list_v1
@@ -3716,6 +3887,269 @@ components:
       required:
         - id
         - code
+    FilterFacultyResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        fullName:
+          type: string
+      required:
+        - id
+        - username
+        - fullName
+    FilterCourseResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        shortname:
+          type: string
+        fullname:
+          type: string
+      required:
+        - id
+        - shortname
+        - fullname
+    FilterVersionResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        versionNumber:
+          type: number
+        isActive:
+          type: boolean
+      required:
+        - id
+        - versionNumber
+        - isActive
+    SubmissionStatusResponseDto:
+      type: object
+      properties:
+        totalEnrolled:
+          type: number
+        alreadySubmitted:
+          type: number
+        availableStudents:
+          type: number
+      required:
+        - totalEnrolled
+        - alreadySubmitted
+        - availableStudents
+    GeneratePreviewRequestDto:
+      type: object
+      properties:
+        versionId:
+          type: string
+          format: uuid
+          description: Questionnaire version UUID
+        facultyUsername:
+          type: string
+          description: Faculty username (exact match)
+        courseShortname:
+          type: string
+          description: Course shortname (exact match)
+      required:
+        - versionId
+        - facultyUsername
+        - courseShortname
+    PreviewMetadataDto:
+      type: object
+      properties:
+        faculty:
+          type: object
+          properties:
+            username:
+              type: string
+            fullName:
+              type: string
+          required:
+            - username
+            - fullName
+        course:
+          type: object
+          properties:
+            shortname:
+              type: string
+            fullname:
+              type: string
+          required:
+            - shortname
+            - fullname
+        semester:
+          type: object
+          properties:
+            code:
+              type: string
+            label:
+              type: string
+            academicYear:
+              type: string
+          required:
+            - code
+            - label
+            - academicYear
+        version:
+          type: object
+          properties:
+            id:
+              type: string
+            versionNumber:
+              type: number
+          required:
+            - id
+            - versionNumber
+        maxScore:
+          type: number
+        totalEnrolled:
+          type: number
+        alreadySubmitted:
+          type: number
+        availableStudents:
+          type: number
+        generatingCount:
+          type: number
+      required:
+        - faculty
+        - course
+        - semester
+        - version
+        - maxScore
+        - totalEnrolled
+        - alreadySubmitted
+        - availableStudents
+        - generatingCount
+    PreviewQuestionDto:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        sectionName:
+          type: string
+      required:
+        - id
+        - text
+        - sectionName
+    PreviewRowDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+        username:
+          type: string
+        facultyUsername:
+          type: string
+        courseShortname:
+          type: string
+        answers:
+          type: object
+          description: Map of questionId -> numeric value
+        comment:
+          type: string
+      required:
+        - externalId
+        - username
+        - facultyUsername
+        - courseShortname
+        - answers
+    GeneratePreviewResponseDto:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/PreviewMetadataDto'
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PreviewQuestionDto'
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/PreviewRowDto'
+      required:
+        - metadata
+        - questions
+        - rows
+    GeneratedRowDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+        username:
+          type: string
+        facultyUsername:
+          type: string
+        courseShortname:
+          type: string
+        answers:
+          type: object
+          description: Map of questionId -> numeric value
+        comment:
+          type: string
+      required:
+        - externalId
+        - username
+        - facultyUsername
+        - courseShortname
+        - answers
+    GenerateCommitRequestDto:
+      type: object
+      properties:
+        versionId:
+          type: string
+          format: uuid
+          description: Questionnaire version UUID
+        rows:
+          minItems: 1
+          maxItems: 200
+          type: array
+          items:
+            $ref: '#/components/schemas/GeneratedRowDto'
+      required:
+        - versionId
+        - rows
+    CommitRecordResultDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+        success:
+          type: boolean
+        error:
+          type: string
+        internalId:
+          type: string
+      required:
+        - externalId
+        - success
+    CommitResultDto:
+      type: object
+      properties:
+        commitId:
+          type: string
+        total:
+          type: number
+        successes:
+          type: number
+        failures:
+          type: number
+        dryRun:
+          type: boolean
+        records:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommitRecordResultDto'
+      required:
+        - commitId
+        - total
+        - successes
+        - failures
+        - dryRun
+        - records
     CampusShortResponseDto:
       type: object
       properties:
