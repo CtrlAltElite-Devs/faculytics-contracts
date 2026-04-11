@@ -139,8 +139,32 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProvisionResultDto'
       security:
+        - bearer: []
         - accesstoken: []
       summary: Provision Moodle category tree
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/categories/preview:
+    post:
+      operationId: MoodleProvisioningController_PreviewCategories_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisionCategoriesRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisionResultDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Preview Moodle category provisioning (dry run)
       tags:
         - Moodle Provisioning
   /api/v1/moodle/provision/courses/preview:
