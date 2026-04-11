@@ -121,6 +121,267 @@ paths:
       summary: Update sync schedule interval
       tags:
         - Moodle
+  /api/v1/moodle/provision/categories:
+    post:
+      operationId: MoodleProvisioningController_ProvisionCategories_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisionCategoriesRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisionResultDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Provision Moodle category tree
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/categories/preview:
+    post:
+      operationId: MoodleProvisioningController_PreviewCategories_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisionCategoriesRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisionResultDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Preview Moodle category provisioning (dry run)
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/courses/preview:
+    post:
+      operationId: MoodleProvisioningController_PreviewCourses_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - campus
+                - department
+                - startDate
+                - endDate
+              properties:
+                file:
+                  type: string
+                  format: binary
+                campus:
+                  type: string
+                department:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoursePreviewResultDto'
+      security:
+        - accesstoken: []
+      summary: Preview bulk course seeding from CSV
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/courses/execute:
+    post:
+      operationId: MoodleProvisioningController_ExecuteCourses_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteCoursesRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisionResultDto'
+      security:
+        - accesstoken: []
+      summary: Execute bulk course creation in Moodle
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/courses/bulk/preview:
+    post:
+      operationId: MoodleProvisioningController_PreviewBulkCourses_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCoursePreviewRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoursePreviewResultDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Preview bulk course creation from JSON input
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/courses/bulk/execute:
+    post:
+      operationId: MoodleProvisioningController_ExecuteBulkCourses_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCourseExecuteRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisionResultDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Execute bulk course creation in Moodle
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/courses/quick/preview:
+    post:
+      operationId: MoodleProvisioningController_PreviewQuickCourse_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickCourseRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoursePreviewRowResponseDto'
+      security:
+        - accesstoken: []
+      summary: Preview quick course creation
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/courses/quick:
+    post:
+      operationId: MoodleProvisioningController_QuickCourse_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickCourseRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisionResultDto'
+      security:
+        - accesstoken: []
+      summary: Create a single course in Moodle
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/users:
+    post:
+      operationId: MoodleProvisioningController_SeedUsers_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeedUsersRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeedUsersResultDto'
+      security:
+        - accesstoken: []
+      summary: Generate and enrol fake users in Moodle
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/tree:
+    get:
+      operationId: MoodleProvisioningController_GetCategoryTree_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoodleCategoryTreeResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Fetch Moodle category tree (live)
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/tree/{categoryId}/courses:
+    get:
+      operationId: MoodleProvisioningController_GetCategoryCourses_v1
+      parameters:
+        - name: categoryId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoodleCategoryCoursesResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Fetch courses for a Moodle category (live)
+      tags:
+        - Moodle Provisioning
   /api/v1/auth/login:
     post:
       operationId: AuthController_Login_v1
@@ -1758,6 +2019,25 @@ paths:
       summary: List all campuses for filter dropdowns
       tags:
         - Admin
+  /api/v1/admin/filters/semesters:
+    get:
+      operationId: AdminFiltersController_GetSemesters_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SemesterFilterResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List all semesters with computed date ranges for filter dropdowns
+      tags:
+        - Admin
   /api/v1/admin/filters/departments:
     get:
       operationId: AdminFiltersController_GetDepartments_v1
@@ -1766,6 +2046,13 @@ paths:
           required: false
           in: query
           description: Filter by campus UUID
+          schema:
+            format: uuid
+            type: string
+        - name: semesterId
+          required: false
+          in: query
+          description: Filter by semester UUID
           schema:
             format: uuid
             type: string
@@ -1803,7 +2090,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/FilterOptionResponseDto'
+                  $ref: '#/components/schemas/ProgramFilterOptionResponseDto'
       security:
         - bearer: []
         - accesstoken: []
@@ -2010,6 +2297,135 @@ paths:
       summary: Commit generated submissions (may take time due to per-row processing)
       tags:
         - Admin
+  /api/v1/audit-logs:
+    get:
+      operationId: AuditController_ListAuditLogs_v1
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: Page number starting at 1
+          schema:
+            minimum: 1
+            default: 1
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: Items per page, max 100
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 10
+            example: 10
+            type: number
+        - name: action
+          required: false
+          in: query
+          description: Filter by exact audit action code
+          schema:
+            maxLength: 100
+            example: auth.login.success
+            type: string
+        - name: actorId
+          required: false
+          in: query
+          description: Filter by actor UUID
+          schema:
+            format: uuid
+            example: 3f6dd1dd-8f33-4b2e-bb0b-6ac2d8bbf5d7
+            type: string
+        - name: actorUsername
+          required: false
+          in: query
+          description: Filter by actor username (partial match)
+          schema:
+            maxLength: 100
+            example: admin
+            type: string
+        - name: resourceType
+          required: false
+          in: query
+          description: Filter by resource type
+          schema:
+            maxLength: 100
+            example: User
+            type: string
+        - name: resourceId
+          required: false
+          in: query
+          description: Filter by resource UUID
+          schema:
+            maxLength: 100
+            example: 9ad12fa1-6286-4461-93f8-33b48d2e5725
+            type: string
+        - name: from
+          required: false
+          in: query
+          description: Lower bound (inclusive) on occurredAt (ISO 8601)
+          schema:
+            example: '2026-01-01T00:00:00.000Z'
+            type: string
+        - name: to
+          required: false
+          in: query
+          description: Upper bound (inclusive) on occurredAt (ISO 8601)
+          schema:
+            example: '2026-12-31T23:59:59.999Z'
+            type: string
+        - name: search
+          required: false
+          in: query
+          description: General text search across actorUsername, action, and resourceType
+          schema:
+            maxLength: 200
+            example: login
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogListResponseDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden — superadmin only
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List audit logs with filters and pagination
+      tags:
+        - Audit
+  /api/v1/audit-logs/{id}:
+    get:
+      operationId: AuditController_GetAuditLog_v1
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Audit log UUID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogDetailResponseDto'
+        '400':
+          description: Invalid UUID format
+        '404':
+          description: Audit log not found
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Get a single audit log entry by ID
+      tags:
+        - Audit
   /api/v1/semesters:
     get:
       operationId: SemestersController_list_v1
@@ -2291,6 +2707,550 @@ components:
           example: 60
       required:
         - intervalMinutes
+    DepartmentDto:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Department code
+          example: CCS
+        programs:
+          minItems: 1
+          description: Program codes under this department
+          example:
+            - BSCS
+            - BSIT
+          type: array
+          items:
+            type: string
+      required:
+        - code
+        - programs
+    ProvisionCategoriesRequestDto:
+      type: object
+      properties:
+        campuses:
+          minItems: 1
+          description: Campus codes
+          example:
+            - UCMN
+          type: array
+          items:
+            type: string
+        semesters:
+          minItems: 1
+          description: Semester numbers (1 and/or 2)
+          example:
+            - 1
+            - 2
+          type: array
+          items:
+            type: number
+        startDate:
+          type: string
+          description: Academic year start date (ISO 8601)
+          example: '2025-08-01'
+        endDate:
+          type: string
+          description: Academic year end date (ISO 8601)
+          example: '2026-06-01'
+        departments:
+          minItems: 1
+          description: Departments with their programs
+          type: array
+          items:
+            $ref: '#/components/schemas/DepartmentDto'
+      required:
+        - campuses
+        - semesters
+        - startDate
+        - endDate
+        - departments
+    ProvisionDetailItemDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: UCMN
+        status:
+          type: string
+          enum:
+            - created
+            - skipped
+            - error
+        reason:
+          type: string
+          example: Already exists
+        moodleId:
+          type: number
+          example: 42
+      required:
+        - name
+        - status
+    ProvisionResultDto:
+      type: object
+      properties:
+        created:
+          type: number
+          example: 4
+        skipped:
+          type: number
+          example: 1
+        errors:
+          type: number
+          example: 0
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProvisionDetailItemDto'
+        durationMs:
+          type: number
+          example: 1234
+        syncCompleted:
+          type: boolean
+          example: true
+      required:
+        - created
+        - skipped
+        - errors
+        - details
+        - durationMs
+    CoursePreviewRowResponseDto:
+      type: object
+      properties:
+        shortname:
+          type: string
+        fullname:
+          type: string
+        categoryPath:
+          type: string
+        categoryId:
+          type: number
+        startDate:
+          type: string
+        endDate:
+          type: string
+        program:
+          type: string
+        semester:
+          type: string
+        courseCode:
+          type: string
+      required:
+        - shortname
+        - fullname
+        - categoryPath
+        - categoryId
+        - startDate
+        - endDate
+        - program
+        - semester
+        - courseCode
+    SkippedRowDto:
+      type: object
+      properties:
+        rowNumber:
+          type: number
+        courseCode:
+          type: string
+        reason:
+          type: string
+      required:
+        - rowNumber
+        - courseCode
+        - reason
+    ParseErrorDto:
+      type: object
+      properties:
+        rowNumber:
+          type: number
+        message:
+          type: string
+      required:
+        - rowNumber
+        - message
+    CoursePreviewResultDto:
+      type: object
+      properties:
+        valid:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoursePreviewRowResponseDto'
+        skipped:
+          type: array
+          items:
+            $ref: '#/components/schemas/SkippedRowDto'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParseErrorDto'
+        shortnameNote:
+          type: string
+          example: EDP codes are examples. Final codes are generated at execution time.
+      required:
+        - valid
+        - skipped
+        - errors
+        - shortnameNote
+    CoursePreviewRowDto:
+      type: object
+      properties:
+        courseCode:
+          type: string
+          example: CS101
+        descriptiveTitle:
+          type: string
+          example: Introduction to Computer Science
+        program:
+          type: string
+          example: BSCS
+        semester:
+          type: string
+          example: '1'
+        categoryId:
+          type: number
+          example: 42
+      required:
+        - courseCode
+        - descriptiveTitle
+        - program
+        - semester
+        - categoryId
+    ExecuteCoursesRequestDto:
+      type: object
+      properties:
+        rows:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/CoursePreviewRowDto'
+        campus:
+          type: string
+          description: Campus code
+          example: UCMN
+        department:
+          type: string
+          description: Department code
+          example: CCS
+        startDate:
+          type: string
+          description: Academic year start date (ISO 8601)
+          example: '2025-08-01'
+        endDate:
+          type: string
+          description: Academic year end date (ISO 8601)
+          example: '2026-06-01'
+      required:
+        - rows
+        - campus
+        - department
+        - startDate
+        - endDate
+    CourseEntryDto:
+      type: object
+      properties:
+        courseCode:
+          type: string
+          description: Course code
+          example: CS101
+        descriptiveTitle:
+          type: string
+          description: Descriptive title
+          example: Introduction to Computer Science
+      required:
+        - courseCode
+        - descriptiveTitle
+    BulkCoursePreviewRequestDto:
+      type: object
+      properties:
+        semesterId:
+          type: string
+          format: uuid
+          description: Semester UUID
+        departmentId:
+          type: string
+          format: uuid
+          description: Department UUID
+        programId:
+          type: string
+          format: uuid
+          description: Program UUID
+        startDate:
+          type: string
+          description: Course start date (ISO 8601)
+          example: '2025-08-01'
+        endDate:
+          type: string
+          description: Course end date (ISO 8601)
+          example: '2025-12-18'
+        courses:
+          minItems: 1
+          maxItems: 500
+          description: Courses to preview
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseEntryDto'
+      required:
+        - semesterId
+        - departmentId
+        - programId
+        - startDate
+        - endDate
+        - courses
+    ConfirmedCourseEntryDto:
+      type: object
+      properties:
+        courseCode:
+          type: string
+          description: Course code
+          example: CS101
+        descriptiveTitle:
+          type: string
+          description: Descriptive title
+          example: Introduction to Computer Science
+        categoryId:
+          type: number
+          minimum: 1
+          description: Moodle category ID from preview
+          example: 42
+      required:
+        - courseCode
+        - descriptiveTitle
+        - categoryId
+    BulkCourseExecuteRequestDto:
+      type: object
+      properties:
+        semesterId:
+          type: string
+          format: uuid
+          description: Semester UUID
+        departmentId:
+          type: string
+          format: uuid
+          description: Department UUID
+        programId:
+          type: string
+          format: uuid
+          description: Program UUID
+        startDate:
+          type: string
+          description: Course start date (ISO 8601)
+          example: '2025-08-01'
+        endDate:
+          type: string
+          description: Course end date (ISO 8601)
+          example: '2025-12-18'
+        courses:
+          minItems: 1
+          maxItems: 500
+          description: Confirmed courses to create
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfirmedCourseEntryDto'
+      required:
+        - semesterId
+        - departmentId
+        - programId
+        - startDate
+        - endDate
+        - courses
+    QuickCourseRequestDto:
+      type: object
+      properties:
+        courseCode:
+          type: string
+          description: Course code
+          example: CS 101
+        descriptiveTitle:
+          type: string
+          description: Course descriptive title
+          example: Introduction to Computer Science
+        campus:
+          type: string
+          description: Campus code
+          example: UCMN
+        department:
+          type: string
+          description: Department code
+          example: CCS
+        program:
+          type: string
+          description: Program code
+          example: BSCS
+        semester:
+          type: number
+          enum:
+            - 1
+            - 2
+          description: Semester number (1 or 2)
+          example: 1
+        startDate:
+          type: string
+          description: Academic year start date (ISO 8601)
+          example: '2025-08-01'
+        endDate:
+          type: string
+          description: Academic year end date (ISO 8601)
+          example: '2026-06-01'
+      required:
+        - courseCode
+        - descriptiveTitle
+        - campus
+        - department
+        - program
+        - semester
+        - startDate
+        - endDate
+    SeedUsersRequestDto:
+      type: object
+      properties:
+        count:
+          type: number
+          minimum: 1
+          maximum: 200
+          description: Number of users to generate
+          example: 10
+        role:
+          type: string
+          enum:
+            - student
+            - faculty
+          description: User role
+          example: student
+        campus:
+          type: string
+          description: Campus code
+          example: ucmn
+        courseIds:
+          minItems: 1
+          description: Moodle course IDs to enrol users into
+          example:
+            - 42
+            - 43
+          type: array
+          items:
+            type: number
+      required:
+        - count
+        - role
+        - campus
+        - courseIds
+    SeedUsersResultDto:
+      type: object
+      properties:
+        usersCreated:
+          type: number
+          example: 10
+        usersFailed:
+          type: number
+          example: 0
+        enrolmentsCreated:
+          type: number
+          example: 20
+        warnings:
+          example: []
+          type: array
+          items:
+            type: string
+        durationMs:
+          type: number
+          example: 3500
+      required:
+        - usersCreated
+        - usersFailed
+        - enrolmentsCreated
+        - warnings
+        - durationMs
+    MoodleCategoryTreeNodeDto:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 5
+        name:
+          type: string
+          example: Campus A
+        depth:
+          type: number
+          example: 1
+        coursecount:
+          type: number
+          example: 12
+        visible:
+          type: number
+          example: 1
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/MoodleCategoryTreeNodeDto'
+      required:
+        - id
+        - name
+        - depth
+        - coursecount
+        - visible
+        - children
+    MoodleCategoryTreeResponseDto:
+      type: object
+      properties:
+        tree:
+          type: array
+          items:
+            $ref: '#/components/schemas/MoodleCategoryTreeNodeDto'
+        fetchedAt:
+          type: string
+          example: '2026-04-11T10:00:00.000Z'
+        totalCategories:
+          type: number
+          example: 25
+      required:
+        - tree
+        - fetchedAt
+        - totalCategories
+    MoodleCoursePreviewDto:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 101
+        shortname:
+          type: string
+          example: CS101-2026
+        fullname:
+          type: string
+          example: Introduction to Computer Science
+        enrolledusercount:
+          type: number
+          example: 45
+        visible:
+          type: number
+          example: 1
+        startdate:
+          type: number
+          example: 1712800000
+        enddate:
+          type: number
+          example: 1720000000
+      required:
+        - id
+        - shortname
+        - fullname
+        - visible
+        - startdate
+        - enddate
+    MoodleCategoryCoursesResponseDto:
+      type: object
+      properties:
+        categoryId:
+          type: number
+          example: 5
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/MoodleCoursePreviewDto'
+      required:
+        - categoryId
+        - courses
     LoginRequest:
       type: object
       properties:
@@ -3887,6 +4847,61 @@ components:
       required:
         - id
         - code
+    SemesterFilterResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Semester UUID
+        code:
+          type: string
+          description: Semester code
+          example: S12526
+        label:
+          type: string
+          description: Semester label
+          example: Semester 1
+        academicYear:
+          type: string
+          description: Academic year
+          example: 2025-2026
+        campusCode:
+          type: string
+          description: Campus code
+          example: UCMN
+        startDate:
+          type: string
+          description: Computed start date (ISO 8601)
+          example: '2025-08-01'
+        endDate:
+          type: string
+          description: Computed end date (ISO 8601)
+          example: '2025-12-18'
+      required:
+        - id
+        - code
+        - label
+        - academicYear
+        - campusCode
+        - startDate
+        - endDate
+    ProgramFilterOptionResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+          nullable: true
+        moodleCategoryId:
+          type: number
+          description: Moodle category ID for this program
+      required:
+        - id
+        - code
+        - moodleCategoryId
     FilterFacultyResponseDto:
       type: object
       properties:
@@ -4150,6 +5165,80 @@ components:
         - failures
         - dryRun
         - records
+    AuditLogItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        action:
+          type: string
+          example: auth.login.success
+        actorId:
+          type: string
+        actorUsername:
+          type: string
+        resourceType:
+          type: string
+        resourceId:
+          type: string
+        metadata:
+          type: object
+        browserName:
+          type: string
+        os:
+          type: string
+        ipAddress:
+          type: string
+        occurredAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - action
+        - occurredAt
+    AuditLogListResponseDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogItemResponseDto'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
+    AuditLogDetailResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        action:
+          type: string
+          example: auth.login.success
+        actorId:
+          type: string
+        actorUsername:
+          type: string
+        resourceType:
+          type: string
+        resourceId:
+          type: string
+        metadata:
+          type: object
+        browserName:
+          type: string
+        os:
+          type: string
+        ipAddress:
+          type: string
+        occurredAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - action
+        - occurredAt
     CampusShortResponseDto:
       type: object
       properties:
