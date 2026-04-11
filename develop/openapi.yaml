@@ -231,6 +231,52 @@ paths:
       summary: Execute bulk course creation in Moodle
       tags:
         - Moodle Provisioning
+  /api/v1/moodle/provision/courses/bulk/preview:
+    post:
+      operationId: MoodleProvisioningController_PreviewBulkCourses_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCoursePreviewRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoursePreviewResultDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Preview bulk course creation from JSON input
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/courses/bulk/execute:
+    post:
+      operationId: MoodleProvisioningController_ExecuteBulkCourses_v1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCourseExecuteRequestDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisionResultDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Execute bulk course creation in Moodle
+      tags:
+        - Moodle Provisioning
   /api/v1/moodle/provision/courses/quick/preview:
     post:
       operationId: MoodleProvisioningController_PreviewQuickCourse_v1
@@ -1973,6 +2019,25 @@ paths:
       summary: List all campuses for filter dropdowns
       tags:
         - Admin
+  /api/v1/admin/filters/semesters:
+    get:
+      operationId: AdminFiltersController_GetSemesters_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SemesterFilterResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: List all semesters with computed date ranges for filter dropdowns
+      tags:
+        - Admin
   /api/v1/admin/filters/departments:
     get:
       operationId: AdminFiltersController_GetDepartments_v1
@@ -1981,6 +2046,13 @@ paths:
           required: false
           in: query
           description: Filter by campus UUID
+          schema:
+            format: uuid
+            type: string
+        - name: semesterId
+          required: false
+          in: query
+          description: Filter by semester UUID
           schema:
             format: uuid
             type: string
@@ -2874,6 +2946,114 @@ components:
         - department
         - startDate
         - endDate
+    CourseEntryDto:
+      type: object
+      properties:
+        courseCode:
+          type: string
+          description: Course code
+          example: CS101
+        descriptiveTitle:
+          type: string
+          description: Descriptive title
+          example: Introduction to Computer Science
+      required:
+        - courseCode
+        - descriptiveTitle
+    BulkCoursePreviewRequestDto:
+      type: object
+      properties:
+        semesterId:
+          type: string
+          format: uuid
+          description: Semester UUID
+        departmentId:
+          type: string
+          format: uuid
+          description: Department UUID
+        programId:
+          type: string
+          format: uuid
+          description: Program UUID
+        startDate:
+          type: string
+          description: Course start date (ISO 8601)
+          example: '2025-08-01'
+        endDate:
+          type: string
+          description: Course end date (ISO 8601)
+          example: '2025-12-18'
+        courses:
+          minItems: 1
+          maxItems: 500
+          description: Courses to preview
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseEntryDto'
+      required:
+        - semesterId
+        - departmentId
+        - programId
+        - startDate
+        - endDate
+        - courses
+    ConfirmedCourseEntryDto:
+      type: object
+      properties:
+        courseCode:
+          type: string
+          description: Course code
+          example: CS101
+        descriptiveTitle:
+          type: string
+          description: Descriptive title
+          example: Introduction to Computer Science
+        categoryId:
+          type: number
+          minimum: 1
+          description: Moodle category ID from preview
+          example: 42
+      required:
+        - courseCode
+        - descriptiveTitle
+        - categoryId
+    BulkCourseExecuteRequestDto:
+      type: object
+      properties:
+        semesterId:
+          type: string
+          format: uuid
+          description: Semester UUID
+        departmentId:
+          type: string
+          format: uuid
+          description: Department UUID
+        programId:
+          type: string
+          format: uuid
+          description: Program UUID
+        startDate:
+          type: string
+          description: Course start date (ISO 8601)
+          example: '2025-08-01'
+        endDate:
+          type: string
+          description: Course end date (ISO 8601)
+          example: '2025-12-18'
+        courses:
+          minItems: 1
+          maxItems: 500
+          description: Confirmed courses to create
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfirmedCourseEntryDto'
+      required:
+        - semesterId
+        - departmentId
+        - programId
+        - startDate
+        - endDate
+        - courses
     QuickCourseRequestDto:
       type: object
       properties:
@@ -4667,6 +4847,44 @@ components:
       required:
         - id
         - code
+    SemesterFilterResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Semester UUID
+        code:
+          type: string
+          description: Semester code
+          example: S12526
+        label:
+          type: string
+          description: Semester label
+          example: Semester 1
+        academicYear:
+          type: string
+          description: Academic year
+          example: 2025-2026
+        campusCode:
+          type: string
+          description: Campus code
+          example: UCMN
+        startDate:
+          type: string
+          description: Computed start date (ISO 8601)
+          example: '2025-08-01'
+        endDate:
+          type: string
+          description: Computed end date (ISO 8601)
+          example: '2025-12-18'
+      required:
+        - id
+        - code
+        - label
+        - academicYear
+        - campusCode
+        - startDate
+        - endDate
     FilterFacultyResponseDto:
       type: object
       properties:
