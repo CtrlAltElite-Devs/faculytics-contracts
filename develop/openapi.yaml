@@ -273,6 +273,45 @@ paths:
       summary: Generate and enrol fake users in Moodle
       tags:
         - Moodle Provisioning
+  /api/v1/moodle/provision/tree:
+    get:
+      operationId: MoodleProvisioningController_GetCategoryTree_v1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoodleCategoryTreeResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Fetch Moodle category tree (live)
+      tags:
+        - Moodle Provisioning
+  /api/v1/moodle/provision/tree/{categoryId}/courses:
+    get:
+      operationId: MoodleProvisioningController_GetCategoryCourses_v1
+      parameters:
+        - name: categoryId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoodleCategoryCoursesResponseDto'
+      security:
+        - bearer: []
+        - accesstoken: []
+      summary: Fetch courses for a Moodle category (live)
+      tags:
+        - Moodle Provisioning
   /api/v1/auth/login:
     post:
       operationId: AuthController_Login_v1
@@ -2789,6 +2828,96 @@ components:
         - enrolmentsCreated
         - warnings
         - durationMs
+    MoodleCategoryTreeNodeDto:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 5
+        name:
+          type: string
+          example: Campus A
+        depth:
+          type: number
+          example: 1
+        coursecount:
+          type: number
+          example: 12
+        visible:
+          type: number
+          example: 1
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/MoodleCategoryTreeNodeDto'
+      required:
+        - id
+        - name
+        - depth
+        - coursecount
+        - visible
+        - children
+    MoodleCategoryTreeResponseDto:
+      type: object
+      properties:
+        tree:
+          type: array
+          items:
+            $ref: '#/components/schemas/MoodleCategoryTreeNodeDto'
+        fetchedAt:
+          type: string
+          example: '2026-04-11T10:00:00.000Z'
+        totalCategories:
+          type: number
+          example: 25
+      required:
+        - tree
+        - fetchedAt
+        - totalCategories
+    MoodleCoursePreviewDto:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 101
+        shortname:
+          type: string
+          example: CS101-2026
+        fullname:
+          type: string
+          example: Introduction to Computer Science
+        enrolledusercount:
+          type: number
+          example: 45
+        visible:
+          type: number
+          example: 1
+        startdate:
+          type: number
+          example: 1712800000
+        enddate:
+          type: number
+          example: 1720000000
+      required:
+        - id
+        - shortname
+        - fullname
+        - visible
+        - startdate
+        - enddate
+    MoodleCategoryCoursesResponseDto:
+      type: object
+      properties:
+        categoryId:
+          type: number
+          example: 5
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/MoodleCoursePreviewDto'
+      required:
+        - categoryId
+        - courses
     LoginRequest:
       type: object
       properties:
