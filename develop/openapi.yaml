@@ -2090,7 +2090,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/FilterOptionResponseDto'
+                  $ref: '#/components/schemas/ProgramFilterOptionResponseDto'
       security:
         - bearer: []
         - accesstoken: []
@@ -4885,6 +4885,23 @@ components:
         - campusCode
         - startDate
         - endDate
+    ProgramFilterOptionResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+          nullable: true
+        moodleCategoryId:
+          type: number
+          description: Moodle category ID for this program
+      required:
+        - id
+        - code
+        - moodleCategoryId
     FilterFacultyResponseDto:
       type: object
       properties:
